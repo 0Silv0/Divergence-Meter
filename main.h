@@ -16,17 +16,21 @@
 //PIC is using internal oscillator
 #define _XTAL_FREQ 4000000          //Running at 4MHz
 
+//Bit Masks
+#define clearPORTA_SHADOW PORTA_SHADOW &= 0x00 // Clears PORTA Mask
+#define clearPORTB_SHADOW PORTB_SHADOW &= 0x00 // Clears PORTB Mask
+
 //PORTA (RA0 = SCL RA1 = SDA for I2C, RA4-RA7 not used, except RA5 for programmer)
 #define BTN1 PORTAbits.RA2         // Button 1 on RA2
 #define BTN2 PORTAbits.RA3         // Button 2 on RA3
 
 //PORTB (RB6-RB7 are for programmer)
-#define LED PORTBbits.RB0          // Debug LED on RB0
-#define HVE PORTBbits.RB1          // High voltage supply enable pin on RB1
-#define CLK PORTBbits.RB2          // Clock line to serial chips on RB2
-#define NBL PORTBbits.RB3          // NOT blanking line to serial chips on RB3
-#define DAT PORTBbits.RB4          // Data line to serial chips on RB4
-#define NLE PORTBbits.RB5          // NOT Latch Enable to serial chips on RB5
+#define LED _PORTB_RB0_POSITION          // Debug LED on RB0
+#define HVE _PORTB_RB1_POSITION          // High voltage supply enable pin on RB1
+#define CLK _PORTB_RB2_POSITION          // Clock line to serial chips on RB2
+#define NBL _PORTB_RB3_POSITION          // NOT blanking line to serial chips on RB3
+#define DAT _PORTB_RB4_POSITION          // Data line to serial chips on RB4
+#define NLE _PORTB_RB5_POSITION          // NOT Latch Enable to serial chips on RB5
 
 //Macros
 #define BIT_CHECK(data,bitNum) ((data) & 1<<(bitNum)) // Checks if bit is set at bitNum location

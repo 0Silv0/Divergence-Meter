@@ -1,29 +1,7 @@
 Version 4.0 HI-TECH Software Intermediate Code
-[p mainexit ]
-"767 C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h
-[; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 767: extern volatile unsigned char CMCON __attribute__((address(0x01F)));
-[v _CMCON `Vuc ~T0 @X0 0 e@31 ]
-"907
-[; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 907: extern volatile unsigned char TRISA __attribute__((address(0x085)));
-[v _TRISA `Vuc ~T0 @X0 0 e@133 ]
-"969
-[; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 969: extern volatile unsigned char TRISB __attribute__((address(0x086)));
-[v _TRISB `Vuc ~T0 @X0 0 e@134 ]
-"837
-[; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 837: extern volatile unsigned char OPTION_REG __attribute__((address(0x081)));
-[v _OPTION_REG `Vuc ~T0 @X0 0 e@129 ]
-"18 ./IIC.h
-[; ;./IIC.h: 18: void InitI2C(void);
-[v _InitI2C `(v ~T0 @X0 0 ef ]
-"17 ./RTC.h
-[; ;./RTC.h: 17: __bit isRTCRunning(void);
-[v _isRTCRunning `(b ~T0 @X0 0 ef ]
-"18
-[; ;./RTC.h: 18: void startRTC(void);
-[v _startRTC `(v ~T0 @X0 0 ef ]
-"19
-[; ;./RTC.h: 19: __bit checkRTCType(void);
-[v _checkRTCType `(b ~T0 @X0 0 ef ]
+"228 C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h
+[; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 228: extern volatile unsigned char PORTB __attribute__((address(0x006)));
+[v _PORTB `Vuc ~T0 @X0 0 e@6 ]
 "54 C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h
 [; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 54: __asm("INDF equ 00h");
 [; <" INDF equ 00h ;# ">
@@ -151,66 +129,201 @@ Version 4.0 HI-TECH Software Intermediate Code
 [p x CPD  =  OFF         ]
 "14
 [p x CP  =  OFF          ]
-"22 main.c
-[; ;main.c: 22: unsigned char PORTA_SHADOW = 0b00000000;
-[v _PORTA_SHADOW `uc ~T0 @X0 1 e ]
-[i _PORTA_SHADOW
+"7 tubes.c
+[; ;tubes.c: 7: unsigned char leftDP __attribute__((address(0x20)));
+[v _leftDP `uc ~T0 @X0 1 e@32 ]
+"8
+[; ;tubes.c: 8: unsigned char rightDP __attribute__((address(0x21)));
+[v _rightDP `uc ~T0 @X0 1 e@33 ]
+"9
+[; ;tubes.c: 9: unsigned char T0 __attribute__((address(0x22)));
+[v _T0 `uc ~T0 @X0 1 e@34 ]
+"10
+[; ;tubes.c: 10: unsigned char T1 __attribute__((address(0x23)));
+[v _T1 `uc ~T0 @X0 1 e@35 ]
+"11
+[; ;tubes.c: 11: unsigned char T2 __attribute__((address(0x24)));
+[v _T2 `uc ~T0 @X0 1 e@36 ]
+"12
+[; ;tubes.c: 12: unsigned char T3 __attribute__((address(0x25)));
+[v _T3 `uc ~T0 @X0 1 e@37 ]
+"13
+[; ;tubes.c: 13: unsigned char T4 __attribute__((address(0x26)));
+[v _T4 `uc ~T0 @X0 1 e@38 ]
+"14
+[; ;tubes.c: 14: unsigned char T5 __attribute__((address(0x27)));
+[v _T5 `uc ~T0 @X0 1 e@39 ]
+"15
+[; ;tubes.c: 15: unsigned char T6 __attribute__((address(0x28)));
+[v _T6 `uc ~T0 @X0 1 e@40 ]
+"16
+[; ;tubes.c: 16: unsigned char T7 __attribute__((address(0x29)));
+[v _T7 `uc ~T0 @X0 1 e@41 ]
+"18
+[; ;tubes.c: 18: unsigned char PORTB_SHADOW = 0b00000000;
+[v _PORTB_SHADOW `uc ~T0 @X0 1 e ]
+[i _PORTB_SHADOW
 -> -> 0 `i `uc
 ]
-[v $root$_main `(v ~T0 @X0 0 e ]
-"24
-[; ;main.c: 24: void main(void) {
-[v _main `(v ~T0 @X0 1 ef ]
+"21
+[; ;tubes.c: 21: void loadDisplay(void) {
+[v _loadDisplay `(v ~T0 @X0 1 ef ]
 {
-[e :U _main ]
+[e :U _loadDisplay ]
 [f ]
-"26
-[; ;main.c: 26:     CMCON = 0b111;
-[e = _CMCON -> -> 7 `i `uc ]
-"27
-[; ;main.c: 27:     TRISA = 0b00101111;
-[e = _TRISA -> -> 47 `i `uc ]
-"28
-[; ;main.c: 28:     TRISB = 0b00000000;
-[e = _TRISB -> -> 0 `i `uc ]
-"29
-[; ;main.c: 29:     OPTION_REG = 0b11011111;
-[e = _OPTION_REG -> -> 223 `i `uc ]
-"30
-[; ;main.c: 30:     InitI2C();
-[e ( _InitI2C ..  ]
-"32
-[; ;main.c: 32:     if(isRTCRunning()) {
-[e $ ! ( _isRTCRunning ..  56  ]
-{
-"33
-[; ;main.c: 33:         startRTC();
-[e ( _startRTC ..  ]
-"34
-[; ;main.c: 34:     } else {
-}
-[e $U 57  ]
-[e :U 56 ]
-{
-"35
-[; ;main.c: 35:         if(checkRTCType()) {
-[e $ ! ( _checkRTCType ..  58  ]
-{
-"36
-[; ;main.c: 36:             startRTC();
-[e ( _startRTC ..  ]
-"37
-[; ;main.c: 37:         }
-}
-[e :U 58 ]
-"38
-[; ;main.c: 38:     }
-}
-[e :U 57 ]
-"48
-[; ;main.c: 48:     return;
-[e $UE 55  ]
-"49
-[; ;main.c: 49: }
+"23
+[; ;tubes.c: 23: }
 [e :UE 55 ]
+}
+"26
+[; ;tubes.c: 26: void display(void) {
+[v _display `(v ~T0 @X0 1 ef ]
+{
+[e :U _display ]
+[f ]
+"27
+[; ;tubes.c: 27:     (PORTB_SHADOW |= (1<<0x3));
+[e =| _PORTB_SHADOW -> << -> 1 `i -> 3 `i `uc ]
+"28
+[; ;tubes.c: 28:     (PORTB_SHADOW |= (1<<0x1));
+[e =| _PORTB_SHADOW -> << -> 1 `i -> 1 `i `uc ]
+"29
+[; ;tubes.c: 29:     PORTB = PORTB_SHADOW;
+[e = _PORTB _PORTB_SHADOW ]
+"30
+[; ;tubes.c: 30: }
+[e :UE 56 ]
+}
+"32
+[; ;tubes.c: 32: void flashBrightness(void) {
+[v _flashBrightness `(v ~T0 @X0 1 ef ]
+{
+[e :U _flashBrightness ]
+[f ]
+"34
+[; ;tubes.c: 34: }
+[e :UE 57 ]
+}
+"37
+[; ;tubes.c: 37: void blankTubes(void) {
+[v _blankTubes `(v ~T0 @X0 1 ef ]
+{
+[e :U _blankTubes ]
+[f ]
+"38
+[; ;tubes.c: 38:     unsigned char *ptr;
+[v _ptr `*uc ~T0 @X0 1 a ]
+"39
+[; ;tubes.c: 39:     ptr = &T0;
+[e = _ptr &U _T0 ]
+"41
+[; ;tubes.c: 41:     for(unsigned char i = 0; i < 8; i++) {
+{
+[v _i `uc ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `uc ]
+[e $ < -> _i `i -> 8 `i 59  ]
+[e $U 60  ]
+[e :U 59 ]
+{
+"42
+[; ;tubes.c: 42:         *ptr = 10;
+[e = *U _ptr -> -> 10 `i `uc ]
+"43
+[; ;tubes.c: 43:         ptr++;
+[e ++ _ptr * -> -> 1 `i `x -> -> # *U _ptr `i `x ]
+"44
+[; ;tubes.c: 44:     }
+}
+[e ++ _i -> -> 1 `i `uc ]
+[e $ < -> _i `i -> 8 `i 59  ]
+[e :U 60 ]
+}
+"45
+[; ;tubes.c: 45: }
+[e :UE 58 ]
+}
+"48
+[; ;tubes.c: 48: void displayError666(void) {
+[v _displayError666 `(v ~T0 @X0 1 ef ]
+{
+[e :U _displayError666 ]
+[f ]
+"49
+[; ;tubes.c: 49:     blankTubes();
+[e ( _blankTubes ..  ]
+"50
+[; ;tubes.c: 50:     T0 = T1 = T2 = 6;
+[e = _T0 = _T1 = _T2 -> -> 6 `i `uc ]
+"51
+[; ;tubes.c: 51:     leftDP = rightDP = 0x00;
+[e = _leftDP = _rightDP -> -> 0 `i `uc ]
+"52
+[; ;tubes.c: 52:     loadDisplay();
+[e ( _loadDisplay ..  ]
+"53
+[; ;tubes.c: 53:     display();
+[e ( _display ..  ]
+"55
+[; ;tubes.c: 55:     while(1){
+[e :U 64 ]
+{
+"58
+[; ;tubes.c: 58:     }
+}
+[e :U 63 ]
+[e $U 64  ]
+[e :U 65 ]
+"59
+[; ;tubes.c: 59: }
+[e :UE 62 ]
+}
+"62
+[; ;tubes.c: 62: void send1ToDrivers(void) {
+[v _send1ToDrivers `(v ~T0 @X0 1 ef ]
+{
+[e :U _send1ToDrivers ]
+[f ]
+"63
+[; ;tubes.c: 63:     (PORTB_SHADOW |= (1<<0x4));
+[e =| _PORTB_SHADOW -> << -> 1 `i -> 4 `i `uc ]
+"64
+[; ;tubes.c: 64:     (PORTB_SHADOW |= (1<<0x2));
+[e =| _PORTB_SHADOW -> << -> 1 `i -> 2 `i `uc ]
+"65
+[; ;tubes.c: 65:     PORTB = PORTB_SHADOW;
+[e = _PORTB _PORTB_SHADOW ]
+"66
+[; ;tubes.c: 66:     (PORTB_SHADOW &=(0<<0x2));
+[e =& _PORTB_SHADOW -> << -> 0 `i -> 2 `i `uc ]
+"67
+[; ;tubes.c: 67:     PORTB = PORTB_SHADOW;
+[e = _PORTB _PORTB_SHADOW ]
+"68
+[; ;tubes.c: 68: }
+[e :UE 66 ]
+}
+"71
+[; ;tubes.c: 71: void send0ToDrivers(void) {
+[v _send0ToDrivers `(v ~T0 @X0 1 ef ]
+{
+[e :U _send0ToDrivers ]
+[f ]
+"72
+[; ;tubes.c: 72:     (PORTB_SHADOW &=(0<<0x4));
+[e =& _PORTB_SHADOW -> << -> 0 `i -> 4 `i `uc ]
+"73
+[; ;tubes.c: 73:     (PORTB_SHADOW |= (1<<0x2));
+[e =| _PORTB_SHADOW -> << -> 1 `i -> 2 `i `uc ]
+"74
+[; ;tubes.c: 74:     PORTB = PORTB_SHADOW;
+[e = _PORTB _PORTB_SHADOW ]
+"75
+[; ;tubes.c: 75:     (PORTB_SHADOW &=(0<<0x2));
+[e =& _PORTB_SHADOW -> << -> 0 `i -> 2 `i `uc ]
+"76
+[; ;tubes.c: 76:     PORTB = PORTB_SHADOW;
+[e = _PORTB _PORTB_SHADOW ]
+"77
+[; ;tubes.c: 77: }
+[e :UE 67 ]
 }

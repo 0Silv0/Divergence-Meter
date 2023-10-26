@@ -19,14 +19,14 @@
 //DAT           Data line to serial chips on RB4
 //NLE           NOT Latch Enable to serial chips on RB5
 
+unsigned char PORTA_SHADOW = 0b00000000; // Bit mask for PortA
+
 void main(void) {
     // Initializations
     CMCON = 0b111; //  Disables comparators and enables digital I/O
     TRISA = 0b00101111; // Set I/O pins in PORTA
     TRISB = 0b00000000; // Set all pins to output in PORTB
     OPTION_REG = 0b11011111; // Set TMR0 to clock of the internal clock, no prescaler
-    STATUSbits.RP0 = 1; // Goes to...
-    STATUSbits.RP1 = 0; // Bank 1
     InitI2C(); 
     // Checks to see if clock is running
     if(isRTCRunning()) { // Clock is DS1307 and is currently stopped

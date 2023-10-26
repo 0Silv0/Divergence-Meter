@@ -1,39 +1,30 @@
 ### HEXMate logfile and output summary ###
 
 ### Command-line arguments ###
- C:\Users\Silv\AppData\Local\Temp\xcAs4vc.\driver_tmp_3.o
+ C:\Users\Silv\AppData\Local\Temp\xcAs7f0.\driver_tmp_3.o
  -Odist/default/debug\DivergenceMeter.X.debug.hex
  -logfile=dist/default/debug\DivergenceMeter.X.debug.hxl
  -addressing=2
 
 ### Memory Usage ###
  Input file ranges:
-  0h - 1h		(C:\Users\Silv\AppData\Local\Temp\xcAs4vc.\driver_tmp_3.o)
-  CFEh - FFFh		(C:\Users\Silv\AppData\Local\Temp\xcAs4vc.\driver_tmp_3.o)
-  400Eh - 400Fh		(C:\Users\Silv\AppData\Local\Temp\xcAs4vc.\driver_tmp_3.o)
+  0h - 1h		(C:\Users\Silv\AppData\Local\Temp\xcAs7f0.\driver_tmp_3.o)
+  D82h - FFFh		(C:\Users\Silv\AppData\Local\Temp\xcAs7f0.\driver_tmp_3.o)
+  400Eh - 400Fh		(C:\Users\Silv\AppData\Local\Temp\xcAs7f0.\driver_tmp_3.o)
  Unused ranges:
-  2h - CFDh
+  2h - D81h
   1000h - 400Dh
 
 ### Hex Memory Map ###
  Legend:
   -- = Unused memory
-  H1 = Input file             (C:\Users\Silv\AppData\Local\Temp\xcAs4vc.\driver_tmp_3.o)
+  H1 = Input file             (C:\Users\Silv\AppData\Local\Temp\xcAs7f0.\driver_tmp_3.o)
 ----------------------------------------------------------
          | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
 ----------------------------------------------------------
 00000000 | H1 H1 -- -- -- -- -- -- -- -- -- -- -- -- -- --
 ----------------------------------------------------------
-00000CF0 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- H1 H1
-00000D00 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
-00000D10 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
-00000D20 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
-00000D30 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
-00000D40 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
-00000D50 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
-00000D60 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
-00000D70 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
-00000D80 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
+00000D80 | -- -- H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
 00000D90 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
 00000DA0 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
 00000DB0 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1

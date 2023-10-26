@@ -151,293 +151,293 @@ Version 4.0 HI-TECH Software Intermediate Code
 [p x CPD  =  OFF         ]
 "14
 [p x CP  =  OFF          ]
-"3 RTC.c
-[; ;RTC.c: 3: void reqReadRTC(unsigned char address) {
+"4 RTC.c
+[; ;RTC.c: 4: void reqReadRTC(unsigned char address) {
 [v _reqReadRTC `(v ~T0 @X0 1 ef1`uc ]
 {
 [e :U _reqReadRTC ]
 [v _address `uc ~T0 @X0 1 r1 ]
 [f ]
-"4
-[; ;RTC.c: 4:     I2C_Start();
-[e ( _I2C_Start ..  ]
 "5
-[; ;RTC.c: 5:     I2C_WriteByte(0b11010000);
-[e ( _I2C_WriteByte (1 -> -> 208 `i `uc ]
+[; ;RTC.c: 5:     I2C_Start();
+[e ( _I2C_Start ..  ]
 "6
-[; ;RTC.c: 6:     I2C_WriteByte(address);
-[e ( _I2C_WriteByte (1 _address ]
+[; ;RTC.c: 6:     I2C_WriteByte(0b11010000);
+[e ( _I2C_WriteByte (1 -> -> 208 `i `uc ]
 "7
-[; ;RTC.c: 7:     I2C_ReStart();
-[e ( _I2C_ReStart ..  ]
+[; ;RTC.c: 7:     I2C_WriteByte(address);
+[e ( _I2C_WriteByte (1 _address ]
 "8
-[; ;RTC.c: 8:     I2C_WriteByte(0b11010001);
-[e ( _I2C_WriteByte (1 -> -> 209 `i `uc ]
+[; ;RTC.c: 8:     I2C_ReStart();
+[e ( _I2C_ReStart ..  ]
 "9
-[; ;RTC.c: 9: }
+[; ;RTC.c: 9:     I2C_WriteByte(0b11010001);
+[e ( _I2C_WriteByte (1 -> -> 209 `i `uc ]
+"11
+[; ;RTC.c: 11: }
 [e :UE 55 ]
 }
-"11
-[; ;RTC.c: 11: unsigned char readDataRTC(void) {
+"14
+[; ;RTC.c: 14: unsigned char readDataRTC(void) {
 [v _readDataRTC `(uc ~T0 @X0 1 ef ]
 {
 [e :U _readDataRTC ]
 [f ]
-"12
-[; ;RTC.c: 12:     unsigned char data;
-[v _data `uc ~T0 @X0 1 a ]
-"13
-[; ;RTC.c: 13:     data = I2C_ReadByte();
-[e = _data ( _I2C_ReadByte ..  ]
-"14
-[; ;RTC.c: 14:     I2C_SendACK();
-[e ( _I2C_SendACK ..  ]
 "15
-[; ;RTC.c: 15:     return data;
+[; ;RTC.c: 15:     unsigned char data;
+[v _data `uc ~T0 @X0 1 a ]
+"16
+[; ;RTC.c: 16:     data = I2C_ReadByte();
+[e = _data ( _I2C_ReadByte ..  ]
+"17
+[; ;RTC.c: 17:     I2C_SendACK();
+[e ( _I2C_SendACK ..  ]
+"18
+[; ;RTC.c: 18:     return data;
 [e ) _data ]
 [e $UE 56  ]
-"16
-[; ;RTC.c: 16: }
+"19
+[; ;RTC.c: 19: }
 [e :UE 56 ]
 }
-"18
-[; ;RTC.c: 18: void endReadRTC(void) {
+"22
+[; ;RTC.c: 22: void endReadRTC(void) {
 [v _endReadRTC `(v ~T0 @X0 1 ef ]
 {
 [e :U _endReadRTC ]
 [f ]
-"19
-[; ;RTC.c: 19:     I2C_SendNACK();
+"23
+[; ;RTC.c: 23:     I2C_SendNACK();
 [e ( _I2C_SendNACK ..  ]
-"20
-[; ;RTC.c: 20:     I2C_Stop();
+"24
+[; ;RTC.c: 24:     I2C_Stop();
 [e ( _I2C_Stop ..  ]
-"21
-[; ;RTC.c: 21: }
+"25
+[; ;RTC.c: 25: }
 [e :UE 57 ]
 }
-"23
-[; ;RTC.c: 23: unsigned char readByteRTC(unsigned char address) {
+"28
+[; ;RTC.c: 28: unsigned char readByteRTC(unsigned char address) {
 [v _readByteRTC `(uc ~T0 @X0 1 ef1`uc ]
 {
 [e :U _readByteRTC ]
 [v _address `uc ~T0 @X0 1 r1 ]
 [f ]
-"24
-[; ;RTC.c: 24:     unsigned char data;
+"29
+[; ;RTC.c: 29:     unsigned char data;
 [v _data `uc ~T0 @X0 1 a ]
-"25
-[; ;RTC.c: 25:     reqReadRTC(address);
+"30
+[; ;RTC.c: 30:     reqReadRTC(address);
 [e ( _reqReadRTC (1 _address ]
-"26
-[; ;RTC.c: 26:     data = I2C_ReadByte();
+"31
+[; ;RTC.c: 31:     data = I2C_ReadByte();
 [e = _data ( _I2C_ReadByte ..  ]
-"27
-[; ;RTC.c: 27:     endReadRTC();
+"32
+[; ;RTC.c: 32:     endReadRTC();
 [e ( _endReadRTC ..  ]
-"28
-[; ;RTC.c: 28:     return data;
+"33
+[; ;RTC.c: 33:     return data;
 [e ) _data ]
 [e $UE 58  ]
-"29
-[; ;RTC.c: 29: }
+"34
+[; ;RTC.c: 34: }
 [e :UE 58 ]
 }
-"31
-[; ;RTC.c: 31: void reqWriteRTC(unsigned char address) {
+"37
+[; ;RTC.c: 37: void reqWriteRTC(unsigned char address) {
 [v _reqWriteRTC `(v ~T0 @X0 1 ef1`uc ]
 {
 [e :U _reqWriteRTC ]
 [v _address `uc ~T0 @X0 1 r1 ]
 [f ]
-"32
-[; ;RTC.c: 32:     I2C_Start();
+"38
+[; ;RTC.c: 38:     I2C_Start();
 [e ( _I2C_Start ..  ]
-"33
-[; ;RTC.c: 33:     I2C_WriteByte(0b11010000);
+"39
+[; ;RTC.c: 39:     I2C_WriteByte(0b11010000);
 [e ( _I2C_WriteByte (1 -> -> 208 `i `uc ]
-"34
-[; ;RTC.c: 34:     I2C_WriteByte(address);
+"40
+[; ;RTC.c: 40:     I2C_WriteByte(address);
 [e ( _I2C_WriteByte (1 _address ]
-"35
-[; ;RTC.c: 35: }
+"41
+[; ;RTC.c: 41: }
 [e :UE 59 ]
 }
-"37
-[; ;RTC.c: 37: void writeDataRTC(unsigned char data) {
+"44
+[; ;RTC.c: 44: void writeDataRTC(unsigned char data) {
 [v _writeDataRTC `(v ~T0 @X0 1 ef1`uc ]
 {
 [e :U _writeDataRTC ]
 [v _data `uc ~T0 @X0 1 r1 ]
 [f ]
-"38
-[; ;RTC.c: 38:     I2C_WriteByte(data);
+"45
+[; ;RTC.c: 45:     I2C_WriteByte(data);
 [e ( _I2C_WriteByte (1 _data ]
-"39
-[; ;RTC.c: 39: }
+"46
+[; ;RTC.c: 46: }
 [e :UE 60 ]
 }
-"41
-[; ;RTC.c: 41: void endWriteRTC(void) {
+"49
+[; ;RTC.c: 49: void endWriteRTC(void) {
 [v _endWriteRTC `(v ~T0 @X0 1 ef ]
 {
 [e :U _endWriteRTC ]
 [f ]
-"42
-[; ;RTC.c: 42:     I2C_Stop();
+"50
+[; ;RTC.c: 50:     I2C_Stop();
 [e ( _I2C_Stop ..  ]
-"43
-[; ;RTC.c: 43: }
+"51
+[; ;RTC.c: 51: }
 [e :UE 61 ]
 }
-"45
-[; ;RTC.c: 45: void writeByteRTC(unsigned char address, unsigned char data) {
+"54
+[; ;RTC.c: 54: void writeByteRTC(unsigned char address, unsigned char data) {
 [v _writeByteRTC `(v ~T0 @X0 1 ef2`uc`uc ]
 {
 [e :U _writeByteRTC ]
 [v _address `uc ~T0 @X0 1 r1 ]
 [v _data `uc ~T0 @X0 1 r2 ]
 [f ]
-"46
-[; ;RTC.c: 46:     reqWriteRTC(address);
+"55
+[; ;RTC.c: 55:     reqWriteRTC(address);
 [e ( _reqWriteRTC (1 _address ]
-"47
-[; ;RTC.c: 47:     writeDataRTC(data);
+"56
+[; ;RTC.c: 56:     writeDataRTC(data);
 [e ( _writeDataRTC (1 _data ]
-"48
-[; ;RTC.c: 48:     endWriteRTC();
+"57
+[; ;RTC.c: 57:     endWriteRTC();
 [e ( _endWriteRTC ..  ]
-"49
-[; ;RTC.c: 49: }
+"58
+[; ;RTC.c: 58: }
 [e :UE 62 ]
 }
-"51
-[; ;RTC.c: 51: __bit isRTCRunning(void) {
+"61
+[; ;RTC.c: 61: __bit isRTCRunning(void) {
 [v _isRTCRunning `(b ~T0 @X0 1 ef ]
 {
 [e :U _isRTCRunning ]
 [f ]
-"52
-[; ;RTC.c: 52:     unsigned char data;
+"62
+[; ;RTC.c: 62:     unsigned char data;
 [v _data `uc ~T0 @X0 1 a ]
-"53
-[; ;RTC.c: 53:     reqReadRTC(0x00);
+"63
+[; ;RTC.c: 63:     reqReadRTC(0x00);
 [e ( _reqReadRTC (1 -> -> 0 `i `uc ]
-"54
-[; ;RTC.c: 54:     data = readDataRTC();
+"64
+[; ;RTC.c: 64:     data = readDataRTC();
 [e = _data ( _readDataRTC ..  ]
-"55
-[; ;RTC.c: 55:     return (data |= (1<<7));
+"65
+[; ;RTC.c: 65:     return (data |= (1<<7));
 [e ) -> =| _data -> << -> 1 `i -> 7 `i `uc `b ]
 [e $UE 63  ]
-"56
-[; ;RTC.c: 56: }
+"66
+[; ;RTC.c: 66: }
 [e :UE 63 ]
 }
-"57
-[; ;RTC.c: 57: void startRTC(void) {
+"69
+[; ;RTC.c: 69: void startRTC(void) {
 [v _startRTC `(v ~T0 @X0 1 ef ]
 {
 [e :U _startRTC ]
 [f ]
-"58
-[; ;RTC.c: 58:     reqWriteRTC(0x00);
-[e ( _reqWriteRTC (1 -> -> 0 `i `uc ]
-"59
-[; ;RTC.c: 59:     writeDataRTC(0x00);
-[e ( _writeDataRTC (1 -> -> 0 `i `uc ]
-"61
-[; ;RTC.c: 61:     writeDataRTC(0x30);
-[e ( _writeDataRTC (1 -> -> 48 `i `uc ]
-"62
-[; ;RTC.c: 62:     writeDataRTC(0x12);
-[e ( _writeDataRTC (1 -> -> 18 `i `uc ]
-"63
-[; ;RTC.c: 63:     writeDataRTC(0x28);
-[e ( _writeDataRTC (1 -> -> 40 `i `uc ]
-"64
-[; ;RTC.c: 64:     writeDataRTC(0x7);
-[e ( _writeDataRTC (1 -> -> 7 `i `uc ]
-"65
-[; ;RTC.c: 65:     writeDataRTC(0x10);
-[e ( _writeDataRTC (1 -> -> 16 `i `uc ]
-"66
-[; ;RTC.c: 66:     endWriteRTC();
-[e ( _endWriteRTC ..  ]
-"68
-[; ;RTC.c: 68:     reqWriteRTC(0x14);
-[e ( _reqWriteRTC (1 -> -> 20 `i `uc ]
-"69
-[; ;RTC.c: 69:     writeDataRTC(0x00);
-[e ( _writeDataRTC (1 -> -> 0 `i `uc ]
 "70
-[; ;RTC.c: 70:     writeDataRTC(0x00);
-[e ( _writeDataRTC (1 -> -> 0 `i `uc ]
+[; ;RTC.c: 70:     reqWriteRTC(0x00);
+[e ( _reqWriteRTC (1 -> -> 0 `i `uc ]
 "71
-[; ;RTC.c: 71:     endWriteRTC();
+[; ;RTC.c: 71:     writeDataRTC(0x00);
+[e ( _writeDataRTC (1 -> -> 0 `i `uc ]
+"73
+[; ;RTC.c: 73:     writeDataRTC(0x30);
+[e ( _writeDataRTC (1 -> -> 48 `i `uc ]
+"74
+[; ;RTC.c: 74:     writeDataRTC(0x12);
+[e ( _writeDataRTC (1 -> -> 18 `i `uc ]
+"75
+[; ;RTC.c: 75:     writeDataRTC(0x28);
+[e ( _writeDataRTC (1 -> -> 40 `i `uc ]
+"76
+[; ;RTC.c: 76:     writeDataRTC(0x7);
+[e ( _writeDataRTC (1 -> -> 7 `i `uc ]
+"77
+[; ;RTC.c: 77:     writeDataRTC(0x10);
+[e ( _writeDataRTC (1 -> -> 16 `i `uc ]
+"78
+[; ;RTC.c: 78:     endWriteRTC();
 [e ( _endWriteRTC ..  ]
-"72
-[; ;RTC.c: 72: }
+"80
+[; ;RTC.c: 80:     reqWriteRTC(0x14);
+[e ( _reqWriteRTC (1 -> -> 20 `i `uc ]
+"81
+[; ;RTC.c: 81:     writeDataRTC(0x00);
+[e ( _writeDataRTC (1 -> -> 0 `i `uc ]
+"82
+[; ;RTC.c: 82:     writeDataRTC(0x00);
+[e ( _writeDataRTC (1 -> -> 0 `i `uc ]
+"83
+[; ;RTC.c: 83:     endWriteRTC();
+[e ( _endWriteRTC ..  ]
+"84
+[; ;RTC.c: 84: }
 [e :UE 64 ]
 }
-"75
-[; ;RTC.c: 75: __bit checkRTCType(void) {
+"87
+[; ;RTC.c: 87: __bit checkRTCType(void) {
 [v _checkRTCType `(b ~T0 @X0 1 ef ]
 {
 [e :U _checkRTCType ]
 [f ]
-"76
-[; ;RTC.c: 76:     unsigned char data;
+"88
+[; ;RTC.c: 88:     unsigned char data;
 [v _data `uc ~T0 @X0 1 a ]
-"77
-[; ;RTC.c: 77:     data = readByteRTC(0x0F);
+"89
+[; ;RTC.c: 89:     data = readByteRTC(0x0F);
 [e = _data ( _readByteRTC (1 -> -> 15 `i `uc ]
-"78
-[; ;RTC.c: 78:     if(((data) & 1<<(7))) {
+"90
+[; ;RTC.c: 90:     if(((data) & 1<<(7))) {
 [e $ ! != & -> _data `i << -> 1 `i -> 7 `i -> 0 `i 66  ]
 {
-"81
-[; ;RTC.c: 81:         (data &=(0<<0));
+"93
+[; ;RTC.c: 93:         (data &=(0<<0));
 [e =& _data -> << -> 0 `i -> 0 `i `uc ]
-"82
-[; ;RTC.c: 82:         writeByteRTC(0x0F,data);
+"94
+[; ;RTC.c: 94:         writeByteRTC(0x0F,data);
 [e ( _writeByteRTC (2 , -> -> 15 `i `uc _data ]
-"83
-[; ;RTC.c: 83:         (data |= (1<<0));
+"95
+[; ;RTC.c: 95:         (data |= (1<<0));
 [e =| _data -> << -> 1 `i -> 0 `i `uc ]
-"84
-[; ;RTC.c: 84:         writeByteRTC(0x0F,data);
+"96
+[; ;RTC.c: 96:         writeByteRTC(0x0F,data);
 [e ( _writeByteRTC (2 , -> -> 15 `i `uc _data ]
-"85
-[; ;RTC.c: 85:         _delay((unsigned long)((5)*(4000000/4000000.0)));
+"97
+[; ;RTC.c: 97:         _delay((unsigned long)((5)*(4000000/4000000.0)));
 [e ( __delay (1 -> * -> -> 5 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
-"86
-[; ;RTC.c: 86:         data = readByteRTC(0x0F);
+"98
+[; ;RTC.c: 98:         data = readByteRTC(0x0F);
 [e = _data ( _readByteRTC (1 -> -> 15 `i `uc ]
-"87
-[; ;RTC.c: 87:         if(!((data) & 1<<(0))) {
+"99
+[; ;RTC.c: 99:         if(!((data) & 1<<(0))) {
 [e $ ! ! != & -> _data `i << -> 1 `i -> 0 `i -> 0 `i 67  ]
 {
-"88
-[; ;RTC.c: 88:             writeByteRTC(0x0F, 0x00);
+"100
+[; ;RTC.c: 100:             writeByteRTC(0x0F, 0x00);
 [e ( _writeByteRTC (2 , -> -> 15 `i `uc -> -> 0 `i `uc ]
-"89
-[; ;RTC.c: 89:             return 1;
+"101
+[; ;RTC.c: 101:             return 1;
 [e ) -> -> 1 `i `b ]
 [e $UE 65  ]
-"90
-[; ;RTC.c: 90:         }
+"102
+[; ;RTC.c: 102:         }
 }
 [e :U 67 ]
-"91
-[; ;RTC.c: 91:     }
+"103
+[; ;RTC.c: 103:     }
 }
 [e :U 66 ]
-"92
-[; ;RTC.c: 92:     return 0;
+"104
+[; ;RTC.c: 104:     return 0;
 [e ) -> -> 0 `i `b ]
 [e $UE 65  ]
-"93
-[; ;RTC.c: 93: }
+"105
+[; ;RTC.c: 105: }
 [e :UE 65 ]
 }

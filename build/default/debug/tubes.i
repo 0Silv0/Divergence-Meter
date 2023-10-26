@@ -1,4 +1,4 @@
-# 1 "RTC.c"
+# 1 "tubes.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,7 +6,7 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.45\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "RTC.c" 2
+# 1 "tubes.c" 2
 # 1 "./headers.h" 1
 
 
@@ -1240,109 +1240,81 @@ __bit checkRTCType(void);
 
 void flashBrightness(void);
 # 11 "./headers.h" 2
-# 1 "RTC.c" 2
+# 1 "tubes.c" 2
 
 
 
-void reqReadRTC(unsigned char address) {
-    I2C_Start();
-    I2C_WriteByte(0b11010000);
-    I2C_WriteByte(address);
-    I2C_ReStart();
-    I2C_WriteByte(0b11010001);
+
+
+
+unsigned char leftDP __attribute__((address(0x20)));
+unsigned char rightDP __attribute__((address(0x21)));
+unsigned char T0 __attribute__((address(0x22)));
+unsigned char T1 __attribute__((address(0x23)));
+unsigned char T2 __attribute__((address(0x24)));
+unsigned char T3 __attribute__((address(0x25)));
+unsigned char T4 __attribute__((address(0x26)));
+unsigned char T5 __attribute__((address(0x27)));
+unsigned char T6 __attribute__((address(0x28)));
+unsigned char T7 __attribute__((address(0x29)));
+
+unsigned char PORTB_SHADOW = 0b00000000;
+
+
+void loadDisplay(void) {
 
 }
 
 
-unsigned char readDataRTC(void) {
-    unsigned char data;
-    data = I2C_ReadByte();
-    I2C_SendACK();
-    return data;
+void display(void) {
+    (PORTB_SHADOW |= (1<<0x3));
+    (PORTB_SHADOW |= (1<<0x1));
+    PORTB = PORTB_SHADOW;
+}
+
+void flashBrightness(void) {
+
 }
 
 
-void endReadRTC(void) {
-    I2C_SendNACK();
-    I2C_Stop();
-}
+void blankTubes(void) {
+    unsigned char *ptr;
+    ptr = &T0;
 
-
-unsigned char readByteRTC(unsigned char address) {
-    unsigned char data;
-    reqReadRTC(address);
-    data = I2C_ReadByte();
-    endReadRTC();
-    return data;
-}
-
-
-void reqWriteRTC(unsigned char address) {
-    I2C_Start();
-    I2C_WriteByte(0b11010000);
-    I2C_WriteByte(address);
-}
-
-
-void writeDataRTC(unsigned char data) {
-    I2C_WriteByte(data);
-}
-
-
-void endWriteRTC(void) {
-    I2C_Stop();
-}
-
-
-void writeByteRTC(unsigned char address, unsigned char data) {
-    reqWriteRTC(address);
-    writeDataRTC(data);
-    endWriteRTC();
-}
-
-
-__bit isRTCRunning(void) {
-    unsigned char data;
-    reqReadRTC(0x00);
-    data = readDataRTC();
-    return (data |= (1<<7));
-}
-
-
-void startRTC(void) {
-    reqWriteRTC(0x00);
-    writeDataRTC(0x00);
-
-    writeDataRTC(0x30);
-    writeDataRTC(0x12);
-    writeDataRTC(0x28);
-    writeDataRTC(0x7);
-    writeDataRTC(0x10);
-    endWriteRTC();
-
-    reqWriteRTC(0x14);
-    writeDataRTC(0x00);
-    writeDataRTC(0x00);
-    endWriteRTC();
-}
-
-
-__bit checkRTCType(void) {
-    unsigned char data;
-    data = readByteRTC(0x0F);
-    if(((data) & 1<<(7))) {
-
-
-        (data &=(0<<0));
-        writeByteRTC(0x0F,data);
-        (data |= (1<<0));
-        writeByteRTC(0x0F,data);
-        _delay((unsigned long)((5)*(4000000/4000000.0)));
-        data = readByteRTC(0x0F);
-        if(!((data) & 1<<(0))) {
-            writeByteRTC(0x0F, 0x00);
-            return 1;
-        }
+    for(unsigned char i = 0; i < 8; i++) {
+        *ptr = 10;
+        ptr++;
     }
-    return 0;
+}
+
+
+void displayError666(void) {
+    blankTubes();
+    T0 = T1 = T2 = 6;
+    leftDP = rightDP = 0x00;
+    loadDisplay();
+    display();
+
+    while(1){
+
+
+    }
+}
+
+
+void send1ToDrivers(void) {
+    (PORTB_SHADOW |= (1<<0x4));
+    (PORTB_SHADOW |= (1<<0x2));
+    PORTB = PORTB_SHADOW;
+    (PORTB_SHADOW &=(0<<0x2));
+    PORTB = PORTB_SHADOW;
+}
+
+
+void send0ToDrivers(void) {
+    (PORTB_SHADOW &=(0<<0x4));
+    (PORTB_SHADOW |= (1<<0x2));
+    PORTB = PORTB_SHADOW;
+    (PORTB_SHADOW &=(0<<0x2));
+    PORTB = PORTB_SHADOW;
 }

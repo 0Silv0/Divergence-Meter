@@ -1232,17 +1232,24 @@ __bit isRTCRunning(void);
 void startRTC(void);
 __bit checkRTCType(void);
 # 10 "./headers.h" 2
+
+# 1 "./tubes.h" 1
+
+
+
+
+void flashBrightness(void);
+# 11 "./headers.h" 2
 # 1 "main.c" 2
-# 19 "main.c"
+# 22 "main.c"
+unsigned char PORTA_SHADOW = 0b00000000;
+
 void main(void) {
 
     CMCON = 0b111;
     TRISA = 0b00101111;
     TRISB = 0b00000000;
     OPTION_REG = 0b11011111;
-    STATUSbits.RP0 = 1;
-    STATUSbits.RP1 = 0;
-
     InitI2C();
 
     if(isRTCRunning()) {
@@ -1252,6 +1259,6 @@ void main(void) {
             startRTC();
         }
     }
-# 45 "main.c"
+# 48 "main.c"
     return;
 }

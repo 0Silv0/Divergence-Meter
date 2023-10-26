@@ -1,5 +1,5 @@
-build/default/debug/RTC.p1:  \
-RTC.c  \
+build/default/debug/tubes.p1:  \
+tubes.c  \
 headers.h  \
 main.h  \
 IIC.h  \

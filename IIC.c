@@ -1,4 +1,3 @@
-
 #include "headers.h"
 
 // Sets initial values of SDA and SCL pins
@@ -65,19 +64,19 @@ __bit I2C_WriteByte(unsigned char Data) {
 
 // Reads 8 bits and returns it as a byte
 unsigned char I2C_ReadByte(void) {
-    unsigned char i, Dat = 0;
+    unsigned char i, Data = 0;
     for(i=0; i<8; i++) {
         SCL_IO = 0;
         SDA_IO = 1;
         __delay_us(HalfBitDelay);
         SCL_IO = 1;
         __delay_us(HalfBitDelay/2);
-        Dat = Dat << 1;
-        Dat = Dat|SDA;
+        Data = Data << 1;
+        Data = Data|SDA;
         //RxData = RxData|(SDA<<(7-i));
         __delay_us(HalfBitDelay/2);
     }
-    return Dat;
+    return Data;
 }
 
 //Send ACK to slave

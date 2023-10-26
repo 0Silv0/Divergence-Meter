@@ -152,292 +152,292 @@ Version 4.0 HI-TECH Software Intermediate Code
 [p x CPD  =  OFF         ]
 "14
 [p x CP  =  OFF          ]
-"5 IIC.c
-[; ;IIC.c: 5: void InitI2C(void) {
+"4 IIC.c
+[; ;IIC.c: 4: void InitI2C(void) {
 [v _InitI2C `(v ~T0 @X0 1 ef ]
 {
 [e :U _InitI2C ]
 [f ]
-"7
-[; ;IIC.c: 7:     PORTAbits.RA1 = 0;
+"6
+[; ;IIC.c: 6:     PORTAbits.RA1 = 0;
 [e = . . _PORTAbits 0 1 -> -> 0 `i `uc ]
-"8
-[; ;IIC.c: 8:     PORTAbits.RA0 = 0;
+"7
+[; ;IIC.c: 7:     PORTAbits.RA0 = 0;
 [e = . . _PORTAbits 0 0 -> -> 0 `i `uc ]
-"9
-[; ;IIC.c: 9: }
+"8
+[; ;IIC.c: 8: }
 [e :UE 55 ]
 }
-"12
-[; ;IIC.c: 12: void I2C_Start(void) {
+"11
+[; ;IIC.c: 11: void I2C_Start(void) {
 [v _I2C_Start `(v ~T0 @X0 1 ef ]
 {
 [e :U _I2C_Start ]
 [f ]
-"13
-[; ;IIC.c: 13:     TRISAbits.TRISA0 = 1;
+"12
+[; ;IIC.c: 12:     TRISAbits.TRISA0 = 1;
 [e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
-"14
-[; ;IIC.c: 14:     TRISAbits.TRISA1 = 1;
+"13
+[; ;IIC.c: 13:     TRISAbits.TRISA1 = 1;
 [e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
+"14
+[; ;IIC.c: 14:     _delay((unsigned long)((500/100)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / -> 500 `i -> 100 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "15
-[; ;IIC.c: 15:     _delay((unsigned long)((500/1)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / -> 500 `i -> 1 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
-"16
-[; ;IIC.c: 16:     TRISAbits.TRISA1 = 0;
+[; ;IIC.c: 15:     TRISAbits.TRISA1 = 0;
 [e = . . _TRISAbits 0 1 -> -> 0 `i `uc ]
+"16
+[; ;IIC.c: 16:     _delay((unsigned long)((500/100)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / -> 500 `i -> 100 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "17
-[; ;IIC.c: 17:     _delay((unsigned long)((500/1)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / -> 500 `i -> 1 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
-"18
-[; ;IIC.c: 18: }
+[; ;IIC.c: 17: }
 [e :UE 56 ]
 }
-"19
-[; ;IIC.c: 19: void I2C_ReStart(void) {
+"20
+[; ;IIC.c: 20: void I2C_ReStart(void) {
 [v _I2C_ReStart `(v ~T0 @X0 1 ef ]
 {
 [e :U _I2C_ReStart ]
 [f ]
-"20
-[; ;IIC.c: 20:     TRISAbits.TRISA0 = 0;
-[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "21
-[; ;IIC.c: 21:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 21:     TRISAbits.TRISA0 = 0;
+[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "22
-[; ;IIC.c: 22:     TRISAbits.TRISA1 = 1;
-[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
+[; ;IIC.c: 22:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "23
-[; ;IIC.c: 23:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 23:     TRISAbits.TRISA1 = 1;
+[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
 "24
-[; ;IIC.c: 24:     TRISAbits.TRISA0 = 1;
-[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
+[; ;IIC.c: 24:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "25
-[; ;IIC.c: 25:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 25:     TRISAbits.TRISA0 = 1;
+[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
 "26
-[; ;IIC.c: 26:     TRISAbits.TRISA1 = 0;
-[e = . . _TRISAbits 0 1 -> -> 0 `i `uc ]
+[; ;IIC.c: 26:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "27
-[; ;IIC.c: 27:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 27:     TRISAbits.TRISA1 = 0;
+[e = . . _TRISAbits 0 1 -> -> 0 `i `uc ]
 "28
-[; ;IIC.c: 28: }
+[; ;IIC.c: 28:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"29
+[; ;IIC.c: 29: }
 [e :UE 57 ]
 }
-"31
-[; ;IIC.c: 31: void I2C_Stop(void) {
+"32
+[; ;IIC.c: 32: void I2C_Stop(void) {
 [v _I2C_Stop `(v ~T0 @X0 1 ef ]
 {
 [e :U _I2C_Stop ]
 [f ]
-"32
-[; ;IIC.c: 32:     TRISAbits.TRISA0 = 0;
-[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "33
-[; ;IIC.c: 33:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 33:     TRISAbits.TRISA0 = 0;
+[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "34
-[; ;IIC.c: 34:     TRISAbits.TRISA1 = 0;
-[e = . . _TRISAbits 0 1 -> -> 0 `i `uc ]
+[; ;IIC.c: 34:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "35
-[; ;IIC.c: 35:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 35:     TRISAbits.TRISA1 = 0;
+[e = . . _TRISAbits 0 1 -> -> 0 `i `uc ]
 "36
-[; ;IIC.c: 36:     TRISAbits.TRISA0 = 1;
-[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
+[; ;IIC.c: 36:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "37
-[; ;IIC.c: 37:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 37:     TRISAbits.TRISA0 = 1;
+[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
 "38
-[; ;IIC.c: 38:     TRISAbits.TRISA1 = 1;
-[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
+[; ;IIC.c: 38:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "39
-[; ;IIC.c: 39:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 39:     TRISAbits.TRISA1 = 1;
+[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
 "40
-[; ;IIC.c: 40: }
+[; ;IIC.c: 40:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"41
+[; ;IIC.c: 41: }
 [e :UE 58 ]
 }
-"42
-[; ;IIC.c: 42: __bit I2C_WriteByte(unsigned char Data) {
+"43
+[; ;IIC.c: 43: __bit I2C_WriteByte(unsigned char Data) {
 [v _I2C_WriteByte `(b ~T0 @X0 1 ef1`uc ]
 {
 [e :U _I2C_WriteByte ]
 [v _Data `uc ~T0 @X0 1 r1 ]
 [f ]
-"43
-[; ;IIC.c: 43:     unsigned char i;
-[v _i `uc ~T0 @X0 1 a ]
 "44
-[; ;IIC.c: 44:     for(i = 0; i<8; i++) {
+[; ;IIC.c: 44:     unsigned char i;
+[v _i `uc ~T0 @X0 1 a ]
+"45
+[; ;IIC.c: 45:     for(i = 0; i<8; i++) {
 {
 [e = _i -> -> 0 `i `uc ]
 [e $ < -> _i `i -> 8 `i 60  ]
 [e $U 61  ]
 [e :U 60 ]
 {
-"45
-[; ;IIC.c: 45:         TRISAbits.TRISA0 = 0;
-[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "46
-[; ;IIC.c: 46:         _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 46:         TRISAbits.TRISA0 = 0;
+[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "47
-[; ;IIC.c: 47:         TRISAbits.TRISA1 = ((Data<<i)&0x80)?1:0;
-[e = . . _TRISAbits 0 1 -> ? != & << -> _Data `i -> _i `i -> 128 `i -> 0 `i : -> 1 `i -> 0 `i `uc ]
+[; ;IIC.c: 47:         _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "48
-[; ;IIC.c: 48:         _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 48:         TRISAbits.TRISA1 = ((Data<<i)&0x80)?1:0;
+[e = . . _TRISAbits 0 1 -> ? != & << -> _Data `i -> _i `i -> 128 `i -> 0 `i : -> 1 `i -> 0 `i `uc ]
 "49
-[; ;IIC.c: 49:         TRISAbits.TRISA0 = 1;
-[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
+[; ;IIC.c: 49:         _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "50
-[; ;IIC.c: 50:         _delay((unsigned long)((500/1)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / -> 500 `i -> 1 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 50:         TRISAbits.TRISA0 = 1;
+[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
 "51
-[; ;IIC.c: 51:     }
+[; ;IIC.c: 51:         _delay((unsigned long)((500/100)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / -> 500 `i -> 100 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"52
+[; ;IIC.c: 52:     }
 }
 [e ++ _i -> -> 1 `i `uc ]
 [e $ < -> _i `i -> 8 `i 60  ]
 [e :U 61 ]
 }
-"54
-[; ;IIC.c: 54:     TRISAbits.TRISA0 = 0;
-[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "55
-[; ;IIC.c: 55:     TRISAbits.TRISA1 = 1;
-[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
+[; ;IIC.c: 55:     TRISAbits.TRISA0 = 0;
+[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "56
-[; ;IIC.c: 56:     _delay((unsigned long)((500/1)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / -> 500 `i -> 1 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 56:     TRISAbits.TRISA1 = 1;
+[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
 "57
-[; ;IIC.c: 57:     TRISAbits.TRISA0 = 1;
-[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
+[; ;IIC.c: 57:     _delay((unsigned long)((500/100)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / -> 500 `i -> 100 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "58
-[; ;IIC.c: 58:     _delay((unsigned long)((500/1)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / -> 500 `i -> 1 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
-"61
-[; ;IIC.c: 61:     return PORTAbits.RA1;
+[; ;IIC.c: 58:     TRISAbits.TRISA0 = 1;
+[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
+"59
+[; ;IIC.c: 59:     _delay((unsigned long)((500/100)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / -> 500 `i -> 100 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"62
+[; ;IIC.c: 62:     return PORTAbits.RA1;
 [e ) -> . . _PORTAbits 0 1 `b ]
 [e $UE 59  ]
-"62
-[; ;IIC.c: 62: }
+"63
+[; ;IIC.c: 63: }
 [e :UE 59 ]
 }
-"64
-[; ;IIC.c: 64: unsigned char I2C_ReadByte(void) {
+"66
+[; ;IIC.c: 66: unsigned char I2C_ReadByte(void) {
 [v _I2C_ReadByte `(uc ~T0 @X0 1 ef ]
 {
 [e :U _I2C_ReadByte ]
 [f ]
-"65
-[; ;IIC.c: 65:     unsigned char i, Dat = 0;
+"67
+[; ;IIC.c: 67:     unsigned char i, Data = 0;
 [v _i `uc ~T0 @X0 1 a ]
-[v _Dat `uc ~T0 @X0 1 a ]
-[e = _Dat -> -> 0 `i `uc ]
-"66
-[; ;IIC.c: 66:     for(i=0; i<8; i++) {
+[v _Data `uc ~T0 @X0 1 a ]
+[e = _Data -> -> 0 `i `uc ]
+"68
+[; ;IIC.c: 68:     for(i=0; i<8; i++) {
 {
 [e = _i -> -> 0 `i `uc ]
 [e $ < -> _i `i -> 8 `i 64  ]
 [e $U 65  ]
 [e :U 64 ]
 {
-"67
-[; ;IIC.c: 67:         TRISAbits.TRISA0 = 0;
-[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
-"68
-[; ;IIC.c: 68:         TRISAbits.TRISA1 = 1;
-[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
 "69
-[; ;IIC.c: 69:         _delay((unsigned long)((500/1)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / -> 500 `i -> 1 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 69:         TRISAbits.TRISA0 = 0;
+[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "70
-[; ;IIC.c: 70:         TRISAbits.TRISA0 = 1;
-[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
+[; ;IIC.c: 70:         TRISAbits.TRISA1 = 1;
+[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
 "71
-[; ;IIC.c: 71:         _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 71:         _delay((unsigned long)((500/100)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / -> 500 `i -> 100 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "72
-[; ;IIC.c: 72:         Dat = Dat << 1;
-[e = _Dat -> << -> _Dat `i -> 1 `i `uc ]
+[; ;IIC.c: 72:         TRISAbits.TRISA0 = 1;
+[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
 "73
-[; ;IIC.c: 73:         Dat = Dat|PORTAbits.RA1;
-[e = _Dat -> | -> _Dat `i -> . . _PORTAbits 0 1 `i `uc ]
+[; ;IIC.c: 73:         _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"74
+[; ;IIC.c: 74:         Data = Data << 1;
+[e = _Data -> << -> _Data `i -> 1 `i `uc ]
 "75
-[; ;IIC.c: 75:         _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
-"76
-[; ;IIC.c: 76:     }
+[; ;IIC.c: 75:         Data = Data|PORTAbits.RA1;
+[e = _Data -> | -> _Data `i -> . . _PORTAbits 0 1 `i `uc ]
+"77
+[; ;IIC.c: 77:         _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"78
+[; ;IIC.c: 78:     }
 }
 [e ++ _i -> -> 1 `i `uc ]
 [e $ < -> _i `i -> 8 `i 64  ]
 [e :U 65 ]
 }
-"77
-[; ;IIC.c: 77:     return Dat;
-[e ) _Dat ]
+"79
+[; ;IIC.c: 79:     return Data;
+[e ) _Data ]
 [e $UE 63  ]
-"78
-[; ;IIC.c: 78: }
+"80
+[; ;IIC.c: 80: }
 [e :UE 63 ]
 }
-"81
-[; ;IIC.c: 81: void I2C_SendACK(void) {
+"83
+[; ;IIC.c: 83: void I2C_SendACK(void) {
 [v _I2C_SendACK `(v ~T0 @X0 1 ef ]
 {
 [e :U _I2C_SendACK ]
 [f ]
-"82
-[; ;IIC.c: 82:     TRISAbits.TRISA0 = 0;
-[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
-"83
-[; ;IIC.c: 83:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "84
-[; ;IIC.c: 84:     TRISAbits.TRISA1 = 0;
-[e = . . _TRISAbits 0 1 -> -> 0 `i `uc ]
+[; ;IIC.c: 84:     TRISAbits.TRISA0 = 0;
+[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "85
-[; ;IIC.c: 85:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 85:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "86
-[; ;IIC.c: 86:     TRISAbits.TRISA0 = 1;
-[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
+[; ;IIC.c: 86:     TRISAbits.TRISA1 = 0;
+[e = . . _TRISAbits 0 1 -> -> 0 `i `uc ]
 "87
-[; ;IIC.c: 87:     _delay((unsigned long)((500/1)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / -> 500 `i -> 1 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 87:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "88
-[; ;IIC.c: 88: }
+[; ;IIC.c: 88:     TRISAbits.TRISA0 = 1;
+[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
+"89
+[; ;IIC.c: 89:     _delay((unsigned long)((500/100)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / -> 500 `i -> 100 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"90
+[; ;IIC.c: 90: }
 [e :UE 67 ]
 }
-"91
-[; ;IIC.c: 91: void I2C_SendNACK(void) {
+"93
+[; ;IIC.c: 93: void I2C_SendNACK(void) {
 [v _I2C_SendNACK `(v ~T0 @X0 1 ef ]
 {
 [e :U _I2C_SendNACK ]
 [f ]
-"92
-[; ;IIC.c: 92:     TRISAbits.TRISA0 = 0;
-[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
-"93
-[; ;IIC.c: 93:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "94
-[; ;IIC.c: 94:     TRISAbits.TRISA1 = 1;
-[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
+[; ;IIC.c: 94:     TRISAbits.TRISA0 = 0;
+[e = . . _TRISAbits 0 0 -> -> 0 `i `uc ]
 "95
-[; ;IIC.c: 95:     _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / / -> 500 `i -> 1 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 95:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "96
-[; ;IIC.c: 96:     TRISAbits.TRISA0 = 1;
-[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
+[; ;IIC.c: 96:     TRISAbits.TRISA1 = 1;
+[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
 "97
-[; ;IIC.c: 97:     _delay((unsigned long)((500/1)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> / -> 500 `i -> 1 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;IIC.c: 97:     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "98
-[; ;IIC.c: 98: }
+[; ;IIC.c: 98:     TRISAbits.TRISA0 = 1;
+[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
+"99
+[; ;IIC.c: 99:     _delay((unsigned long)((500/100)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> / -> 500 `i -> 100 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"100
+[; ;IIC.c: 100: }
 [e :UE 68 ]
 }

@@ -7,7 +7,6 @@
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.45\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "IIC.c" 2
-
 # 1 "./headers.h" 1
 
 
@@ -1233,7 +1232,15 @@ __bit isRTCRunning(void);
 void startRTC(void);
 __bit checkRTCType(void);
 # 10 "./headers.h" 2
-# 2 "IIC.c" 2
+
+# 1 "./tubes.h" 1
+
+
+
+
+void flashBrightness(void);
+# 11 "./headers.h" 2
+# 1 "IIC.c" 2
 
 
 
@@ -1247,87 +1254,90 @@ void InitI2C(void) {
 void I2C_Start(void) {
     TRISAbits.TRISA0 = 1;
     TRISAbits.TRISA1 = 1;
-    _delay((unsigned long)((500/1)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100)*(4000000/4000000.0)));
     TRISAbits.TRISA1 = 0;
-    _delay((unsigned long)((500/1)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100)*(4000000/4000000.0)));
 }
+
+
 void I2C_ReStart(void) {
     TRISAbits.TRISA0 = 0;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     TRISAbits.TRISA1 = 1;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     TRISAbits.TRISA0 = 1;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     TRISAbits.TRISA1 = 0;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
 }
 
 
 void I2C_Stop(void) {
     TRISAbits.TRISA0 = 0;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     TRISAbits.TRISA1 = 0;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     TRISAbits.TRISA0 = 1;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     TRISAbits.TRISA1 = 1;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
 }
 
 __bit I2C_WriteByte(unsigned char Data) {
     unsigned char i;
     for(i = 0; i<8; i++) {
         TRISAbits.TRISA0 = 0;
-        _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+        _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
         TRISAbits.TRISA1 = ((Data<<i)&0x80)?1:0;
-        _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+        _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
         TRISAbits.TRISA0 = 1;
-        _delay((unsigned long)((500/1)*(4000000/4000000.0)));
+        _delay((unsigned long)((500/100)*(4000000/4000000.0)));
     }
 
 
     TRISAbits.TRISA0 = 0;
     TRISAbits.TRISA1 = 1;
-    _delay((unsigned long)((500/1)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100)*(4000000/4000000.0)));
     TRISAbits.TRISA0 = 1;
-    _delay((unsigned long)((500/1)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100)*(4000000/4000000.0)));
 
 
     return PORTAbits.RA1;
 }
 
+
 unsigned char I2C_ReadByte(void) {
-    unsigned char i, Dat = 0;
+    unsigned char i, Data = 0;
     for(i=0; i<8; i++) {
         TRISAbits.TRISA0 = 0;
         TRISAbits.TRISA1 = 1;
-        _delay((unsigned long)((500/1)*(4000000/4000000.0)));
+        _delay((unsigned long)((500/100)*(4000000/4000000.0)));
         TRISAbits.TRISA0 = 1;
-        _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
-        Dat = Dat << 1;
-        Dat = Dat|PORTAbits.RA1;
+        _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
+        Data = Data << 1;
+        Data = Data|PORTAbits.RA1;
 
-        _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+        _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     }
-    return Dat;
+    return Data;
 }
 
 
 void I2C_SendACK(void) {
     TRISAbits.TRISA0 = 0;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     TRISAbits.TRISA1 = 0;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     TRISAbits.TRISA0 = 1;
-    _delay((unsigned long)((500/1)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100)*(4000000/4000000.0)));
 }
 
 
 void I2C_SendNACK(void) {
     TRISAbits.TRISA0 = 0;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     TRISAbits.TRISA1 = 1;
-    _delay((unsigned long)((500/1/2)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     TRISAbits.TRISA0 = 1;
-    _delay((unsigned long)((500/1)*(4000000/4000000.0)));
+    _delay((unsigned long)((500/100)*(4000000/4000000.0)));
 }

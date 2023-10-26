@@ -11,7 +11,7 @@
 #define SDA_IO TRISAbits.TRISA1     // Data pin input/output
 
 // Define I2C speed
-#define I2C_SPEED 100               //kbps (maximum DS1307 supports)
+#define I2C_SPEED 100               //kbps (maximum DS1307 supports, and because we want to maximize THOUGHPUT)
 #define HalfBitDelay 500/I2C_SPEED  //usec
 
 // Function declarations
