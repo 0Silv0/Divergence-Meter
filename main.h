@@ -38,5 +38,22 @@
 #define BIT_CLEAR(data,bitNum) (data &=(0<<bitNum))   // Clears bit of byte at bitNum location
 #define BIT_TOGGLE(data,bitNum) (data ^= (1<<bitNum)) // Toggles bit of byte at bitNum location
 
+//Flag bits
+#define short1  0       // Short BTN1 press
+#define long1   1       // Long BTN1 press
+#define short2  2       // Short BTN2 press
+#define long2   3       // Long BTN2 press
+#define Done    4       // World line animation complete
+#define Slide   5       // Slide loading used in ___ (1=slide)
+#define AMPM    6       // Keeps track of AM/PM (1=PM)
+#define Clk12   7       // 12/24 hour preference (1=12 hour clock)
+
+// Global variables
+extern unsigned char flag;
+extern unsigned char PORTA_SHADOW; // Bit mask for PortA
+extern unsigned char PORTB_SHADOW; // Bit mask for PortB
+
+// Function declarations
+void Init(void);
 #endif	/* MAIN_H */
 

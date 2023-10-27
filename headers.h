@@ -2,6 +2,7 @@
 #define	HEADERS_H
 
 #include <xc.h>
+#include <stdbool.h>
 //#include <stdint.h> 
 
 // Project headers

@@ -1,0 +1,490 @@
+Microchip MPLAB XC8 Compiler V2.45
+
+Linker command line:
+
+-W-3 \
+  --edf=C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\dat\20231012211500_en.msgs \
+  -cn -h+dist/default/production\DivergenceMeter.X.production.sym \
+  --cmf=dist/default/production\DivergenceMeter.X.production.cmf -z \
+  -Q16F628A -oC:\Users\Silv\AppData\Local\Temp\xcAs2v4.\driver_tmp_3.o \
+  --defsym=__MPLAB_BUILD=1 --fixupoverflow=error \
+  -Mdist/default/production/DivergenceMeter.X.production.map \
+  --md=C:\Users\Silv\AppData\Local\Temp\xcAs2v4.\driver_tmp_0.dat -E1 \
+  -ver=XC8 Compiler --acfsm=1493 -ACODE=00h-07FFh -ASTRCODE=00h-07FFh \
+  -ASTRING=00h-0FFhx8 -ACONST=00h-0FFhx8 -AENTRY=00h-0FFhx8 \
+  -ACOMMON=070h-07Fh -ABANK0=020h-06Fh -ABANK1=0A0h-0EFh \
+  -ABANK2=0120h-014Fh -ARAM=020h-06Fh,0A0h-0EFh,0120h-014Fh \
+  -AABS1=020h-07Fh,0A0h-0EFh,0120h-014Fh -ASFR0=00h-01Fh -ASFR1=080h-09Fh \
+  -ASFR2=0100h-011Fh -ASFR3=0180h-01EFh -ACONFIG=02007h-02007h -DCONFIG=2 \
+  -AIDLOC=02000h-02003h -DIDLOC=2 -AEEDATA=00h-07Fh/02100h \
+  -peeprom_data=EEDATA -DEEDATA=2 -DCODE=2 -DSTRCODE=2 -DSTRING=2 -DCONST=2 \
+  -DENTRY=2 -preset_vec=00h,intentry,init,end_init -ppowerup=CODE \
+  -pcinit=CODE -pfunctab=ENTRY -k \
+  C:\Users\Silv\AppData\Local\Temp\xcAs2v4.\driver_tmp_12.o \
+  dist/default/production\DivergenceMeter.X.production.o 
+
+Object code version is 3.11
+
+Machine type is 16F628A
+
+
+
+                Name                               Link     Load   Length Selector   Space Scale
+C:\Users\Silv\AppData\Local\Temp\xcAs2v4.\driver_tmp_12.o
+                end_init                              0        0        1        0       0
+                config                             2007     2007        1        0       4
+dist/default/production\DivergenceMeter.X.production.o
+                cinit                               7F9      7F9        7      FF2       0
+                config                             2007     2007        1        0       4
+                text27                              622      622        5      C44       0
+                text26                              757      757       24      EAE       0
+                text25                              68B      68B        F      D16       0
+                text24                              6A9      6A9       11      D52       0
+                text23                              61B      61B        3      C36       0
+                text22                              6BA      6BA       11      D74       0
+                text21                              67D      67D        E      CFA       0
+                text20                              77B      77B       3D      EF6       0
+                text19                              65F      65F        A      CBE       0
+                text18                              64E      64E        8      C9C       0
+                text17                              619      619        2      C32       0
+                text16                              632      632        7      C64       0
+                text15                              61E      61E        4      C3C       0
+                text14                              639      639        7      C72       0
+                text13                              715      715       21      E2A       0
+                text12                              69A      69A        F      D34       0
+                text11                              627      627        5      C4E       0
+                text10                              640      640        7      C80       0
+                text9                               6DF      6DF       17      DBE       0
+                text8                               736      736       21      E6C       0
+                text7                               647      647        7      C8E       0
+                text6                               669      669        A      CD2       0
+                text5                               673      673        A      CE6       0
+                text4                               6F6      6F6       1F      DEC       0
+                text3                               656      656        9      CAC       0
+                text2                               7B8      7B8       41      F70       0
+                text1                               6CB      6CB       14      D96       0
+                maintext                            62C      62C        6      C58       0
+                cstackCOMMON                         70       70        8       70       1
+                bssCOMMON                            78       78        5       70       1
+
+TOTAL           Name                               Link     Load   Length     Space
+        CLASS   CODE           
+                end_init                              0        0        1         0
+                cinit                               7F9      7F9        7         0
+                text27                              622      622        5         0
+                text26                              757      757       24         0
+                text25                              68B      68B        F         0
+                text24                              6A9      6A9       11         0
+                text23                              61B      61B        3         0
+                text22                              6BA      6BA       11         0
+                text21                              67D      67D        E         0
+                text20                              77B      77B       3D         0
+                text19                              65F      65F        A         0
+                text18                              64E      64E        8         0
+                text17                              619      619        2         0
+                text16                              632      632        7         0
+                text15                              61E      61E        4         0
+                text14                              639      639        7         0
+                text13                              715      715       21         0
+                text12                              69A      69A        F         0
+                text11                              627      627        5         0
+                text10                              640      640        7         0
+                text9                               6DF      6DF       17         0
+                text8                               736      736       21         0
+                text7                               647      647        7         0
+                text6                               669      669        A         0
+                text5                               673      673        A         0
+                text4                               6F6      6F6       1F         0
+                text3                               656      656        9         0
+                text2                               7B8      7B8       41         0
+                text1                               6CB      6CB       14         0
+                maintext                            62C      62C        6         0
+
+        CLASS   STRCODE        
+
+        CLASS   STRING         
+
+        CLASS   CONST          
+
+        CLASS   ENTRY          
+
+        CLASS   COMMON         
+                cstackCOMMON                         70       70        8         1
+                bssCOMMON                            78       78        5         1
+
+        CLASS   BANK0          
+
+        CLASS   BANK1          
+
+        CLASS   BANK2          
+
+        CLASS   RAM            
+
+        CLASS   ABS1           
+                abs_s1                               22       22        8         1
+                abs_s1                               7E       7E        2         1
+
+        CLASS   SFR0           
+
+        CLASS   SFR1           
+
+        CLASS   SFR2           
+
+        CLASS   SFR3           
+
+        CLASS   CONFIG         
+                config                             2007     2007        1         4
+
+        CLASS   IDLOC          
+
+        CLASS   EEDATA         
+
+        CLASS   BANK3          
+
+        CLASS   HEAP           
+
+        CLASS   STACK          
+
+
+
+SEGMENTS        Name                           Load    Length   Top    Selector   Space  Class     Delta
+
+                reset_vec                      000000  000001  000001         0       0  CODE        2
+                cstackCOMMON                   000070  00000D  00007D        70       1  COMMON      1
+                text17                         000619  000002  00061B       C32       0  CODE        2
+                text23                         00061B  000003  00061E       C36       0  CODE        2
+                text15                         00061E  000004  000622       C3C       0  CODE        2
+                text27                         000622  000005  000627       C44       0  CODE        2
+                text11                         000627  000005  00062C       C4E       0  CODE        2
+                maintext                       00062C  000006  000632       C58       0  CODE        2
+                text16                         000632  000007  000639       C64       0  CODE        2
+                text14                         000639  000007  000640       C72       0  CODE        2
+                text10                         000640  000007  000647       C80       0  CODE        2
+                text7                          000647  000007  00064E       C8E       0  CODE        2
+                text18                         00064E  000008  000656       C9C       0  CODE        2
+                text3                          000656  000009  00065F       CAC       0  CODE        2
+                text19                         00065F  00000A  000669       CBE       0  CODE        2
+                text6                          000669  00000A  000673       CD2       0  CODE        2
+                text5                          000673  00000A  00067D       CE6       0  CODE        2
+                text21                         00067D  00000E  00068B       CFA       0  CODE        2
+                text25                         00068B  00000F  00069A       D16       0  CODE        2
+                text12                         00069A  00000F  0006A9       D34       0  CODE        2
+                text24                         0006A9  000011  0006BA       D52       0  CODE        2
+                text22                         0006BA  000011  0006CB       D74       0  CODE        2
+                text1                          0006CB  000014  0006DF       D96       0  CODE        2
+                text9                          0006DF  000017  0006F6       DBE       0  CODE        2
+                text4                          0006F6  00001F  000715       DEC       0  CODE        2
+                text13                         000715  000021  000736       E2A       0  CODE        2
+                text8                          000736  000021  000757       E6C       0  CODE        2
+                text26                         000757  000024  00077B       EAE       0  CODE        2
+                text20                         00077B  00003D  0007B8       EF6       0  CODE        2
+                text2                          0007B8  000041  0007F9       F70       0  CODE        2
+                cinit                          0007F9  000007  000800       FF2       0  CODE        2
+
+
+UNUSED ADDRESS RANGES
+
+        Name                Unused          Largest block    Delta
+        BANK0            0020-0021              2           1
+                         002A-006F             46
+        BANK1            00A0-00EF             50           1
+        BANK2            0120-014F             30           1
+        CODE             0001-0618            618           2
+        COMMON           007D-007D              1           1
+        CONST            0001-0618            100           2
+        EEDATA           2100-217F             80           2
+        ENTRY            0001-0618            100           2
+        IDLOC            2000-2003              4           2
+        RAM              0020-0021              2           1
+                         002A-006F             46
+                         00A0-00EF             50
+                         0120-014F             30
+        SFR0             0000-001F             20           1
+        SFR1             0080-009F             20           1
+        SFR2             0100-011F             20           1
+        SFR3             0180-01EF             70           1
+        STRCODE          0001-0618            618           2
+        STRING           0001-0618            100           2
+
+                                  Symbol Table
+
+I2C_ReadByte@Data        cstackCOMMON 0072
+I2C_ReadByte@i           cstackCOMMON 0071
+I2C_WriteByte@Data       cstackCOMMON 0072
+I2C_WriteByte@i          cstackCOMMON 0073
+_CMCON                   (abs)        001F
+_I2C_ReStart             text22       06BA
+_I2C_ReadByte            text26       0757
+_I2C_SendACK             text12       069A
+_I2C_SendNACK            text25       068B
+_I2C_Start               text21       067D
+_I2C_Stop                text24       06A9
+_I2C_WriteByte           text20       077B
+_Init                    text8        0736
+_InitI2C                 text27       0622
+_OPTION_REG              (abs)        0081
+_PORTA_SHADOW            bssCOMMON    007B
+_PORTAbits               (abs)        0005
+_PORTB                   (abs)        0006
+_PORTB_SHADOW            bssCOMMON    007A
+_T0                      (abs)        0022
+_T1                      (abs)        0023
+_T2                      (abs)        0024
+_T3                      (abs)        0025
+_T4                      (abs)        0026
+_T5                      (abs)        0027
+_T6                      (abs)        0028
+_T7                      (abs)        0029
+_TRISA                   (abs)        0085
+_TRISAbits               (abs)        0085
+_TRISB                   (abs)        0086
+__H__absolute__          __absolute__ 0000
+__Habs1                  abs1         0000
+__Hbank0                 bank0        0000
+__Hbank1                 bank1        0000
+__Hbank2                 bank2        0000
+__Hbank3                 bank3        0000
+__HbssCOMMON             bssCOMMON    0000
+__Hcinit                 cinit        0800
+__Hclrtext               clrtext      0000
+__Hcode                  code         0000
+__Hcommon                common       0000
+__Hconfig                config       2008
+__HcstackCOMMON          cstackCOMMON 0000
+__Heeprom_data           eeprom_data  0000
+__Hend_init              end_init     0001
+__Hfunctab               functab      0000
+__Hheap                  heap         0000
+__Hinit                  init         0000
+__Hintentry              intentry     0000
+__Hmaintext              maintext     0000
+__Hpowerup               powerup      0000
+__Hram                   ram          0000
+__Hreset_vec             reset_vec    0000
+__Hsfr0                  sfr0         0000
+__Hsfr1                  sfr1         0000
+__Hsfr2                  sfr2         0000
+__Hsfr3                  sfr3         0000
+__Hspace_0               (abs)        0800
+__Hspace_1               (abs)        007D
+__Hspace_2               (abs)        0000
+__Hspace_3               (abs)        0000
+__Hspace_4               (abs)        400F
+__Hstack                 stack        0000
+__Hstrings               strings      0000
+__Htext                  text         0000
+__L__absolute__          __absolute__ 0000
+__Labs1                  abs1         0000
+__Lbank0                 bank0        0000
+__Lbank1                 bank1        0000
+__Lbank2                 bank2        0000
+__Lbank3                 bank3        0000
+__LbssCOMMON             bssCOMMON    0000
+__Lcinit                 cinit        07F9
+__Lclrtext               clrtext      0000
+__Lcode                  code         0000
+__Lcommon                common       0000
+__Lconfig                config       0000
+__LcstackCOMMON          cstackCOMMON 0000
+__Leeprom_data           eeprom_data  0000
+__Lend_init              end_init     0000
+__Lfunctab               functab      0000
+__Lheap                  heap         0000
+__Linit                  init         0000
+__Lintentry              intentry     0000
+__Lmaintext              maintext     0000
+__Lpowerup               powerup      0000
+__Lram                   ram          0000
+__Lreset_vec             reset_vec    0000
+__Lsfr0                  sfr0         0000
+__Lsfr1                  sfr1         0000
+__Lsfr2                  sfr2         0000
+__Lsfr3                  sfr3         0000
+__Lspace_0               (abs)        0000
+__Lspace_1               (abs)        0000
+__Lspace_2               (abs)        0000
+__Lspace_3               (abs)        0000
+__Lspace_4               (abs)        0000
+__Lstack                 stack        0000
+__Lstrings               strings      0000
+__Ltext                  text         0000
+__S0                     (abs)        0800
+__S1                     (abs)        007D
+__S3                     (abs)        0000
+___heap_hi               (abs)        0000
+___heap_lo               (abs)        0000
+___int_sp                stack        0000
+___int_stack_hi          stack        0000
+___int_stack_lo          stack        0000
+___latbits               (abs)        0000
+___sp                    stack        0000
+___stack_hi              stack        0000
+___stack_lo              stack        0000
+___stackhi               (abs)        0000
+___stacklo               (abs)        0000
+__end_of_I2C_ReStart     text22       06CB
+__end_of_I2C_ReadByte    text26       077B
+__end_of_I2C_SendACK     text12       06A9
+__end_of_I2C_SendNACK    text25       069A
+__end_of_I2C_Start       text21       068B
+__end_of_I2C_Stop        text24       06BA
+__end_of_I2C_WriteByte   text20       07B8
+__end_of_Init            text8        0757
+__end_of_InitI2C         text27       0627
+__end_of__initialization cinit        07FE
+__end_of_checkDP         text4        0715
+__end_of_checkRTCType    text13       0736
+__end_of_display         text7        064E
+__end_of_endReadRTC      text23       061E
+__end_of_endWriteRTC     text17       061B
+__end_of_isRTCRunning    text10       0647
+__end_of_latch           text3        065F
+__end_of_loadDisplay     text2        07F9
+__end_of_main            maintext     0632
+__end_of_preLoadWL       text1        06DF
+__end_of_readByteRTC     text18       0656
+__end_of_readDataRTC     text11       062C
+__end_of_reqReadRTC      text19       0669
+__end_of_reqWriteRTC     text16       0639
+__end_of_send0ToDrivers  text6        0673
+__end_of_send1ToDrivers  text5        067D
+__end_of_startRTC        text9        06F6
+__end_of_writeByteRTC    text14       0640
+__end_of_writeDataRTC    text15       0622
+__initialization         cinit        07F9
+__pbssCOMMON             bssCOMMON    0078
+__pcstackCOMMON          cstackCOMMON 0070
+__pmaintext              maintext     062C
+__ptext0                 text0        0000
+__ptext1                 text1        06CB
+__ptext10                text10       0640
+__ptext11                text11       0627
+__ptext12                text12       069A
+__ptext13                text13       0715
+__ptext14                text14       0639
+__ptext15                text15       061E
+__ptext16                text16       0632
+__ptext17                text17       0619
+__ptext18                text18       064E
+__ptext19                text19       065F
+__ptext2                 text2        07B8
+__ptext20                text20       077B
+__ptext21                text21       067D
+__ptext22                text22       06BA
+__ptext23                text23       061B
+__ptext24                text24       06A9
+__ptext25                text25       068B
+__ptext26                text26       0757
+__ptext27                text27       0622
+__ptext3                 text3        0656
+__ptext4                 text4        06F6
+__ptext5                 text5        0673
+__ptext6                 text6        0669
+__ptext7                 text7        0647
+__ptext8                 text8        0736
+__ptext9                 text9        06DF
+_checkDP                 text4        06F6
+_checkRTCType            text13       0715
+_display                 text7        0647
+_endReadRTC              text23       061B
+_endWriteRTC             text17       0619
+_flag                    bssCOMMON    007C
+_isRTCRunning            text10       0640
+_latch                   text3        0656
+_leftDP                  bssCOMMON    0079
+_loadDisplay             text2        07B8
+_main                    maintext     062C
+_preLoadWL               text1        06CB
+_readByteRTC             text18       064E
+_readDataRTC             text11       0627
+_reqReadRTC              text19       065F
+_reqWriteRTC             text16       0632
+_rightDP                 bssCOMMON    0078
+_send0ToDrivers          text6        0669
+_send1ToDrivers          text5        0673
+_startRTC                text9        06DF
+_writeByteRTC            text14       0639
+_writeDataRTC            text15       061E
+btemp                    (abs)        007E
+checkDP@DP               cstackCOMMON 0071
+checkRTCType@data        cstackCOMMON 0077
+end_of_initialization    cinit        07FE
+intlevel0                functab      0000
+intlevel1                functab      0000
+intlevel2                functab      0000
+intlevel3                functab      0000
+intlevel4                functab      0000
+intlevel5                functab      0000
+isRTCRunning@data        cstackCOMMON 0075
+loadDisplay@LDP          cstackCOMMON 0074
+loadDisplay@RDP          cstackCOMMON 0075
+loadDisplay@dispNum      cstackCOMMON 0072
+loadDisplay@numIndex     cstackCOMMON 0077
+loadDisplay@tubeIndex    cstackCOMMON 0076
+loadDisplay@tubePtr      cstackCOMMON 0073
+readByteRTC@address      cstackCOMMON 0075
+readByteRTC@data         cstackCOMMON 0076
+readDataRTC@data         cstackCOMMON 0073
+reqReadRTC@address       cstackCOMMON 0074
+reqWriteRTC@address      cstackCOMMON 0074
+reset_vec                reset_vec    0000
+start                    init         0000
+start_initialization     cinit        07F9
+writeByteRTC@address     cstackCOMMON 0076
+writeByteRTC@data        cstackCOMMON 0075
+writeDataRTC@data        cstackCOMMON 0074
+wtemp0                   (abs)        007E
+
+
+MODULE INFORMATION
+
+Module		Function		Class		Link	Load	Size
+tubes.c
+		_checkDP       		CODE           	06F6	0000	31
+		_display       		CODE           	0647	0000	7
+		_loadDisplay   		CODE           	07B8	0000	65
+		_send0ToDrivers		CODE           	0669	0000	10
+		_latch         		CODE           	0656	0000	9
+		_send1ToDrivers		CODE           	0673	0000	10
+		_preLoadWL     		CODE           	06CB	0000	20
+
+tubes.c estimated size: 152
+
+shared
+		__initialization		CODE           	07F9	0000	5
+
+shared estimated size: 5
+
+IIC.c
+		_I2C_Stop      		CODE           	06A9	0000	17
+		_I2C_WriteByte 		CODE           	077B	0000	61
+		_InitI2C       		CODE           	0622	0000	5
+		_I2C_ReadByte  		CODE           	0757	0000	36
+		_I2C_SendACK   		CODE           	069A	0000	15
+		_I2C_SendNACK  		CODE           	068B	0000	15
+		_I2C_Start     		CODE           	067D	0000	14
+		_I2C_ReStart   		CODE           	06BA	0000	17
+
+IIC.c estimated size: 180
+
+main.c
+		_main          		CODE           	062C	0000	6
+		_Init          		CODE           	0736	0000	33
+
+main.c estimated size: 39
+
+RTC.c
+		_readByteRTC   		CODE           	064E	0000	8
+		_readDataRTC   		CODE           	0627	0000	5
+		_reqWriteRTC   		CODE           	0632	0000	7
+		_endReadRTC    		CODE           	061B	0000	3
+		_writeByteRTC  		CODE           	0639	0000	7
+		_checkRTCType  		CODE           	0715	0000	33
+		_isRTCRunning  		CODE           	0640	0000	7
+		_startRTC      		CODE           	06DF	0000	23
+		_writeDataRTC  		CODE           	061E	0000	4
+		_endWriteRTC   		CODE           	0619	0000	2
+		_reqReadRTC    		CODE           	065F	0000	10
+
+RTC.c estimated size: 109
+
