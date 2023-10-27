@@ -14,7 +14,7 @@ Features to add/currently working on.
 - [ ] Daylight savings
 - [ ] Cross fading (maybe? Would be cool but this is not important)
 
-27-10-23
+27-10-23 | 
   Can display digits to all tubes( Probably, still need to insert the rest of my nixie tubes to be certain)
   I2C doesn't appear to be working. Really hard to debug with only one LED on the board. Will connect the rest of my nixie tubes and just use those to display error messages :)
 
