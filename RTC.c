@@ -14,7 +14,6 @@ void reqReadRTC(unsigned char address) {
 unsigned char readDataRTC(void) {
     unsigned char data;
     data = I2C_ReadByte(); // stores read byte
-    I2C_SendACK();         // Sends acknowledge to slave so it can increment to next address to read from
     return data;
 }
 
@@ -26,7 +25,7 @@ void endReadRTC(void) {
 
 // Reads only one byte from RTC (created separate functions for ease of looping)
 unsigned char readByteRTC(unsigned char address) {
-    unsigned char data;
+    unsigned char data = 0x00;
     reqReadRTC(address);   // Requests read from address location
     data = I2C_ReadByte(); // Stores read byte into data
     endReadRTC();          // Ends read
@@ -61,8 +60,8 @@ void writeByteRTC(unsigned char address, unsigned char data) {
 __bit isRTCRunning(void) {
     unsigned char data;
     reqReadRTC(0x00);       // Reads address 00h (interested in CH which is bit 7)
-    data = readDataRTC();
-    return BIT_SET(data,7); // returns 1 if CH is set(clock is not started) and 0 if CH
+    data = I2C_ReadByte();
+    return BIT_CHECK(data,7); // returns 1 if CH is set(clock is not started) and 0 if CH
 }
 
 // Starts RTC and initializes starting date and time
@@ -102,4 +101,24 @@ __bit checkRTCType(void) {
         }
     } 
     return 0;                         // If OSF is clear or clock is DS1307 return 0 (if any clock is working);
+}
+
+void getTime(void) {
+    unsigned char seconds, minutes, hours;
+    unsigned char singleSeconds, singleMinutes, singleHours;
+    unsigned char tensSeconds, tensMinutes, tensHours;
+    reqReadRTC(0x00); // Seconds address
+    seconds = readDataRTC(); // Reads seconds and 
+    I2C_SendACK();           // sends ACK to increment to minutes address
+    minutes = readDataRTC(); // Reads minutes and 
+    I2C_SendACK();           // sends ACK to increment to hours address
+    hours = readDataRTC();   // Reads minutes
+    endReadRTC();
+    singleSeconds = (seconds & 0x0F); // Keeps only ones digit of seconds
+    tensSeconds = (swapNibbles(seconds) & 0x0F); // Swaps nibbles to get tens digit of seconds
+    singleMinutes = (minutes & 0x0F); // Keeps only ones digit of minutes
+    tensMinutes = (swapNibbles(minutes) & 0x0F); // Swaps nibbles to get tens digit of minutes
+    singleHours = (hours & 0x0F); // Keeps only ones digit of hours
+    tensHours = (swapNibbles(hours) & 0x0F); // Swaps nibbles to get tens digit of hours
+    passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,0x00,0x24); //Puts the time into tubes, 0x24 == 0b00100100 enables right decimal point on blank tubes
 }

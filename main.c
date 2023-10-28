@@ -36,20 +36,21 @@ unsigned char PORTB_SHADOW;
 
 void main(void) {
     Init(); // Initialize everything
-    preLoadWL();
-    loadDisplay();
-    display();
     while(1) {
-        
+        if(BTN1) {
+            while(BTN1) {
+                // wait for btn release
+            }
+            getTime();
+        } else if (BTN2) {
+            while(BTN2) {
+                // wait for btn release
+            }
+            preLoadWL();
+            loadDisplay();
+            display();
+        }
     }
-//    while(1) {
-//        // If BTN1:2 are pressed
-//        if(BTN1 && BTN2) {
-//            LED = 1; // enable LED
-//        } else {
-//            LED = 0; // disable LED
-//        }
-//    }
 }
 
 // Initializations
@@ -63,6 +64,7 @@ void Init(void) {
     PORTB = PORTB_SHADOW;
     flag = 0b00000000; // Clears flag bits
     InitI2C(); // Initialize I2C
+    blankTubes(); // Initialize all tubes to display nothing
     // Checks to see if clock is running
     if(isRTCRunning()) { // Clock is DS1307 and is currently stopped
         startRTC(); // Start DS1307
@@ -71,4 +73,8 @@ void Init(void) {
             startRTC(); // fills DS3232 after it was started in isRTCRunning()
         }
     }
+}
+
+unsigned char swapNibbles(unsigned char data) {
+    return ((data & 0x0F) << 4 | (data & 0xF0) >> 4);
 }

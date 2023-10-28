@@ -12,6 +12,7 @@ void blankTubes(void);
 void displayError666(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
+void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
 
 #endif	/* TUBES_H */
 

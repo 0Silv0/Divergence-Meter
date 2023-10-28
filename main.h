@@ -33,7 +33,7 @@
 #define NLE _PORTB_RB5_POSITION          // NOT Latch Enable to serial chips on RB5
 
 //Macros
-#define BIT_CHECK(data,bitNum) ((data) & 1<<(bitNum)) // Checks if bit is set at bitNum location
+#define BIT_CHECK(data,bitNum) ((data)>>(bitNum) & 1) // Checks if bit is set at bitNum location
 #define BIT_SET(data,bitNum) (data |= (1<<bitNum))    // Sets bit of byte at bitNum location
 #define BIT_CLEAR(data,bitNum) (data &=(0<<bitNum))   // Clears bit of byte at bitNum location
 #define BIT_TOGGLE(data,bitNum) (data ^= (1<<bitNum)) // Toggles bit of byte at bitNum location
@@ -55,5 +55,6 @@ extern unsigned char PORTB_SHADOW; // Bit mask for PortB
 
 // Function declarations
 void Init(void);
+unsigned char swapNibbles(unsigned char data);
 #endif	/* MAIN_H */
 

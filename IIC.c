@@ -2,6 +2,8 @@
 
 // Sets initial values of SDA and SCL pins
 void InitI2C(void) {
+    SCL_IO = 0;
+    SDA_IO = 0;
     // Writes zero in output register of SDA and SCL pins
     SDA = 0;
     SCL = 0;
@@ -58,6 +60,14 @@ __bit I2C_WriteByte(unsigned char Data) {
     SCL_IO = 1;
     __delay_us(HalfBitDelay);
     
+//    unsigned char timer = 255;
+//    while(timer != 0) {
+//        if(!SDA) {
+//            timer = 0;
+//            return SDA;
+//        }
+//                timer--;
+//    }
     // Returns 0 for ACK and 1 for NACK.
     return SDA;
 }
@@ -71,9 +81,7 @@ unsigned char I2C_ReadByte(void) {
         __delay_us(HalfBitDelay);
         SCL_IO = 1;
         __delay_us(HalfBitDelay/2);
-        Data = Data << 1;
-        Data = Data|SDA;
-        //RxData = RxData|(SDA<<(7-i));
+        Data = Data|(SDA<<(7-i));
         __delay_us(HalfBitDelay/2);
     }
     return Data;

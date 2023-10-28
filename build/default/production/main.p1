@@ -3,6 +3,20 @@ Version 4.0 HI-TECH Software Intermediate Code
 "57 ./main.h
 [; ;./main.h: 57: void Init(void);
 [v _Init `(v ~T0 @X0 0 ef ]
+"172 C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h
+[; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 172:     struct {
+[s S10 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S10 . RA0 RA1 RA2 RA3 RA4 RA5 RA6 RA7 ]
+"171
+[; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 171: typedef union {
+[u S9 `S10 1 ]
+[n S9 . . ]
+"183
+[; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 183: extern volatile PORTAbits_t PORTAbits __attribute__((address(0x005)));
+[v _PORTAbits `VS9 ~T0 @X0 0 e@5 ]
+"20 ./RTC.h
+[; ;./RTC.h: 20: void getTime(void);
+[v _getTime `(v ~T0 @X0 0 ef ]
 "5 ./tubes.h
 [; ;./tubes.h: 5: void preLoadWL(void);
 [v _preLoadWL `(v ~T0 @X0 0 ef ]
@@ -30,6 +44,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "18 ./IIC.h
 [; ;./IIC.h: 18: void InitI2C(void);
 [v _InitI2C `(v ~T0 @X0 0 ef ]
+"11 ./tubes.h
+[; ;./tubes.h: 11: void blankTubes(void);
+[v _blankTubes `(v ~T0 @X0 0 ef ]
 "17 ./RTC.h
 [; ;./RTC.h: 17: __bit isRTCRunning(void);
 [v _isRTCRunning `(b ~T0 @X0 0 ef ]
@@ -186,90 +203,153 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 38:     Init();
 [e ( _Init ..  ]
 "39
-[; ;main.c: 39:     preLoadWL();
-[e ( _preLoadWL ..  ]
-"40
-[; ;main.c: 40:     loadDisplay();
-[e ( _loadDisplay ..  ]
-"41
-[; ;main.c: 41:     display();
-[e ( _display ..  ]
-"42
-[; ;main.c: 42:     while(1) {
+[; ;main.c: 39:     while(1) {
 [e :U 57 ]
 {
+"40
+[; ;main.c: 40:         if(PORTAbits.RA2) {
+[e $ ! != -> . . _PORTAbits 0 2 `i -> 0 `i 59  ]
+{
+"41
+[; ;main.c: 41:             while(PORTAbits.RA2) {
+[e $U 60  ]
+[e :U 61 ]
+{
+"43
+[; ;main.c: 43:             }
+}
+[e :U 60 ]
+"41
+[; ;main.c: 41:             while(PORTAbits.RA2) {
+[e $ != -> . . _PORTAbits 0 2 `i -> 0 `i 61  ]
+[e :U 62 ]
 "44
-[; ;main.c: 44:     }
+[; ;main.c: 44:             getTime();
+[e ( _getTime ..  ]
+"45
+[; ;main.c: 45:         } else if (PORTAbits.RA3) {
+}
+[e $U 63  ]
+[e :U 59 ]
+[e $ ! != -> . . _PORTAbits 0 3 `i -> 0 `i 64  ]
+{
+"46
+[; ;main.c: 46:             while(PORTAbits.RA3) {
+[e $U 65  ]
+[e :U 66 ]
+{
+"48
+[; ;main.c: 48:             }
+}
+[e :U 65 ]
+"46
+[; ;main.c: 46:             while(PORTAbits.RA3) {
+[e $ != -> . . _PORTAbits 0 3 `i -> 0 `i 66  ]
+[e :U 67 ]
+"49
+[; ;main.c: 49:             preLoadWL();
+[e ( _preLoadWL ..  ]
+"50
+[; ;main.c: 50:             loadDisplay();
+[e ( _loadDisplay ..  ]
+"51
+[; ;main.c: 51:             display();
+[e ( _display ..  ]
+"52
+[; ;main.c: 52:         }
+}
+[e :U 64 ]
+[e :U 63 ]
+"53
+[; ;main.c: 53:     }
 }
 [e :U 56 ]
 [e $U 57  ]
 [e :U 58 ]
-"53
-[; ;main.c: 53: }
+"54
+[; ;main.c: 54: }
 [e :UE 55 ]
 }
-"56
-[; ;main.c: 56: void Init(void) {
+"57
+[; ;main.c: 57: void Init(void) {
 [v _Init `(v ~T0 @X0 1 ef ]
 {
 [e :U _Init ]
 [f ]
-"57
-[; ;main.c: 57:     CMCON = 0b111;
-[e = _CMCON -> -> 7 `i `uc ]
 "58
-[; ;main.c: 58:     TRISA = 0b00101111;
-[e = _TRISA -> -> 47 `i `uc ]
+[; ;main.c: 58:     CMCON = 0b111;
+[e = _CMCON -> -> 7 `i `uc ]
 "59
-[; ;main.c: 59:     TRISB = 0b00000000;
-[e = _TRISB -> -> 0 `i `uc ]
+[; ;main.c: 59:     TRISA = 0b00101111;
+[e = _TRISA -> -> 47 `i `uc ]
 "60
-[; ;main.c: 60:     OPTION_REG = 0b11011111;
-[e = _OPTION_REG -> -> 223 `i `uc ]
+[; ;main.c: 60:     TRISB = 0b00000000;
+[e = _TRISB -> -> 0 `i `uc ]
 "61
-[; ;main.c: 61:     PORTA_SHADOW = 0b00000000;
-[e = _PORTA_SHADOW -> -> 0 `i `uc ]
+[; ;main.c: 61:     OPTION_REG = 0b11011111;
+[e = _OPTION_REG -> -> 223 `i `uc ]
 "62
-[; ;main.c: 62:     PORTB_SHADOW = 0b00000000;
-[e = _PORTB_SHADOW -> -> 0 `i `uc ]
+[; ;main.c: 62:     PORTA_SHADOW = 0b00000000;
+[e = _PORTA_SHADOW -> -> 0 `i `uc ]
 "63
-[; ;main.c: 63:     PORTB = PORTB_SHADOW;
-[e = _PORTB _PORTB_SHADOW ]
+[; ;main.c: 63:     PORTB_SHADOW = 0b00000000;
+[e = _PORTB_SHADOW -> -> 0 `i `uc ]
 "64
-[; ;main.c: 64:     flag = 0b00000000;
-[e = _flag -> -> 0 `i `uc ]
+[; ;main.c: 64:     PORTB = PORTB_SHADOW;
+[e = _PORTB _PORTB_SHADOW ]
 "65
-[; ;main.c: 65:     InitI2C();
+[; ;main.c: 65:     flag = 0b00000000;
+[e = _flag -> -> 0 `i `uc ]
+"66
+[; ;main.c: 66:     InitI2C();
 [e ( _InitI2C ..  ]
 "67
-[; ;main.c: 67:     if(isRTCRunning()) {
-[e $ ! ( _isRTCRunning ..  60  ]
-{
-"68
-[; ;main.c: 68:         startRTC();
-[e ( _startRTC ..  ]
+[; ;main.c: 67:     blankTubes();
+[e ( _blankTubes ..  ]
 "69
-[; ;main.c: 69:     } else {
-}
-[e $U 61  ]
-[e :U 60 ]
+[; ;main.c: 69:     if(isRTCRunning()) {
+[e $ ! ( _isRTCRunning ..  69  ]
 {
 "70
-[; ;main.c: 70:         if(checkRTCType()) {
-[e $ ! ( _checkRTCType ..  62  ]
-{
-"71
-[; ;main.c: 71:             startRTC();
+[; ;main.c: 70:         startRTC();
 [e ( _startRTC ..  ]
+"71
+[; ;main.c: 71:     } else {
+}
+[e $U 70  ]
+[e :U 69 ]
+{
 "72
-[; ;main.c: 72:         }
-}
-[e :U 62 ]
+[; ;main.c: 72:         if(checkRTCType()) {
+[e $ ! ( _checkRTCType ..  71  ]
+{
 "73
-[; ;main.c: 73:     }
-}
-[e :U 61 ]
+[; ;main.c: 73:             startRTC();
+[e ( _startRTC ..  ]
 "74
-[; ;main.c: 74: }
-[e :UE 59 ]
+[; ;main.c: 74:         }
+}
+[e :U 71 ]
+"75
+[; ;main.c: 75:     }
+}
+[e :U 70 ]
+"76
+[; ;main.c: 76: }
+[e :UE 68 ]
+}
+"78
+[; ;main.c: 78: unsigned char swapNibbles(unsigned char data) {
+[v _swapNibbles `(uc ~T0 @X0 1 ef1`uc ]
+{
+[e :U _swapNibbles ]
+[v _data `uc ~T0 @X0 1 r1 ]
+[f ]
+"79
+[; ;main.c: 79:     return ((data & 0x0F) << 4 | (data & 0xF0) >> 4);
+[e ) -> | << & -> _data `i -> 15 `i -> 4 `i >> & -> _data `i -> 240 `i -> 4 `i `uc ]
+[e $UE 72  ]
+"80
+[; ;main.c: 80: }
+[e :UE 72 ]
 }

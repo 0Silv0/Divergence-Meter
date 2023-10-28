@@ -1207,6 +1207,7 @@ extern unsigned char PORTB_SHADOW;
 
 
 void Init(void);
+unsigned char swapNibbles(unsigned char data);
 # 9 "./headers.h" 2
 
 # 1 "./IIC.h" 1
@@ -1241,6 +1242,7 @@ void writeByteRTC(unsigned char address, unsigned char data);
 __bit isRTCRunning(void);
 void startRTC(void);
 __bit checkRTCType(void);
+void getTime(void);
 # 11 "./headers.h" 2
 
 # 1 "./tubes.h" 1
@@ -1258,12 +1260,15 @@ void blankTubes(void);
 void displayError666(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
+void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
 # 12 "./headers.h" 2
 # 1 "IIC.c" 2
 
 
 
 void InitI2C(void) {
+    TRISAbits.TRISA0 = 0;
+    TRISAbits.TRISA1 = 0;
 
     PORTAbits.RA1 = 0;
     PORTAbits.RA0 = 0;
@@ -1319,8 +1324,7 @@ __bit I2C_WriteByte(unsigned char Data) {
     _delay((unsigned long)((500/100)*(4000000/4000000.0)));
     TRISAbits.TRISA0 = 1;
     _delay((unsigned long)((500/100)*(4000000/4000000.0)));
-
-
+# 72 "IIC.c"
     return PORTAbits.RA1;
 }
 
@@ -1333,9 +1337,7 @@ unsigned char I2C_ReadByte(void) {
         _delay((unsigned long)((500/100)*(4000000/4000000.0)));
         TRISAbits.TRISA0 = 1;
         _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
-        Data = Data << 1;
-        Data = Data|PORTAbits.RA1;
-
+        Data = Data|(PORTAbits.RA1<<(7-i));
         _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     }
     return Data;

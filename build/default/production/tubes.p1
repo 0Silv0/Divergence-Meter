@@ -202,8 +202,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;tubes.c: 26:     T1 = 9;
 [e = _T1 -> -> 9 `i `uc ]
 "27
-[; ;tubes.c: 27:     T0 = 0;
-[e = _T0 -> -> 0 `i `uc ]
+[; ;tubes.c: 27:     T0 = 6;
+[e = _T0 -> -> 6 `i `uc ]
 "28
 [; ;tubes.c: 28:     leftDP = 0x00;
 [e = _leftDP -> -> 0 `i `uc ]
@@ -342,8 +342,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _DP `*uc ~T0 @X0 1 r1 ]
 [f ]
 "66
-[; ;tubes.c: 66:     if ((((*DP)) & 1<<(7))) {
-[e $ ! != & -> *U _DP `i << -> 1 `i -> 7 `i -> 0 `i 68  ]
+[; ;tubes.c: 66:     if ((((*DP))>>(7) & 1)) {
+[e $ ! != & >> -> *U _DP `i -> 7 `i -> 1 `i -> 0 `i 68  ]
 {
 "68
 [; ;tubes.c: 68:         *DP = (*DP) << 1;
@@ -457,91 +457,143 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 75 ]
 }
 "104
-[; ;tubes.c: 104: }
+[; ;tubes.c: 104:     leftDP = rightDP = 0x00;
+[e = _leftDP = _rightDP -> -> 0 `i `uc ]
+"105
+[; ;tubes.c: 105: }
 [e :UE 73 ]
 }
-"107
-[; ;tubes.c: 107: void displayError666(void) {
+"108
+[; ;tubes.c: 108: void displayError666(void) {
 [v _displayError666 `(v ~T0 @X0 1 ef ]
 {
 [e :U _displayError666 ]
 [f ]
-"108
-[; ;tubes.c: 108:     blankTubes();
-[e ( _blankTubes ..  ]
 "109
-[; ;tubes.c: 109:     T0 = T1 = T2 = 6;
-[e = _T0 = _T1 = _T2 -> -> 6 `i `uc ]
+[; ;tubes.c: 109:     blankTubes();
+[e ( _blankTubes ..  ]
 "110
-[; ;tubes.c: 110:     leftDP = rightDP = 0x00;
-[e = _leftDP = _rightDP -> -> 0 `i `uc ]
+[; ;tubes.c: 110:     T0 = T1 = T2 = 6;
+[e = _T0 = _T1 = _T2 -> -> 6 `i `uc ]
 "111
-[; ;tubes.c: 111:     loadDisplay();
-[e ( _loadDisplay ..  ]
+[; ;tubes.c: 111:     leftDP = rightDP = 0x00;
+[e = _leftDP = _rightDP -> -> 0 `i `uc ]
 "112
-[; ;tubes.c: 112:     display();
+[; ;tubes.c: 112:     loadDisplay();
+[e ( _loadDisplay ..  ]
+"113
+[; ;tubes.c: 113:     display();
 [e ( _display ..  ]
-"114
-[; ;tubes.c: 114:     while(1){
-[e :U 79 ]
-{
-"117
-[; ;tubes.c: 117:     }
-}
-[e :U 78 ]
-[e $U 79  ]
-[e :U 80 ]
-"118
-[; ;tubes.c: 118: }
+"119
+[; ;tubes.c: 119: }
 [e :UE 77 ]
 }
-"121
-[; ;tubes.c: 121: void send1ToDrivers(void) {
+"122
+[; ;tubes.c: 122: void send1ToDrivers(void) {
 [v _send1ToDrivers `(v ~T0 @X0 1 ef ]
 {
 [e :U _send1ToDrivers ]
 [f ]
-"122
-[; ;tubes.c: 122:     (PORTB_SHADOW |= (1<<0x4));
-[e =| _PORTB_SHADOW -> << -> 1 `i -> 4 `i `uc ]
 "123
-[; ;tubes.c: 123:     (PORTB_SHADOW |= (1<<0x2));
-[e =| _PORTB_SHADOW -> << -> 1 `i -> 2 `i `uc ]
+[; ;tubes.c: 123:     (PORTB_SHADOW |= (1<<0x4));
+[e =| _PORTB_SHADOW -> << -> 1 `i -> 4 `i `uc ]
 "124
-[; ;tubes.c: 124:     PORTB = PORTB_SHADOW;
-[e = _PORTB _PORTB_SHADOW ]
+[; ;tubes.c: 124:     (PORTB_SHADOW |= (1<<0x2));
+[e =| _PORTB_SHADOW -> << -> 1 `i -> 2 `i `uc ]
 "125
-[; ;tubes.c: 125:     (PORTB_SHADOW &=(0<<0x2));
-[e =& _PORTB_SHADOW -> << -> 0 `i -> 2 `i `uc ]
-"126
-[; ;tubes.c: 126:     PORTB = PORTB_SHADOW;
+[; ;tubes.c: 125:     PORTB = PORTB_SHADOW;
 [e = _PORTB _PORTB_SHADOW ]
+"126
+[; ;tubes.c: 126:     (PORTB_SHADOW &=(0<<0x2));
+[e =& _PORTB_SHADOW -> << -> 0 `i -> 2 `i `uc ]
 "127
-[; ;tubes.c: 127: }
-[e :UE 81 ]
+[; ;tubes.c: 127:     PORTB = PORTB_SHADOW;
+[e = _PORTB _PORTB_SHADOW ]
+"128
+[; ;tubes.c: 128: }
+[e :UE 78 ]
 }
-"130
-[; ;tubes.c: 130: void send0ToDrivers(void) {
+"131
+[; ;tubes.c: 131: void send0ToDrivers(void) {
 [v _send0ToDrivers `(v ~T0 @X0 1 ef ]
 {
 [e :U _send0ToDrivers ]
 [f ]
-"131
-[; ;tubes.c: 131:     (PORTB_SHADOW &=(0<<0x4));
-[e =& _PORTB_SHADOW -> << -> 0 `i -> 4 `i `uc ]
 "132
-[; ;tubes.c: 132:     (PORTB_SHADOW |= (1<<0x2));
-[e =| _PORTB_SHADOW -> << -> 1 `i -> 2 `i `uc ]
+[; ;tubes.c: 132:     (PORTB_SHADOW &=(0<<0x4));
+[e =& _PORTB_SHADOW -> << -> 0 `i -> 4 `i `uc ]
 "133
-[; ;tubes.c: 133:     PORTB = PORTB_SHADOW;
-[e = _PORTB _PORTB_SHADOW ]
+[; ;tubes.c: 133:     (PORTB_SHADOW |= (1<<0x2));
+[e =| _PORTB_SHADOW -> << -> 1 `i -> 2 `i `uc ]
 "134
-[; ;tubes.c: 134:     (PORTB_SHADOW &=(0<<0x2));
-[e =& _PORTB_SHADOW -> << -> 0 `i -> 2 `i `uc ]
-"135
-[; ;tubes.c: 135:     PORTB = PORTB_SHADOW;
+[; ;tubes.c: 134:     PORTB = PORTB_SHADOW;
 [e = _PORTB _PORTB_SHADOW ]
+"135
+[; ;tubes.c: 135:     (PORTB_SHADOW &=(0<<0x2));
+[e =& _PORTB_SHADOW -> << -> 0 `i -> 2 `i `uc ]
 "136
-[; ;tubes.c: 136: }
-[e :UE 82 ]
+[; ;tubes.c: 136:     PORTB = PORTB_SHADOW;
+[e = _PORTB _PORTB_SHADOW ]
+"137
+[; ;tubes.c: 137: }
+[e :UE 79 ]
+}
+"139
+[; ;tubes.c: 139: void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP) {
+[v _passTubeNum `(v ~T0 @X0 1 ef10`uc`uc`uc`uc`uc`uc`uc`uc`uc`uc ]
+{
+[e :U _passTubeNum ]
+[v _tmp7 `uc ~T0 @X0 1 r1 ]
+[v _tmp6 `uc ~T0 @X0 1 r2 ]
+[v _tmp5 `uc ~T0 @X0 1 r3 ]
+[v _tmp4 `uc ~T0 @X0 1 r4 ]
+[v _tmp3 `uc ~T0 @X0 1 r5 ]
+[v _tmp2 `uc ~T0 @X0 1 r6 ]
+[v _tmp1 `uc ~T0 @X0 1 r7 ]
+[v _tmp0 `uc ~T0 @X0 1 r8 ]
+[v _tmpLDP `uc ~T0 @X0 1 r9 ]
+[v _tmpRDP `uc ~T0 @X0 1 r10 ]
+[f ]
+"140
+[; ;tubes.c: 140:     blankTubes();
+[e ( _blankTubes ..  ]
+"141
+[; ;tubes.c: 141:     T0 = tmp0;
+[e = _T0 _tmp0 ]
+"142
+[; ;tubes.c: 142:     T1 = tmp1;
+[e = _T1 _tmp1 ]
+"143
+[; ;tubes.c: 143:     T2 = tmp2;
+[e = _T2 _tmp2 ]
+"144
+[; ;tubes.c: 144:     T3 = tmp3;
+[e = _T3 _tmp3 ]
+"145
+[; ;tubes.c: 145:     T4 = tmp4;
+[e = _T4 _tmp4 ]
+"146
+[; ;tubes.c: 146:     T5 = tmp5;
+[e = _T5 _tmp5 ]
+"147
+[; ;tubes.c: 147:     T6 = tmp6;
+[e = _T6 _tmp6 ]
+"148
+[; ;tubes.c: 148:     T7 = tmp7;
+[e = _T7 _tmp7 ]
+"149
+[; ;tubes.c: 149:     leftDP = tmpLDP;
+[e = _leftDP _tmpLDP ]
+"150
+[; ;tubes.c: 150:     rightDP = tmpRDP;
+[e = _rightDP _tmpRDP ]
+"151
+[; ;tubes.c: 151:     loadDisplay();
+[e ( _loadDisplay ..  ]
+"152
+[; ;tubes.c: 152:     display();
+[e ( _display ..  ]
+"153
+[; ;tubes.c: 153: }
+[e :UE 80 ]
 }

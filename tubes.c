@@ -24,7 +24,7 @@ void preLoadWL(void) {
     T3 = 8;
     T2 = 5;
     T1 = 9;
-    T0 = 0;
+    T0 = 6;
     leftDP = 0x00; // Clears leftDP
     rightDP = 0x00; // Clears rightDP
     BIT_SET(rightDP, 6); // Sets right decimal point for tube 6
@@ -101,6 +101,7 @@ void blankTubes(void) {
         *ptr = 10; // 10 will display blank in tube
         ptr++; // Goes to next tube address
     }
+    leftDP = rightDP = 0x00;
 }
 
 // Displays error 666
@@ -111,10 +112,10 @@ void displayError666(void) {
     loadDisplay(); // Sends tube data to serial to parallel drivers
     display(); // Displays sent data
     // Move to error handler
-    while(1){
-        // Either clock is not working, or no battery is installed.
-        // Infinite loop crash, GG.
-    }
+//    while(1){
+//        // Either clock is not working, or no battery is installed.
+//        // Infinite loop crash, GG.
+//    }
 }
 
 // Sends 1 to serial to parallel drivers
@@ -133,4 +134,20 @@ void send0ToDrivers(void) {
     PORTB = PORTB_SHADOW;
     BIT_CLEAR(PORTB_SHADOW, CLK); // Set clock low
     PORTB = PORTB_SHADOW;    
+}
+
+void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP) {
+    blankTubes();
+    T0 = tmp0;
+    T1 = tmp1;
+    T2 = tmp2;
+    T3 = tmp3;
+    T4 = tmp4;
+    T5 = tmp5;
+    T6 = tmp6;
+    T7 = tmp7;
+    leftDP = tmpLDP;
+    rightDP = tmpRDP;
+    loadDisplay();
+    display();
 }

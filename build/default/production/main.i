@@ -1207,6 +1207,7 @@ extern unsigned char PORTB_SHADOW;
 
 
 void Init(void);
+unsigned char swapNibbles(unsigned char data);
 # 9 "./headers.h" 2
 
 # 1 "./IIC.h" 1
@@ -1241,6 +1242,7 @@ void writeByteRTC(unsigned char address, unsigned char data);
 __bit isRTCRunning(void);
 void startRTC(void);
 __bit checkRTCType(void);
+void getTime(void);
 # 11 "./headers.h" 2
 
 # 1 "./tubes.h" 1
@@ -1258,6 +1260,7 @@ void blankTubes(void);
 void displayError666(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
+void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
 # 12 "./headers.h" 2
 # 1 "main.c" 2
 # 33 "main.c"
@@ -1267,13 +1270,21 @@ unsigned char PORTB_SHADOW;
 
 void main(void) {
     Init();
-    preLoadWL();
-    loadDisplay();
-    display();
     while(1) {
+        if(PORTAbits.RA2) {
+            while(PORTAbits.RA2) {
 
+            }
+            getTime();
+        } else if (PORTAbits.RA3) {
+            while(PORTAbits.RA3) {
+
+            }
+            preLoadWL();
+            loadDisplay();
+            display();
+        }
     }
-# 53 "main.c"
 }
 
 
@@ -1287,6 +1298,7 @@ void Init(void) {
     PORTB = PORTB_SHADOW;
     flag = 0b00000000;
     InitI2C();
+    blankTubes();
 
     if(isRTCRunning()) {
         startRTC();
@@ -1295,4 +1307,8 @@ void Init(void) {
             startRTC();
         }
     }
+}
+
+unsigned char swapNibbles(unsigned char data) {
+    return ((data & 0x0F) << 4 | (data & 0xF0) >> 4);
 }

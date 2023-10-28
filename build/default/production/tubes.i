@@ -1207,6 +1207,7 @@ extern unsigned char PORTB_SHADOW;
 
 
 void Init(void);
+unsigned char swapNibbles(unsigned char data);
 # 9 "./headers.h" 2
 
 # 1 "./IIC.h" 1
@@ -1241,6 +1242,7 @@ void writeByteRTC(unsigned char address, unsigned char data);
 __bit isRTCRunning(void);
 void startRTC(void);
 __bit checkRTCType(void);
+void getTime(void);
 # 11 "./headers.h" 2
 
 # 1 "./tubes.h" 1
@@ -1258,6 +1260,7 @@ void blankTubes(void);
 void displayError666(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
+void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
 # 12 "./headers.h" 2
 # 1 "tubes.c" 2
 
@@ -1286,7 +1289,7 @@ void preLoadWL(void) {
     T3 = 8;
     T2 = 5;
     T1 = 9;
-    T0 = 0;
+    T0 = 6;
     leftDP = 0x00;
     rightDP = 0x00;
     (rightDP |= (1<<6));
@@ -1325,7 +1328,7 @@ void loadDisplay(void) {
 
 
 void checkDP(unsigned char *DP) {
-    if ((((*DP)) & 1<<(7))) {
+    if ((((*DP))>>(7) & 1)) {
 
         *DP = (*DP) << 1;
         send1ToDrivers();
@@ -1363,6 +1366,7 @@ void blankTubes(void) {
         *ptr = 10;
         ptr++;
     }
+    leftDP = rightDP = 0x00;
 }
 
 
@@ -1373,10 +1377,10 @@ void displayError666(void) {
     loadDisplay();
     display();
 
-    while(1){
 
 
-    }
+
+
 }
 
 
@@ -1395,4 +1399,20 @@ void send0ToDrivers(void) {
     PORTB = PORTB_SHADOW;
     (PORTB_SHADOW &=(0<<0x2));
     PORTB = PORTB_SHADOW;
+}
+
+void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP) {
+    blankTubes();
+    T0 = tmp0;
+    T1 = tmp1;
+    T2 = tmp2;
+    T3 = tmp3;
+    T4 = tmp4;
+    T5 = tmp5;
+    T6 = tmp6;
+    T7 = tmp7;
+    leftDP = tmpLDP;
+    rightDP = tmpRDP;
+    loadDisplay();
+    display();
 }
