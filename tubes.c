@@ -15,6 +15,10 @@ unsigned char T5 __at(0x27);
 unsigned char T6 __at(0x28);
 unsigned char T7 __at(0x29);
 
+void InitTubes(void) {
+    blankTubes(); // Initialize all tubes to display nothing
+}
+
 // Loads Steins;Gate worldline number
 void preLoadWL(void) {
     T7 = 1;
@@ -74,6 +78,7 @@ void checkDP(unsigned char *DP) {
     }
 }
 
+// Enables latches in serial to parallel drivers
 void latch(void) {
     BIT_SET(PORTB_SHADOW, NLE); // Latches load when NLE is high
     PORTB = PORTB_SHADOW;
@@ -83,8 +88,8 @@ void latch(void) {
 
 // Displays loaded numbers into tubes
 void display(void) {
+    BIT_SET(PORTB_SHADOW, HVE);
     BIT_SET(PORTB_SHADOW, NBL); // Set NOT blanking high, causing tubes to no longer be blanked
-    BIT_SET(PORTB_SHADOW, HVE); // Set high voltage enable on to display tubes
     PORTB = PORTB_SHADOW;
 }
 //Flashes full brightness in tubes
@@ -111,11 +116,6 @@ void displayError666(void) {
     leftDP = rightDP = 0x00; // Clears left and right decimal points
     loadDisplay(); // Sends tube data to serial to parallel drivers
     display(); // Displays sent data
-    // Move to error handler
-//    while(1){
-//        // Either clock is not working, or no battery is installed.
-//        // Infinite loop crash, GG.
-//    }
 }
 
 // Sends 1 to serial to parallel drivers
@@ -137,7 +137,6 @@ void send0ToDrivers(void) {
 }
 
 void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP) {
-    blankTubes();
     T0 = tmp0;
     T1 = tmp1;
     T2 = tmp2;

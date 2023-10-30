@@ -2,6 +2,7 @@
 #define	TUBES_H
 
 // Function declarations
+void InitTubes(void);
 void preLoadWL(void);
 void loadDisplay(void);
 void checkDP(unsigned char *DP);

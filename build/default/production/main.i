@@ -1200,8 +1200,9 @@ extern __bank0 __bit __timeout;
 #pragma config LVP = OFF
 #pragma config CPD = OFF
 #pragma config CP = OFF
-# 52 "./main.h"
+# 56 "./main.h"
 extern unsigned char flag;
+extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
 
@@ -1216,7 +1217,7 @@ void InitI2C(void);
 void I2C_Start(void);
 void I2C_ReStart(void);
 void I2C_Stop(void);
-__bit I2C_WriteByte(unsigned char Data);
+void I2C_WriteByte(unsigned char Data);
 unsigned char I2C_ReadByte(void);
 void I2C_SendACK(void);
 void I2C_SendNACK(void);
@@ -1250,6 +1251,7 @@ void getTime(void);
 
 
 
+void InitTubes(void);
 void preLoadWL(void);
 void loadDisplay(void);
 void checkDP(unsigned char *DP);
@@ -1265,46 +1267,64 @@ void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, uns
 # 1 "main.c" 2
 # 33 "main.c"
 unsigned char flag;
+unsigned char ErrFlag;
 unsigned char PORTA_SHADOW;
 unsigned char PORTB_SHADOW;
 
 void main(void) {
     Init();
+    unsigned char tmp = 1;
     while(1) {
+        if(tmp) {
+            if(!((ErrFlag)>>(1) & 1)) {
+                getTime();
+            } else {
+                displayError666();
+            }
+        }
         if(PORTAbits.RA2) {
-            while(PORTAbits.RA2) {
-
-            }
-            getTime();
-        } else if (PORTAbits.RA3) {
-            while(PORTAbits.RA3) {
-
-            }
+            while(PORTAbits.RA2) {}
+            tmp = 0;
             preLoadWL();
             loadDisplay();
             display();
+        } else if (PORTAbits.RA3) {
+            while(PORTAbits.RA3) {}
+            tmp = 1;
         }
     }
 }
 
 
 void Init(void) {
+    unsigned char clockTest;
     CMCON = 0b111;
     TRISA = 0b00101111;
     TRISB = 0b00000000;
     OPTION_REG = 0b11011111;
-    PORTA_SHADOW = 0b00000000;
-    PORTB_SHADOW = 0b00000000;
+    PORTA_SHADOW = 0x00;
+    PORTB_SHADOW = 0x00;
     PORTB = PORTB_SHADOW;
-    flag = 0b00000000;
+    flag = 0x00;
+    ErrFlag = 0x00;
     InitI2C();
-    blankTubes();
+    InitTubes();
 
     if(isRTCRunning()) {
         startRTC();
+
+        clockTest = readByteRTC(0x00);
+        if(((clockTest)>>(7) & 1)) {
+            (ErrFlag |= (1<<1));
+        }
     } else {
         if(checkRTCType()) {
             startRTC();
+
+            clockTest = readByteRTC(0x0F);
+            if(((clockTest)>>(7) & 1)) {
+                (ErrFlag |= (1<<1));
+            }
         }
     }
 }

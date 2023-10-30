@@ -42,7 +42,7 @@ void I2C_Stop(void) {
     __delay_us(HalfBitDelay/2);
 }
 // I2C data write from master to slave. 
-__bit I2C_WriteByte(unsigned char Data) {
+void I2C_WriteByte(unsigned char Data) {
     unsigned char i;
     for(i = 0; i<8; i++) {
         SCL_IO = 0;
@@ -60,16 +60,22 @@ __bit I2C_WriteByte(unsigned char Data) {
     SCL_IO = 1;
     __delay_us(HalfBitDelay);
     
-//    unsigned char timer = 255;
-//    while(timer != 0) {
-//        if(!SDA) {
-//            timer = 0;
-//            return SDA;
-//        }
-//                timer--;
-//    }
+    // Waits for RTC to respond
+    unsigned char timer = 255;
+    while(timer != 0) {
+        if(!SDA) {
+            // RTC responded, exit wait loop
+            timer = 0;
+        } else {
+            __delay_us(1);
+            timer--;
+        }
+    }
+    // If timer ran out RTC is not communicating correctly, throw error flag
+    if(timer == 0) {
+        BIT_SET(ErrFlag, ErrNACK);
+    }
     // Returns 0 for ACK and 1 for NACK.
-    return SDA;
 }
 
 // Reads 8 bits and returns it as a byte

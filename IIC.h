@@ -19,7 +19,7 @@ void InitI2C(void);
 void I2C_Start(void);
 void I2C_ReStart(void);
 void I2C_Stop(void);
-__bit I2C_WriteByte(unsigned char Data);
+void I2C_WriteByte(unsigned char Data);
 unsigned char I2C_ReadByte(void);
 void I2C_SendACK(void);
 void I2C_SendNACK(void);

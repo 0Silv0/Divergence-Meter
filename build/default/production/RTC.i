@@ -1200,8 +1200,9 @@ extern __bank0 __bit __timeout;
 #pragma config LVP = OFF
 #pragma config CPD = OFF
 #pragma config CP = OFF
-# 52 "./main.h"
+# 56 "./main.h"
 extern unsigned char flag;
+extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
 
@@ -1216,7 +1217,7 @@ void InitI2C(void);
 void I2C_Start(void);
 void I2C_ReStart(void);
 void I2C_Stop(void);
-__bit I2C_WriteByte(unsigned char Data);
+void I2C_WriteByte(unsigned char Data);
 unsigned char I2C_ReadByte(void);
 void I2C_SendACK(void);
 void I2C_SendNACK(void);
@@ -1250,6 +1251,7 @@ void getTime(void);
 
 
 
+void InitTubes(void);
 void preLoadWL(void);
 void loadDisplay(void);
 void checkDP(unsigned char *DP);
@@ -1264,6 +1266,8 @@ void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, uns
 # 12 "./headers.h" 2
 # 1 "RTC.c" 2
 
+
+unsigned char oldSeconds;
 
 
 void reqReadRTC(unsigned char address) {
@@ -1324,8 +1328,7 @@ void writeByteRTC(unsigned char address, unsigned char data) {
 
 __bit isRTCRunning(void) {
     unsigned char data;
-    reqReadRTC(0x00);
-    data = I2C_ReadByte();
+    data = readByteRTC(0x00);
     return ((data)>>(7) & 1);
 }
 
@@ -1372,18 +1375,34 @@ void getTime(void) {
     unsigned char seconds, minutes, hours;
     unsigned char singleSeconds, singleMinutes, singleHours;
     unsigned char tensSeconds, tensMinutes, tensHours;
-    reqReadRTC(0x00);
-    seconds = readDataRTC();
-    I2C_SendACK();
-    minutes = readDataRTC();
-    I2C_SendACK();
-    hours = readDataRTC();
-    endReadRTC();
-    singleSeconds = (seconds & 0x0F);
-    tensSeconds = (swapNibbles(seconds) & 0x0F);
-    singleMinutes = (minutes & 0x0F);
-    tensMinutes = (swapNibbles(minutes) & 0x0F);
-    singleHours = (hours & 0x0F);
-    tensHours = (swapNibbles(hours) & 0x0F);
-    passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,0x00,0x24);
+    unsigned char tmpLeft, tmpRight;
+
+    seconds = readByteRTC(0x00);
+
+
+    if(seconds != oldSeconds) {
+        reqReadRTC(0x00);
+        seconds = readDataRTC();
+        I2C_SendACK();
+        minutes = readDataRTC();
+        I2C_SendACK();
+        hours = readDataRTC();
+        endReadRTC();
+        singleSeconds = (seconds & 0x0F);
+        tensSeconds = (swapNibbles(seconds) & 0x0F);
+        singleMinutes = (minutes & 0x0F);
+        tensMinutes = (swapNibbles(minutes) & 0x0F);
+        singleHours = (hours & 0x0F);
+        tensHours = (swapNibbles(hours) & 0x0F);
+
+        if(((seconds)>>(0) & 1)) {
+            tmpLeft = 0x00;
+            tmpRight = 0x24;
+        } else {
+            tmpLeft = 0x24;
+            tmpRight = 0x00;
+        }
+        passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,tmpLeft,tmpRight);
+        oldSeconds = seconds;
+    }
 }

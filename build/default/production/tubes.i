@@ -1200,8 +1200,9 @@ extern __bank0 __bit __timeout;
 #pragma config LVP = OFF
 #pragma config CPD = OFF
 #pragma config CP = OFF
-# 52 "./main.h"
+# 56 "./main.h"
 extern unsigned char flag;
+extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
 
@@ -1216,7 +1217,7 @@ void InitI2C(void);
 void I2C_Start(void);
 void I2C_ReStart(void);
 void I2C_Stop(void);
-__bit I2C_WriteByte(unsigned char Data);
+void I2C_WriteByte(unsigned char Data);
 unsigned char I2C_ReadByte(void);
 void I2C_SendACK(void);
 void I2C_SendNACK(void);
@@ -1250,6 +1251,7 @@ void getTime(void);
 
 
 
+void InitTubes(void);
 void preLoadWL(void);
 void loadDisplay(void);
 void checkDP(unsigned char *DP);
@@ -1279,6 +1281,10 @@ unsigned char T4 __attribute__((address(0x26)));
 unsigned char T5 __attribute__((address(0x27)));
 unsigned char T6 __attribute__((address(0x28)));
 unsigned char T7 __attribute__((address(0x29)));
+
+void InitTubes(void) {
+    blankTubes();
+}
 
 
 void preLoadWL(void) {
@@ -1339,6 +1345,7 @@ void checkDP(unsigned char *DP) {
     }
 }
 
+
 void latch(void) {
     (PORTB_SHADOW |= (1<<0x5));
     PORTB = PORTB_SHADOW;
@@ -1348,8 +1355,8 @@ void latch(void) {
 
 
 void display(void) {
-    (PORTB_SHADOW |= (1<<0x3));
     (PORTB_SHADOW |= (1<<0x1));
+    (PORTB_SHADOW |= (1<<0x3));
     PORTB = PORTB_SHADOW;
 }
 
@@ -1376,11 +1383,6 @@ void displayError666(void) {
     leftDP = rightDP = 0x00;
     loadDisplay();
     display();
-
-
-
-
-
 }
 
 
@@ -1402,7 +1404,6 @@ void send0ToDrivers(void) {
 }
 
 void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP) {
-    blankTubes();
     T0 = tmp0;
     T1 = tmp1;
     T2 = tmp2;

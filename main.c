@@ -31,50 +31,69 @@
 
 // Global variables
 unsigned char flag;
+unsigned char ErrFlag;
 unsigned char PORTA_SHADOW;
 unsigned char PORTB_SHADOW;
 
 void main(void) {
     Init(); // Initialize everything
+    unsigned char tmp = 1;
     while(1) {
+        if(tmp) {
+            if(!BIT_CHECK(ErrFlag, ErrRTC)) {
+                getTime();
+            } else {
+                displayError666();
+            }
+        }
         if(BTN1) {
-            while(BTN1) {
-                // wait for btn release
-            }
-            getTime();
-        } else if (BTN2) {
-            while(BTN2) {
-                // wait for btn release
-            }
+            while(BTN1) {}  // wait for btn release
+            tmp = 0;
             preLoadWL();
             loadDisplay();
             display();
+        } else if (BTN2) {
+            while(BTN2) {}  // wait for btn release
+            tmp = 1;
         }
     }
 }
 
 // Initializations
 void Init(void) {
+    unsigned char clockTest;
     CMCON = 0b111; //  Disables comparators and enables digital I/O
     TRISA = 0b00101111; // Set I/O pins in PORTA
     TRISB = 0b00000000; // Set all pins to output in PORTB
     OPTION_REG = 0b11011111; // Set TMR0 to clock of the internal clock, no prescaler
-    PORTA_SHADOW = 0b00000000; // Clear PORTA Shadow bits
-    PORTB_SHADOW = 0b00000000; // Clear PORTB Shadow bits
+    PORTA_SHADOW = 0x00; // Clear PORTA Shadow bits
+    PORTB_SHADOW = 0x00; // Clear PORTB Shadow bits
     PORTB = PORTB_SHADOW;
-    flag = 0b00000000; // Clears flag bits
+    flag = 0x00; // Clears flag bits
+    ErrFlag = 0x00;
     InitI2C(); // Initialize I2C
-    blankTubes(); // Initialize all tubes to display nothing
+    InitTubes(); // Initialize tubes
     // Checks to see if clock is running
     if(isRTCRunning()) { // Clock is DS1307 and is currently stopped
         startRTC(); // Start DS1307
+        // Checks to see if it started properly
+        clockTest = readByteRTC(0x00);
+        if(BIT_CHECK(clockTest,7)) {
+            BIT_SET(ErrFlag,ErrRTC);
+        }
     } else { // DS1307 is either running or the clock is a DS3232
         if(checkRTCType()) { // returns 1 for stopped DS3232 and 0 for everything else
             startRTC(); // fills DS3232 after it was started in isRTCRunning()
+            // Checks to see if it started properly
+            clockTest = readByteRTC(0x0F);
+            if(BIT_CHECK(clockTest,7)) {
+                BIT_SET(ErrFlag,ErrRTC);
+            }
         }
     }
 }
 
+// Swaps nibbles in a byte
 unsigned char swapNibbles(unsigned char data) {
     return ((data & 0x0F) << 4 | (data & 0xF0) >> 4);
 }

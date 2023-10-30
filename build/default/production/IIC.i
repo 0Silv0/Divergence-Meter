@@ -1200,8 +1200,9 @@ extern __bank0 __bit __timeout;
 #pragma config LVP = OFF
 #pragma config CPD = OFF
 #pragma config CP = OFF
-# 52 "./main.h"
+# 56 "./main.h"
 extern unsigned char flag;
+extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
 
@@ -1216,7 +1217,7 @@ void InitI2C(void);
 void I2C_Start(void);
 void I2C_ReStart(void);
 void I2C_Stop(void);
-__bit I2C_WriteByte(unsigned char Data);
+void I2C_WriteByte(unsigned char Data);
 unsigned char I2C_ReadByte(void);
 void I2C_SendACK(void);
 void I2C_SendNACK(void);
@@ -1250,6 +1251,7 @@ void getTime(void);
 
 
 
+void InitTubes(void);
 void preLoadWL(void);
 void loadDisplay(void);
 void checkDP(unsigned char *DP);
@@ -1307,7 +1309,7 @@ void I2C_Stop(void) {
     _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
 }
 
-__bit I2C_WriteByte(unsigned char Data) {
+void I2C_WriteByte(unsigned char Data) {
     unsigned char i;
     for(i = 0; i<8; i++) {
         TRISAbits.TRISA0 = 0;
@@ -1324,8 +1326,23 @@ __bit I2C_WriteByte(unsigned char Data) {
     _delay((unsigned long)((500/100)*(4000000/4000000.0)));
     TRISAbits.TRISA0 = 1;
     _delay((unsigned long)((500/100)*(4000000/4000000.0)));
-# 72 "IIC.c"
-    return PORTAbits.RA1;
+
+
+    unsigned char timer = 255;
+    while(timer != 0) {
+        if(!PORTAbits.RA1) {
+
+            timer = 0;
+        } else {
+            _delay((unsigned long)((1)*(4000000/4000000.0)));
+            timer--;
+        }
+    }
+
+    if(timer == 0) {
+        (ErrFlag |= (1<<0));
+    }
+
 }
 
 
