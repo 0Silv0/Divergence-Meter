@@ -1201,7 +1201,7 @@ extern __bank0 __bit __timeout;
 #pragma config CPD = OFF
 #pragma config CP = OFF
 # 56 "./main.h"
-extern unsigned char flag;
+extern unsigned char Flag;
 extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
@@ -1244,6 +1244,7 @@ __bit isRTCRunning(void);
 void startRTC(void);
 __bit checkRTCType(void);
 void getTime(void);
+void getDate(void);
 # 11 "./headers.h" 2
 
 # 1 "./tubes.h" 1
@@ -1259,45 +1260,43 @@ void latch(void);
 void display(void);
 void flashBrightness(void);
 void blankTubes(void);
-void displayError666(void);
+void displayError(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
 void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
 # 12 "./headers.h" 2
 # 1 "main.c" 2
-# 33 "main.c"
-unsigned char flag;
+# 35 "main.c"
+unsigned char Flag;
 unsigned char ErrFlag;
 unsigned char PORTA_SHADOW;
 unsigned char PORTB_SHADOW;
 
 void main(void) {
     Init();
-    unsigned char tmp = 1;
+    unsigned char menu = 1;
     while(1) {
-        if(tmp) {
-            if(!((ErrFlag)>>(1) & 1)) {
+        if(menu) {
+            if(!(((ErrFlag)>>(1) & 1))) {
                 getTime();
             } else {
-                displayError666();
+                displayError();
             }
         }
         if(PORTAbits.RA2) {
             while(PORTAbits.RA2) {}
-            tmp = 0;
-            preLoadWL();
-            loadDisplay();
-            display();
+            menu = 0;
+            passTubeNum(((ErrFlag)>>(0) & 1),10,1,2,3,4,5,6,0x00,0x00);
+            startRTC();
         } else if (PORTAbits.RA3) {
             while(PORTAbits.RA3) {}
-            tmp = 1;
+            menu = 1;
         }
     }
 }
 
 
 void Init(void) {
-    unsigned char clockTest;
     CMCON = 0b111;
     TRISA = 0b00101111;
     TRISB = 0b00000000;
@@ -1305,29 +1304,21 @@ void Init(void) {
     PORTA_SHADOW = 0x00;
     PORTB_SHADOW = 0x00;
     PORTB = PORTB_SHADOW;
-    flag = 0x00;
+    Flag = 0x10;
     ErrFlag = 0x00;
     InitI2C();
     InitTubes();
 
     if(isRTCRunning()) {
+        ((Flag) |= (1<<4));
         startRTC();
-
-        clockTest = readByteRTC(0x00);
-        if(((clockTest)>>(7) & 1)) {
-            (ErrFlag |= (1<<1));
-        }
     } else {
         if(checkRTCType()) {
             startRTC();
-
-            clockTest = readByteRTC(0x0F);
-            if(((clockTest)>>(7) & 1)) {
-                (ErrFlag |= (1<<1));
-            }
         }
     }
 }
+
 
 unsigned char swapNibbles(unsigned char data) {
     return ((data & 0x0F) << 4 | (data & 0xF0) >> 4);

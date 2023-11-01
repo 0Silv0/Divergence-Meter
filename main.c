@@ -24,44 +24,43 @@
 // long1        1   Long BTN1 press
 // short2       2   Short BTN2 press
 // long2        3   Long BTN2 press
-// Done         4   World line animation complete
+// typeRTC      4   RTC type, 0 for DS3232 1 for DS1307
 // Slide        5   Slide loading used in ___ (1=slide)
 // AMPM         6   Keeps track of AM/PM (1=PM)
 // Clk12        7   12/24 hour preference (1=12 hour clock)
 
+//Error Flag bits
+// ErrNACK      0   RTC NACK/SDA line high
 // Global variables
-unsigned char flag;
+unsigned char Flag;
 unsigned char ErrFlag;
 unsigned char PORTA_SHADOW;
 unsigned char PORTB_SHADOW;
 
 void main(void) {
     Init(); // Initialize everything
-    unsigned char tmp = 1;
+    unsigned char menu = 1;
     while(1) {
-        if(tmp) {
-            if(!BIT_CHECK(ErrFlag, ErrRTC)) {
+        if(menu) {
+            if(!(BIT_CHECK(ErrFlag, ErrRTC))) {
                 getTime();
             } else {
-                displayError666();
+                displayError();
             }
         }
         if(BTN1) {
             while(BTN1) {}  // wait for btn release
-            tmp = 0;
-            preLoadWL();
-            loadDisplay();
-            display();
+            menu = 0;
+            //passTubeNum(BIT_CHECK(ErrFlag, ErrNACK),10,1,2,3,4,5,6,0x00,0x00); using this for variable testing
         } else if (BTN2) {
             while(BTN2) {}  // wait for btn release
-            tmp = 1;
+            menu = 1;
         }
     }
 }
 
 // Initializations
 void Init(void) {
-    unsigned char clockTest;
     CMCON = 0b111; //  Disables comparators and enables digital I/O
     TRISA = 0b00101111; // Set I/O pins in PORTA
     TRISB = 0b00000000; // Set all pins to output in PORTB
@@ -69,26 +68,17 @@ void Init(void) {
     PORTA_SHADOW = 0x00; // Clear PORTA Shadow bits
     PORTB_SHADOW = 0x00; // Clear PORTB Shadow bits
     PORTB = PORTB_SHADOW;
-    flag = 0x00; // Clears flag bits
-    ErrFlag = 0x00;
+    Flag = 0x10; // Clears flag bits (sets default RTC to DS1307)
+    ErrFlag = 0x00; // Clears error flag
     InitI2C(); // Initialize I2C
     InitTubes(); // Initialize tubes
     // Checks to see if clock is running
     if(isRTCRunning()) { // Clock is DS1307 and is currently stopped
+        BIT_SET(Flag, typeRTC); // Sets RTC type flag to DS1307
         startRTC(); // Start DS1307
-        // Checks to see if it started properly
-        clockTest = readByteRTC(0x00);
-        if(BIT_CHECK(clockTest,7)) {
-            BIT_SET(ErrFlag,ErrRTC);
-        }
     } else { // DS1307 is either running or the clock is a DS3232
         if(checkRTCType()) { // returns 1 for stopped DS3232 and 0 for everything else
             startRTC(); // fills DS3232 after it was started in isRTCRunning()
-            // Checks to see if it started properly
-            clockTest = readByteRTC(0x0F);
-            if(BIT_CHECK(clockTest,7)) {
-                BIT_SET(ErrFlag,ErrRTC);
-            }
         }
     }
 }

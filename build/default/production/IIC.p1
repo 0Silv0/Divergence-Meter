@@ -369,11 +369,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ != -> _timer `i -> 0 `i 64  ]
 [e :U 65 ]
 "75
-[; ;IIC.c: 75:     if(timer == 0) {
-[e $ ! == -> _timer `i -> 0 `i 68  ]
+[; ;IIC.c: 75:     if(timer == 0 && PORTAbits.RA1) {
+[e $ ! && == -> _timer `i -> 0 `i != -> . . _PORTAbits 0 1 `i -> 0 `i 68  ]
 {
 "76
-[; ;IIC.c: 76:         (ErrFlag |= (1<<0));
+[; ;IIC.c: 76:         ((ErrFlag) |= (1<<0));
 [e =| _ErrFlag -> << -> 1 `i -> 0 `i `uc ]
 "77
 [; ;IIC.c: 77:     }

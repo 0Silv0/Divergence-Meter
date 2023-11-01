@@ -27,11 +27,11 @@
 [v _I2C_SendACK I2C_SendACK `(v  1 e 1 0 ]
 "107
 [v _I2C_SendNACK I2C_SendNACK `(v  1 e 1 0 ]
-"38 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\main.c
+"40 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\main.c
 [v _main main `(v  1 e 1 0 ]
-"63
+"64
 [v _Init Init `(v  1 e 1 0 ]
-"96
+"88
 [v _swapNibbles swapNibbles `(uc  1 e 1 0 ]
 "6 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\RTC.c
 [v _reqReadRTC reqReadRTC `(v  1 e 1 0 ]
@@ -53,31 +53,31 @@
 [v _isRTCRunning isRTCRunning `(b  1 e 0 0 ]
 "69
 [v _startRTC startRTC `(v  1 e 1 0 ]
-"87
+"106
 [v _checkRTCType checkRTCType `(b  1 e 0 0 ]
-"107
+"129
 [v _getTime getTime `(v  1 e 1 0 ]
+"176
+[v _getDate getDate `(v  1 e 1 0 ]
 "18 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\tubes.c
 [v _InitTubes InitTubes `(v  1 e 1 0 ]
-"23
-[v _preLoadWL preLoadWL `(v  1 e 1 0 ]
-"37
+"39
 [v _loadDisplay loadDisplay `(v  1 e 1 0 ]
-"69
+"71
 [v _checkDP checkDP `(v  1 e 1 0 ]
-"82
+"84
 [v _latch latch `(v  1 e 1 0 ]
-"90
+"92
 [v _display display `(v  1 e 1 0 ]
-"101
+"103
 [v _blankTubes blankTubes `(v  1 e 1 0 ]
-"113
-[v _displayError666 displayError666 `(v  1 e 1 0 ]
-"122
+"115
+[v _displayError displayError `(v  1 e 1 0 ]
+"129
 [v _send1ToDrivers send1ToDrivers `(v  1 e 1 0 ]
-"131
+"138
 [v _send0ToDrivers send0ToDrivers `(v  1 e 1 0 ]
-"139
+"146
 [v _passTubeNum passTubeNum `(v  1 e 1 0 ]
 [s S34 . 1 `uc 1 RA0 1 0 :1:0 
 `uc 1 RA1 1 0 :1:1 
@@ -99,7 +99,7 @@
 [v _OPTION_REG OPTION_REG `VEuc  1 e 1 @129 ]
 "907
 [v _TRISA TRISA `VEuc  1 e 1 @133 ]
-[s S119 . 1 `uc 1 TRISA0 1 0 :1:0 
+[s S115 . 1 `uc 1 TRISA0 1 0 :1:0 
 `uc 1 TRISA1 1 0 :1:1 
 `uc 1 TRISA2 1 0 :1:2 
 `uc 1 TRISA3 1 0 :1:3 
@@ -109,17 +109,17 @@
 `uc 1 TRISA7 1 0 :1:7 
 ]
 "924
-[u S128 . 1 `S119 1 . 1 0 ]
-[v _TRISAbits TRISAbits `VES128  1 e 1 @133 ]
+[u S124 . 1 `S115 1 . 1 0 ]
+[v _TRISAbits TRISAbits `VES124  1 e 1 @133 ]
 "969
 [v _TRISB TRISB `VEuc  1 e 1 @134 ]
-"33 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\main.c
-[v _flag flag `uc  1 e 1 0 ]
-"34
-[v _ErrFlag ErrFlag `uc  1 e 1 0 ]
-"35
-[v _PORTA_SHADOW PORTA_SHADOW `uc  1 e 1 0 ]
+"35 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\main.c
+[v _Flag Flag `uc  1 e 1 0 ]
 "36
+[v _ErrFlag ErrFlag `uc  1 e 1 0 ]
+"37
+[v _PORTA_SHADOW PORTA_SHADOW `uc  1 e 1 0 ]
+"38
 [v _PORTB_SHADOW PORTB_SHADOW `uc  1 e 1 0 ]
 "3 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\RTC.c
 [v _oldSeconds oldSeconds `uc  1 e 1 0 ]
@@ -143,45 +143,57 @@
 [v _T6 T6 `uc  1 e 1 @40 ]
 "16
 [v _T7 T7 `uc  1 e 1 @41 ]
-"38 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\main.c
+"40 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\main.c
 [v _main main `(v  1 e 1 0 ]
 {
-"40
-[v main@tmp tmp `uc  1 a 1 13 ]
-"60
+"42
+[v main@menu menu `uc  1 a 1 13 ]
+"61
 } 0
-"23 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\tubes.c
-[v _preLoadWL preLoadWL `(v  1 e 1 0 ]
-{
-"35
-} 0
-"107 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\RTC.c
+"129 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\RTC.c
 [v _getTime getTime `(v  1 e 1 0 ]
 {
-"108
-[v getTime@seconds seconds `uc  1 a 1 19 ]
-[v getTime@hours hours `uc  1 a 1 18 ]
-[v getTime@minutes minutes `uc  1 a 1 17 ]
-"111
-[v getTime@tmpRight tmpRight `uc  1 a 1 16 ]
-[v getTime@tmpLeft tmpLeft `uc  1 a 1 15 ]
-"110
-[v getTime@tensHours tensHours `uc  1 a 1 14 ]
-[v getTime@tensMinutes tensMinutes `uc  1 a 1 13 ]
-[v getTime@tensSeconds tensSeconds `uc  1 a 1 12 ]
-"109
-[v getTime@singleHours singleHours `uc  1 a 1 11 ]
-[v getTime@singleMinutes singleMinutes `uc  1 a 1 10 ]
-[v getTime@singleSeconds singleSeconds `uc  1 a 1 9 ]
-"141
+"130
+[v getTime@seconds seconds `uc  1 a 1 28 ]
+[v getTime@hours hours `uc  1 a 1 27 ]
+[v getTime@minutes minutes `uc  1 a 1 26 ]
+"133
+[v getTime@tmpRight tmpRight `uc  1 a 1 25 ]
+[v getTime@tmpLeft tmpLeft `uc  1 a 1 24 ]
+"132
+[v getTime@tensHours tensHours `uc  1 a 1 23 ]
+[v getTime@tensMinutes tensMinutes `uc  1 a 1 22 ]
+[v getTime@tensSeconds tensSeconds `uc  1 a 1 21 ]
+"131
+[v getTime@singleHours singleHours `uc  1 a 1 20 ]
+[v getTime@singleMinutes singleMinutes `uc  1 a 1 19 ]
+[v getTime@singleSeconds singleSeconds `uc  1 a 1 18 ]
+"174
 } 0
-"96 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\main.c
+"176
+[v _getDate getDate `(v  1 e 1 0 ]
+{
+"177
+[v getDate@year year `uc  1 a 1 17 ]
+[v getDate@month month `uc  1 a 1 16 ]
+[v getDate@day day `uc  1 a 1 15 ]
+"179
+[v getDate@tensYear tensYear `uc  1 a 1 14 ]
+[v getDate@tensMonth tensMonth `uc  1 a 1 13 ]
+[v getDate@tensDay tensDay `uc  1 a 1 12 ]
+"178
+[v getDate@singleYear singleYear `uc  1 a 1 11 ]
+[v getDate@singleMonth singleMonth `uc  1 a 1 10 ]
+[v getDate@singleDay singleDay `uc  1 a 1 9 ]
+"194
+} 0
+"88 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\main.c
 [v _swapNibbles swapNibbles `(uc  1 e 1 0 ]
 {
 [v swapNibbles@data data `uc  1 a 1 wreg ]
 [v swapNibbles@data data `uc  1 a 1 wreg ]
 [v swapNibbles@data data `uc  1 a 1 3 ]
-"98
+"90
 } 0
 "16 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\RTC.c
 [v _readDataRTC readDataRTC `(uc  1 e 1 0 ]
@@ -190,7 +202,7 @@
 [v readDataRTC@data data `uc  1 a 1 3 ]
 "20
 } 0
-"139 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\tubes.c
+"146 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\tubes.c
 [v _passTubeNum passTubeNum `(v  1 e 1 0 ]
 {
 [v passTubeNum@tmp7 tmp7 `uc  1 a 1 wreg ]
@@ -205,88 +217,44 @@
 [v passTubeNum@tmpLDP tmpLDP `uc  1 p 1 7 ]
 [v passTubeNum@tmpRDP tmpRDP `uc  1 p 1 8 ]
 [v passTubeNum@tmp7 tmp7 `uc  1 a 1 8 ]
-"152
+"158
 } 0
 "97 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\IIC.c
 [v _I2C_SendACK I2C_SendACK `(v  1 e 1 0 ]
 {
 "104
 } 0
-"113 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\tubes.c
-[v _displayError666 displayError666 `(v  1 e 1 0 ]
-{
-"119
-} 0
-"37
-[v _loadDisplay loadDisplay `(v  1 e 1 0 ]
-{
-"48
-[v loadDisplay@numIndex numIndex `uc  1 a 1 5 ]
-"44
-[v loadDisplay@tubeIndex tubeIndex `uc  1 a 1 4 ]
-"42
-[v loadDisplay@RDP RDP `uc  1 a 1 7 ]
-"41
-[v loadDisplay@LDP LDP `uc  1 a 1 6 ]
-"38
-[v loadDisplay@tubePtr tubePtr `*.4uc  1 a 1 3 ]
-"40
-[v loadDisplay@dispNum dispNum `uc  1 a 1 2 ]
-"66
-} 0
-"82
-[v _latch latch `(v  1 e 1 0 ]
-{
-"87
-} 0
-"69
-[v _checkDP checkDP `(v  1 e 1 0 ]
-{
-[v checkDP@DP DP `*.1uc  1 a 1 wreg ]
-[v checkDP@DP DP `*.1uc  1 a 1 wreg ]
-[v checkDP@DP DP `*.1uc  1 a 1 1 ]
-"79
-} 0
-"122
-[v _send1ToDrivers send1ToDrivers `(v  1 e 1 0 ]
-{
-"128
-} 0
-"131
-[v _send0ToDrivers send0ToDrivers `(v  1 e 1 0 ]
-{
-"137
-} 0
-"90
-[v _display display `(v  1 e 1 0 ]
-{
-"94
-} 0
-"63 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\main.c
+"64 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\main.c
 [v _Init Init `(v  1 e 1 0 ]
 {
-"64
-[v Init@clockTest clockTest `uc  1 a 1 11 ]
-"94
+"85
 } 0
 "69 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\RTC.c
 [v _startRTC startRTC `(v  1 e 1 0 ]
 {
-"84
+"70
+[v startRTC@RTCaddress RTCaddress `uc  1 a 1 11 ]
+[v startRTC@clockTest clockTest `uc  1 a 1 10 ]
+"103
 } 0
-"62
+"115 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\tubes.c
+[v _displayError displayError `(v  1 e 1 0 ]
+{
+"126
+} 0
+"62 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\RTC.c
 [v _isRTCRunning isRTCRunning `(b  1 e 0 0 ]
 {
 "63
 [v isRTCRunning@data data `uc  1 a 1 9 ]
 "66
 } 0
-"87
+"106
 [v _checkRTCType checkRTCType `(b  1 e 0 0 ]
 {
-"88
+"107
 [v checkRTCType@data data `uc  1 a 1 9 ]
-"105
+"127
 } 0
 "55
 [v _writeByteRTC writeByteRTC `(v  1 e 1 0 ]
@@ -387,16 +355,61 @@
 "18 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\tubes.c
 [v _InitTubes InitTubes `(v  1 e 1 0 ]
 {
-"20
+"22
 } 0
-"101
+"39
+[v _loadDisplay loadDisplay `(v  1 e 1 0 ]
+{
+"50
+[v loadDisplay@numIndex numIndex `uc  1 a 1 5 ]
+"46
+[v loadDisplay@tubeIndex tubeIndex `uc  1 a 1 4 ]
+"44
+[v loadDisplay@RDP RDP `uc  1 a 1 7 ]
+"43
+[v loadDisplay@LDP LDP `uc  1 a 1 6 ]
+"40
+[v loadDisplay@tubePtr tubePtr `*.4uc  1 a 1 3 ]
+"42
+[v loadDisplay@dispNum dispNum `uc  1 a 1 2 ]
+"68
+} 0
+"84
+[v _latch latch `(v  1 e 1 0 ]
+{
+"89
+} 0
+"71
+[v _checkDP checkDP `(v  1 e 1 0 ]
+{
+[v checkDP@DP DP `*.1uc  1 a 1 wreg ]
+[v checkDP@DP DP `*.1uc  1 a 1 wreg ]
+[v checkDP@DP DP `*.1uc  1 a 1 1 ]
+"81
+} 0
+"129
+[v _send1ToDrivers send1ToDrivers `(v  1 e 1 0 ]
+{
+"135
+} 0
+"138
+[v _send0ToDrivers send0ToDrivers `(v  1 e 1 0 ]
+{
+"144
+} 0
+"92
+[v _display display `(v  1 e 1 0 ]
+{
+"96
+} 0
+"103
 [v _blankTubes blankTubes `(v  1 e 1 0 ]
 {
-"105
+"107
 [v blankTubes@i i `uc  1 a 1 1 ]
-"102
+"104
 [v blankTubes@ptr ptr `*.4uc  1 a 1 0 ]
-"110
+"112
 } 0
 "4 C:\Users\Silv\MPLABXProjects\DivergenceMeter.X\IIC.c
 [v _InitI2C InitI2C `(v  1 e 1 0 ]

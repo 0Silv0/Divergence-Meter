@@ -1201,7 +1201,7 @@ extern __bank0 __bit __timeout;
 #pragma config CPD = OFF
 #pragma config CP = OFF
 # 56 "./main.h"
-extern unsigned char flag;
+extern unsigned char Flag;
 extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
@@ -1244,6 +1244,7 @@ __bit isRTCRunning(void);
 void startRTC(void);
 __bit checkRTCType(void);
 void getTime(void);
+void getDate(void);
 # 11 "./headers.h" 2
 
 # 1 "./tubes.h" 1
@@ -1259,7 +1260,7 @@ void latch(void);
 void display(void);
 void flashBrightness(void);
 void blankTubes(void);
-void displayError666(void);
+void displayError(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
 void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
@@ -1334,11 +1335,14 @@ __bit isRTCRunning(void) {
 
 
 void startRTC(void) {
+    unsigned char clockTest, RTCaddress;
     reqWriteRTC(0x00);
     writeDataRTC(0x00);
 
     writeDataRTC(0x30);
     writeDataRTC(0x12);
+    endWriteRTC();
+    reqWriteRTC(0x04);
     writeDataRTC(0x28);
     writeDataRTC(0x7);
     writeDataRTC(0x10);
@@ -1348,6 +1352,22 @@ void startRTC(void) {
     writeDataRTC(0x00);
     writeDataRTC(0x00);
     endWriteRTC();
+
+    if(((Flag)>>(4) & 1)) {
+        RTCaddress = 0x00;
+    } else {
+        RTCaddress = 0x0F;
+    }
+
+    clockTest = readByteRTC(RTCaddress);
+    if(!((clockTest)>>(7) & 1)) {
+        ((ErrFlag) &= ~(1<<1));
+        ((ErrFlag) &= ~(1<<0));
+    } else {
+
+        ((ErrFlag) |= (1<<1));
+        displayError();
+    }
 }
 
 
@@ -1357,15 +1377,18 @@ __bit checkRTCType(void) {
     if(((data)>>(7) & 1)) {
 
 
-        (data &=(0<<0));
+        ((data) &= ~(1<<0));
         writeByteRTC(0x0F,data);
-        (data |= (1<<0));
+        ((data) |= (1<<0));
         writeByteRTC(0x0F,data);
         _delay((unsigned long)((5)*(4000000/4000000.0)));
         data = readByteRTC(0x0F);
         if(!((data)>>(0) & 1)) {
             writeByteRTC(0x0F, 0x00);
+            ((Flag) &= ~(1<<4));
             return 1;
+        } else {
+            ((Flag) |= (1<<4));
         }
     }
     return 0;
@@ -1379,30 +1402,61 @@ void getTime(void) {
 
     seconds = readByteRTC(0x00);
 
+    if(((seconds)>>(7) & 1)) {
+        ((ErrFlag) |= (1<<1));
+    } else {
 
-    if(seconds != oldSeconds) {
-        reqReadRTC(0x00);
-        seconds = readDataRTC();
-        I2C_SendACK();
-        minutes = readDataRTC();
-        I2C_SendACK();
-        hours = readDataRTC();
-        endReadRTC();
-        singleSeconds = (seconds & 0x0F);
-        tensSeconds = (swapNibbles(seconds) & 0x0F);
-        singleMinutes = (minutes & 0x0F);
-        tensMinutes = (swapNibbles(minutes) & 0x0F);
-        singleHours = (hours & 0x0F);
-        tensHours = (swapNibbles(hours) & 0x0F);
+        if(seconds != oldSeconds) {
+            if(seconds == 0b00110000) {
+                getDate();
+                _delay((unsigned long)((4000)*(4000000/4000.0)));
+            } else if (seconds == 0b01011001) {
 
-        if(((seconds)>>(0) & 1)) {
-            tmpLeft = 0x00;
-            tmpRight = 0x24;
-        } else {
-            tmpLeft = 0x24;
-            tmpRight = 0x00;
+            } else {
+                reqReadRTC(0x00);
+                seconds = readDataRTC();
+                I2C_SendACK();
+                minutes = readDataRTC();
+                I2C_SendACK();
+                hours = readDataRTC();
+                endReadRTC();
+                singleSeconds = (seconds & 0x0F);
+                tensSeconds = (swapNibbles(seconds) & 0x0F);
+                singleMinutes = (minutes & 0x0F);
+                tensMinutes = (swapNibbles(minutes) & 0x0F);
+                singleHours = (hours & 0x0F);
+                tensHours = (swapNibbles(hours) & 0x0F);
+
+                if(((seconds)>>(0) & 1)) {
+                    tmpLeft = 0x00;
+                    tmpRight = 0x24;
+                } else {
+                    tmpLeft = 0x24;
+                    tmpRight = 0x00;
+                }
+                passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,tmpLeft,tmpRight);
+                oldSeconds = seconds;
+            }
         }
-        passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,tmpLeft,tmpRight);
-        oldSeconds = seconds;
     }
+}
+
+void getDate(void) {
+    unsigned char day, month, year;
+    unsigned char singleDay, singleMonth, singleYear;
+    unsigned char tensDay, tensMonth, tensYear;
+    reqReadRTC(0x04);
+    day = readDataRTC();
+    I2C_SendACK();
+    month = readDataRTC();
+    I2C_SendACK();
+    year = readDataRTC();
+    endReadRTC();
+    singleDay = (day & 0x0F);
+    tensDay = (swapNibbles(day) & 0x0F);
+    singleMonth = (month & 0x0F);
+    tensMonth = (swapNibbles(month) & 0x0F);
+    singleYear = (year & 0x0F);
+    tensYear = (swapNibbles(year) & 0x0F);
+    passTubeNum(tensDay,singleDay,10,tensMonth,singleMonth,10,tensYear,singleYear,0x00,0x00);
 }

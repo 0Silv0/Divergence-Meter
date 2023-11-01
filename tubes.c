@@ -17,6 +17,8 @@ unsigned char T7 __at(0x29);
 
 void InitTubes(void) {
     blankTubes(); // Initialize all tubes to display nothing
+    loadDisplay();
+    display();
 }
 
 // Loads Steins;Gate worldline number
@@ -110,12 +112,17 @@ void blankTubes(void) {
 }
 
 // Displays error 666
-void displayError666(void) {
+void displayError(void) {
     blankTubes(); // Clear tubes
-    T0 = T1 = T2 = 6; // Sets T0-T2 to 6
-    leftDP = rightDP = 0x00; // Clears left and right decimal points
-    loadDisplay(); // Sends tube data to serial to parallel drivers
-    display(); // Displays sent data
+    if(BIT_CHECK(ErrFlag, ErrRTC)) {
+        T0 = T1 = T2 = 6; // Sets T0-T2 to 6
+        leftDP = rightDP = 0x00; // Clears left and right decimal points
+        loadDisplay(); // Sends tube data to serial to parallel drivers
+    } else if (BIT_CHECK(ErrFlag, ErrNACK)) {
+        T0 = T1 = T2 = 9; // Sets T0-T2 to 9
+        leftDP = rightDP = 0x00; // Clears left and right decimal points
+        loadDisplay(); // Sends tube data to serial to parallel drivers
+    }
 }
 
 // Sends 1 to serial to parallel drivers
@@ -148,5 +155,4 @@ void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, uns
     leftDP = tmpLDP;
     rightDP = tmpRDP;
     loadDisplay();
-    display();
 }

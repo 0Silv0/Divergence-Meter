@@ -1201,7 +1201,7 @@ extern __bank0 __bit __timeout;
 #pragma config CPD = OFF
 #pragma config CP = OFF
 # 56 "./main.h"
-extern unsigned char flag;
+extern unsigned char Flag;
 extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
@@ -1244,6 +1244,7 @@ __bit isRTCRunning(void);
 void startRTC(void);
 __bit checkRTCType(void);
 void getTime(void);
+void getDate(void);
 # 11 "./headers.h" 2
 
 # 1 "./tubes.h" 1
@@ -1259,7 +1260,7 @@ void latch(void);
 void display(void);
 void flashBrightness(void);
 void blankTubes(void);
-void displayError666(void);
+void displayError(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
 void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
@@ -1339,8 +1340,8 @@ void I2C_WriteByte(unsigned char Data) {
         }
     }
 
-    if(timer == 0) {
-        (ErrFlag |= (1<<0));
+    if(timer == 0 && PORTAbits.RA1) {
+        ((ErrFlag) |= (1<<0));
     }
 
 }

@@ -17,10 +17,22 @@ Version 4.0 HI-TECH Software Intermediate Code
 "21
 [; ;./IIC.h: 21: void I2C_Stop(void);
 [v _I2C_Stop `(v ~T0 @X0 0 ef ]
+"56 ./main.h
+[; ;./main.h: 56: extern unsigned char Flag;
+[v _Flag `uc ~T0 @X0 0 e ]
+"57
+[; ;./main.h: 57: extern unsigned char ErrFlag;
+[v _ErrFlag `uc ~T0 @X0 0 e ]
+"13 ./tubes.h
+[; ;./tubes.h: 13: void displayError(void);
+[v _displayError `(v ~T0 @X0 0 ef ]
 [v F164 `(v ~T0 @X0 1 tf1`ul ]
 "20 C:\Program Files\Microchip\xc8\v2.45\pic\include\builtins.h
 [v __delay `JF164 ~T0 @X0 0 e ]
 [p i __delay ]
+"21 ./RTC.h
+[; ;./RTC.h: 21: void getDate(void);
+[v _getDate `(v ~T0 @X0 0 ef ]
 "24 ./IIC.h
 [; ;./IIC.h: 24: void I2C_SendACK(void);
 [v _I2C_SendACK `(v ~T0 @X0 0 ef ]
@@ -345,214 +357,397 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U _startRTC ]
 [f ]
 "70
-[; ;RTC.c: 70:     reqWriteRTC(0x00);
-[e ( _reqWriteRTC (1 -> -> 0 `i `uc ]
+[; ;RTC.c: 70:     unsigned char clockTest, RTCaddress;
+[v _clockTest `uc ~T0 @X0 1 a ]
+[v _RTCaddress `uc ~T0 @X0 1 a ]
 "71
-[; ;RTC.c: 71:     writeDataRTC(0x00);
+[; ;RTC.c: 71:     reqWriteRTC(0x00);
+[e ( _reqWriteRTC (1 -> -> 0 `i `uc ]
+"72
+[; ;RTC.c: 72:     writeDataRTC(0x00);
 [e ( _writeDataRTC (1 -> -> 0 `i `uc ]
-"73
-[; ;RTC.c: 73:     writeDataRTC(0x30);
-[e ( _writeDataRTC (1 -> -> 48 `i `uc ]
 "74
-[; ;RTC.c: 74:     writeDataRTC(0x12);
-[e ( _writeDataRTC (1 -> -> 18 `i `uc ]
+[; ;RTC.c: 74:     writeDataRTC(0x30);
+[e ( _writeDataRTC (1 -> -> 48 `i `uc ]
 "75
-[; ;RTC.c: 75:     writeDataRTC(0x28);
-[e ( _writeDataRTC (1 -> -> 40 `i `uc ]
+[; ;RTC.c: 75:     writeDataRTC(0x12);
+[e ( _writeDataRTC (1 -> -> 18 `i `uc ]
 "76
-[; ;RTC.c: 76:     writeDataRTC(0x7);
-[e ( _writeDataRTC (1 -> -> 7 `i `uc ]
+[; ;RTC.c: 76:     endWriteRTC();
+[e ( _endWriteRTC ..  ]
 "77
-[; ;RTC.c: 77:     writeDataRTC(0x10);
-[e ( _writeDataRTC (1 -> -> 16 `i `uc ]
+[; ;RTC.c: 77:     reqWriteRTC(0x04);
+[e ( _reqWriteRTC (1 -> -> 4 `i `uc ]
 "78
-[; ;RTC.c: 78:     endWriteRTC();
-[e ( _endWriteRTC ..  ]
+[; ;RTC.c: 78:     writeDataRTC(0x28);
+[e ( _writeDataRTC (1 -> -> 40 `i `uc ]
+"79
+[; ;RTC.c: 79:     writeDataRTC(0x7);
+[e ( _writeDataRTC (1 -> -> 7 `i `uc ]
 "80
-[; ;RTC.c: 80:     reqWriteRTC(0x14);
-[e ( _reqWriteRTC (1 -> -> 20 `i `uc ]
+[; ;RTC.c: 80:     writeDataRTC(0x10);
+[e ( _writeDataRTC (1 -> -> 16 `i `uc ]
 "81
-[; ;RTC.c: 81:     writeDataRTC(0x00);
-[e ( _writeDataRTC (1 -> -> 0 `i `uc ]
-"82
-[; ;RTC.c: 82:     writeDataRTC(0x00);
-[e ( _writeDataRTC (1 -> -> 0 `i `uc ]
-"83
-[; ;RTC.c: 83:     endWriteRTC();
+[; ;RTC.c: 81:     endWriteRTC();
 [e ( _endWriteRTC ..  ]
+"83
+[; ;RTC.c: 83:     reqWriteRTC(0x14);
+[e ( _reqWriteRTC (1 -> -> 20 `i `uc ]
 "84
-[; ;RTC.c: 84: }
+[; ;RTC.c: 84:     writeDataRTC(0x00);
+[e ( _writeDataRTC (1 -> -> 0 `i `uc ]
+"85
+[; ;RTC.c: 85:     writeDataRTC(0x00);
+[e ( _writeDataRTC (1 -> -> 0 `i `uc ]
+"86
+[; ;RTC.c: 86:     endWriteRTC();
+[e ( _endWriteRTC ..  ]
+"88
+[; ;RTC.c: 88:     if(((Flag)>>(4) & 1)) {
+[e $ ! != & >> -> _Flag `i -> 4 `i -> 1 `i -> 0 `i 65  ]
+{
+"89
+[; ;RTC.c: 89:         RTCaddress = 0x00;
+[e = _RTCaddress -> -> 0 `i `uc ]
+"90
+[; ;RTC.c: 90:     } else {
+}
+[e $U 66  ]
+[e :U 65 ]
+{
+"91
+[; ;RTC.c: 91:         RTCaddress = 0x0F;
+[e = _RTCaddress -> -> 15 `i `uc ]
+"92
+[; ;RTC.c: 92:     }
+}
+[e :U 66 ]
+"94
+[; ;RTC.c: 94:     clockTest = readByteRTC(RTCaddress);
+[e = _clockTest ( _readByteRTC (1 _RTCaddress ]
+"95
+[; ;RTC.c: 95:     if(!((clockTest)>>(7) & 1)) {
+[e $ ! ! != & >> -> _clockTest `i -> 7 `i -> 1 `i -> 0 `i 67  ]
+{
+"96
+[; ;RTC.c: 96:         ((ErrFlag) &= ~(1<<1));
+[e =& _ErrFlag -> ~ << -> 1 `i -> 1 `i `uc ]
+"97
+[; ;RTC.c: 97:         ((ErrFlag) &= ~(1<<0));
+[e =& _ErrFlag -> ~ << -> 1 `i -> 0 `i `uc ]
+"98
+[; ;RTC.c: 98:     } else {
+}
+[e $U 68  ]
+[e :U 67 ]
+{
+"100
+[; ;RTC.c: 100:         ((ErrFlag) |= (1<<1));
+[e =| _ErrFlag -> << -> 1 `i -> 1 `i `uc ]
+"101
+[; ;RTC.c: 101:         displayError();
+[e ( _displayError ..  ]
+"102
+[; ;RTC.c: 102:     }
+}
+[e :U 68 ]
+"103
+[; ;RTC.c: 103: }
 [e :UE 64 ]
 }
-"87
-[; ;RTC.c: 87: __bit checkRTCType(void) {
+"106
+[; ;RTC.c: 106: __bit checkRTCType(void) {
 [v _checkRTCType `(b ~T0 @X0 1 ef ]
 {
 [e :U _checkRTCType ]
 [f ]
-"88
-[; ;RTC.c: 88:     unsigned char data;
-[v _data `uc ~T0 @X0 1 a ]
-"89
-[; ;RTC.c: 89:     data = readByteRTC(0x0F);
-[e = _data ( _readByteRTC (1 -> -> 15 `i `uc ]
-"90
-[; ;RTC.c: 90:     if(((data)>>(7) & 1)) {
-[e $ ! != & >> -> _data `i -> 7 `i -> 1 `i -> 0 `i 66  ]
-{
-"93
-[; ;RTC.c: 93:         (data &=(0<<0));
-[e =& _data -> << -> 0 `i -> 0 `i `uc ]
-"94
-[; ;RTC.c: 94:         writeByteRTC(0x0F,data);
-[e ( _writeByteRTC (2 , -> -> 15 `i `uc _data ]
-"95
-[; ;RTC.c: 95:         (data |= (1<<0));
-[e =| _data -> << -> 1 `i -> 0 `i `uc ]
-"96
-[; ;RTC.c: 96:         writeByteRTC(0x0F,data);
-[e ( _writeByteRTC (2 , -> -> 15 `i `uc _data ]
-"97
-[; ;RTC.c: 97:         _delay((unsigned long)((5)*(4000000/4000000.0)));
-[e ( __delay (1 -> * -> -> 5 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
-"98
-[; ;RTC.c: 98:         data = readByteRTC(0x0F);
-[e = _data ( _readByteRTC (1 -> -> 15 `i `uc ]
-"99
-[; ;RTC.c: 99:         if(!((data)>>(0) & 1)) {
-[e $ ! ! != & >> -> _data `i -> 0 `i -> 1 `i -> 0 `i 67  ]
-{
-"100
-[; ;RTC.c: 100:             writeByteRTC(0x0F, 0x00);
-[e ( _writeByteRTC (2 , -> -> 15 `i `uc -> -> 0 `i `uc ]
-"101
-[; ;RTC.c: 101:             return 1;
-[e ) -> -> 1 `i `b ]
-[e $UE 65  ]
-"102
-[; ;RTC.c: 102:         }
-}
-[e :U 67 ]
-"103
-[; ;RTC.c: 103:     }
-}
-[e :U 66 ]
-"104
-[; ;RTC.c: 104:     return 0;
-[e ) -> -> 0 `i `b ]
-[e $UE 65  ]
-"105
-[; ;RTC.c: 105: }
-[e :UE 65 ]
-}
 "107
-[; ;RTC.c: 107: void getTime(void) {
+[; ;RTC.c: 107:     unsigned char data;
+[v _data `uc ~T0 @X0 1 a ]
+"108
+[; ;RTC.c: 108:     data = readByteRTC(0x0F);
+[e = _data ( _readByteRTC (1 -> -> 15 `i `uc ]
+"109
+[; ;RTC.c: 109:     if(((data)>>(7) & 1)) {
+[e $ ! != & >> -> _data `i -> 7 `i -> 1 `i -> 0 `i 70  ]
+{
+"112
+[; ;RTC.c: 112:         ((data) &= ~(1<<0));
+[e =& _data -> ~ << -> 1 `i -> 0 `i `uc ]
+"113
+[; ;RTC.c: 113:         writeByteRTC(0x0F,data);
+[e ( _writeByteRTC (2 , -> -> 15 `i `uc _data ]
+"114
+[; ;RTC.c: 114:         ((data) |= (1<<0));
+[e =| _data -> << -> 1 `i -> 0 `i `uc ]
+"115
+[; ;RTC.c: 115:         writeByteRTC(0x0F,data);
+[e ( _writeByteRTC (2 , -> -> 15 `i `uc _data ]
+"116
+[; ;RTC.c: 116:         _delay((unsigned long)((5)*(4000000/4000000.0)));
+[e ( __delay (1 -> * -> -> 5 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"117
+[; ;RTC.c: 117:         data = readByteRTC(0x0F);
+[e = _data ( _readByteRTC (1 -> -> 15 `i `uc ]
+"118
+[; ;RTC.c: 118:         if(!((data)>>(0) & 1)) {
+[e $ ! ! != & >> -> _data `i -> 0 `i -> 1 `i -> 0 `i 71  ]
+{
+"119
+[; ;RTC.c: 119:             writeByteRTC(0x0F, 0x00);
+[e ( _writeByteRTC (2 , -> -> 15 `i `uc -> -> 0 `i `uc ]
+"120
+[; ;RTC.c: 120:             ((Flag) &= ~(1<<4));
+[e =& _Flag -> ~ << -> 1 `i -> 4 `i `uc ]
+"121
+[; ;RTC.c: 121:             return 1;
+[e ) -> -> 1 `i `b ]
+[e $UE 69  ]
+"122
+[; ;RTC.c: 122:         } else {
+}
+[e $U 72  ]
+[e :U 71 ]
+{
+"123
+[; ;RTC.c: 123:             ((Flag) |= (1<<4));
+[e =| _Flag -> << -> 1 `i -> 4 `i `uc ]
+"124
+[; ;RTC.c: 124:         }
+}
+[e :U 72 ]
+"125
+[; ;RTC.c: 125:     }
+}
+[e :U 70 ]
+"126
+[; ;RTC.c: 126:     return 0;
+[e ) -> -> 0 `i `b ]
+[e $UE 69  ]
+"127
+[; ;RTC.c: 127: }
+[e :UE 69 ]
+}
+"129
+[; ;RTC.c: 129: void getTime(void) {
 [v _getTime `(v ~T0 @X0 1 ef ]
 {
 [e :U _getTime ]
 [f ]
-"108
-[; ;RTC.c: 108:     unsigned char seconds, minutes, hours;
+"130
+[; ;RTC.c: 130:     unsigned char seconds, minutes, hours;
 [v _seconds `uc ~T0 @X0 1 a ]
 [v _minutes `uc ~T0 @X0 1 a ]
 [v _hours `uc ~T0 @X0 1 a ]
-"109
-[; ;RTC.c: 109:     unsigned char singleSeconds, singleMinutes, singleHours;
+"131
+[; ;RTC.c: 131:     unsigned char singleSeconds, singleMinutes, singleHours;
 [v _singleSeconds `uc ~T0 @X0 1 a ]
 [v _singleMinutes `uc ~T0 @X0 1 a ]
 [v _singleHours `uc ~T0 @X0 1 a ]
-"110
-[; ;RTC.c: 110:     unsigned char tensSeconds, tensMinutes, tensHours;
+"132
+[; ;RTC.c: 132:     unsigned char tensSeconds, tensMinutes, tensHours;
 [v _tensSeconds `uc ~T0 @X0 1 a ]
 [v _tensMinutes `uc ~T0 @X0 1 a ]
 [v _tensHours `uc ~T0 @X0 1 a ]
-"111
-[; ;RTC.c: 111:     unsigned char tmpLeft, tmpRight;
+"133
+[; ;RTC.c: 133:     unsigned char tmpLeft, tmpRight;
 [v _tmpLeft `uc ~T0 @X0 1 a ]
 [v _tmpRight `uc ~T0 @X0 1 a ]
-"113
-[; ;RTC.c: 113:     seconds = readByteRTC(0x00);
-[e = _seconds ( _readByteRTC (1 -> -> 0 `i `uc ]
-"116
-[; ;RTC.c: 116:     if(seconds != oldSeconds) {
-[e $ ! != -> _seconds `i -> _oldSeconds `i 69  ]
-{
-"117
-[; ;RTC.c: 117:         reqReadRTC(0x00);
-[e ( _reqReadRTC (1 -> -> 0 `i `uc ]
-"118
-[; ;RTC.c: 118:         seconds = readDataRTC();
-[e = _seconds ( _readDataRTC ..  ]
-"119
-[; ;RTC.c: 119:         I2C_SendACK();
-[e ( _I2C_SendACK ..  ]
-"120
-[; ;RTC.c: 120:         minutes = readDataRTC();
-[e = _minutes ( _readDataRTC ..  ]
-"121
-[; ;RTC.c: 121:         I2C_SendACK();
-[e ( _I2C_SendACK ..  ]
-"122
-[; ;RTC.c: 122:         hours = readDataRTC();
-[e = _hours ( _readDataRTC ..  ]
-"123
-[; ;RTC.c: 123:         endReadRTC();
-[e ( _endReadRTC ..  ]
-"124
-[; ;RTC.c: 124:         singleSeconds = (seconds & 0x0F);
-[e = _singleSeconds -> & -> _seconds `i -> 15 `i `uc ]
-"125
-[; ;RTC.c: 125:         tensSeconds = (swapNibbles(seconds) & 0x0F);
-[e = _tensSeconds -> & -> ( _swapNibbles (1 _seconds `i -> 15 `i `uc ]
-"126
-[; ;RTC.c: 126:         singleMinutes = (minutes & 0x0F);
-[e = _singleMinutes -> & -> _minutes `i -> 15 `i `uc ]
-"127
-[; ;RTC.c: 127:         tensMinutes = (swapNibbles(minutes) & 0x0F);
-[e = _tensMinutes -> & -> ( _swapNibbles (1 _minutes `i -> 15 `i `uc ]
-"128
-[; ;RTC.c: 128:         singleHours = (hours & 0x0F);
-[e = _singleHours -> & -> _hours `i -> 15 `i `uc ]
-"129
-[; ;RTC.c: 129:         tensHours = (swapNibbles(hours) & 0x0F);
-[e = _tensHours -> & -> ( _swapNibbles (1 _hours `i -> 15 `i `uc ]
-"131
-[; ;RTC.c: 131:         if(((seconds)>>(0) & 1)) {
-[e $ ! != & >> -> _seconds `i -> 0 `i -> 1 `i -> 0 `i 70  ]
-{
-"132
-[; ;RTC.c: 132:             tmpLeft = 0x00;
-[e = _tmpLeft -> -> 0 `i `uc ]
-"133
-[; ;RTC.c: 133:             tmpRight = 0x24;
-[e = _tmpRight -> -> 36 `i `uc ]
-"134
-[; ;RTC.c: 134:         } else {
-}
-[e $U 71  ]
-[e :U 70 ]
-{
 "135
-[; ;RTC.c: 135:             tmpLeft = 0x24;
-[e = _tmpLeft -> -> 36 `i `uc ]
-"136
-[; ;RTC.c: 136:             tmpRight = 0x00;
-[e = _tmpRight -> -> 0 `i `uc ]
+[; ;RTC.c: 135:     seconds = readByteRTC(0x00);
+[e = _seconds ( _readByteRTC (1 -> -> 0 `i `uc ]
 "137
-[; ;RTC.c: 137:         }
-}
-[e :U 71 ]
+[; ;RTC.c: 137:     if(((seconds)>>(7) & 1)) {
+[e $ ! != & >> -> _seconds `i -> 7 `i -> 1 `i -> 0 `i 74  ]
+{
 "138
-[; ;RTC.c: 138:         passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,tmpLeft,tmpRight);
-[e ( _passTubeNum (4 , , , , , , , , , _tensHours _singleHours -> -> 10 `i `uc _tensMinutes _singleMinutes -> -> 10 `i `uc _tensSeconds _singleSeconds _tmpLeft _tmpRight ]
+[; ;RTC.c: 138:         ((ErrFlag) |= (1<<1));
+[e =| _ErrFlag -> << -> 1 `i -> 1 `i `uc ]
 "139
-[; ;RTC.c: 139:         oldSeconds = seconds;
-[e = _oldSeconds _seconds ]
-"140
-[; ;RTC.c: 140:     }
+[; ;RTC.c: 139:     } else {
 }
-[e :U 69 ]
+[e $U 75  ]
+[e :U 74 ]
+{
 "141
-[; ;RTC.c: 141: }
-[e :UE 68 ]
+[; ;RTC.c: 141:         if(seconds != oldSeconds) {
+[e $ ! != -> _seconds `i -> _oldSeconds `i 76  ]
+{
+"142
+[; ;RTC.c: 142:             if(seconds == 0b00110000) {
+[e $ ! == -> _seconds `i -> 48 `i 77  ]
+{
+"143
+[; ;RTC.c: 143:                 getDate();
+[e ( _getDate ..  ]
+"144
+[; ;RTC.c: 144:                 _delay((unsigned long)((4000)*(4000000/4000.0)));
+[e ( __delay (1 -> * -> -> 4000 `i `d / -> -> 4000000 `l `d .4000.0 `ul ]
+"145
+[; ;RTC.c: 145:             } else if (seconds == 0b01011001) {
+}
+[e $U 78  ]
+[e :U 77 ]
+[e $ ! == -> _seconds `i -> 89 `i 79  ]
+{
+"147
+[; ;RTC.c: 147:             } else {
+}
+[e $U 80  ]
+[e :U 79 ]
+{
+"148
+[; ;RTC.c: 148:                 reqReadRTC(0x00);
+[e ( _reqReadRTC (1 -> -> 0 `i `uc ]
+"149
+[; ;RTC.c: 149:                 seconds = readDataRTC();
+[e = _seconds ( _readDataRTC ..  ]
+"150
+[; ;RTC.c: 150:                 I2C_SendACK();
+[e ( _I2C_SendACK ..  ]
+"151
+[; ;RTC.c: 151:                 minutes = readDataRTC();
+[e = _minutes ( _readDataRTC ..  ]
+"152
+[; ;RTC.c: 152:                 I2C_SendACK();
+[e ( _I2C_SendACK ..  ]
+"153
+[; ;RTC.c: 153:                 hours = readDataRTC();
+[e = _hours ( _readDataRTC ..  ]
+"154
+[; ;RTC.c: 154:                 endReadRTC();
+[e ( _endReadRTC ..  ]
+"155
+[; ;RTC.c: 155:                 singleSeconds = (seconds & 0x0F);
+[e = _singleSeconds -> & -> _seconds `i -> 15 `i `uc ]
+"156
+[; ;RTC.c: 156:                 tensSeconds = (swapNibbles(seconds) & 0x0F);
+[e = _tensSeconds -> & -> ( _swapNibbles (1 _seconds `i -> 15 `i `uc ]
+"157
+[; ;RTC.c: 157:                 singleMinutes = (minutes & 0x0F);
+[e = _singleMinutes -> & -> _minutes `i -> 15 `i `uc ]
+"158
+[; ;RTC.c: 158:                 tensMinutes = (swapNibbles(minutes) & 0x0F);
+[e = _tensMinutes -> & -> ( _swapNibbles (1 _minutes `i -> 15 `i `uc ]
+"159
+[; ;RTC.c: 159:                 singleHours = (hours & 0x0F);
+[e = _singleHours -> & -> _hours `i -> 15 `i `uc ]
+"160
+[; ;RTC.c: 160:                 tensHours = (swapNibbles(hours) & 0x0F);
+[e = _tensHours -> & -> ( _swapNibbles (1 _hours `i -> 15 `i `uc ]
+"162
+[; ;RTC.c: 162:                 if(((seconds)>>(0) & 1)) {
+[e $ ! != & >> -> _seconds `i -> 0 `i -> 1 `i -> 0 `i 81  ]
+{
+"163
+[; ;RTC.c: 163:                     tmpLeft = 0x00;
+[e = _tmpLeft -> -> 0 `i `uc ]
+"164
+[; ;RTC.c: 164:                     tmpRight = 0x24;
+[e = _tmpRight -> -> 36 `i `uc ]
+"165
+[; ;RTC.c: 165:                 } else {
+}
+[e $U 82  ]
+[e :U 81 ]
+{
+"166
+[; ;RTC.c: 166:                     tmpLeft = 0x24;
+[e = _tmpLeft -> -> 36 `i `uc ]
+"167
+[; ;RTC.c: 167:                     tmpRight = 0x00;
+[e = _tmpRight -> -> 0 `i `uc ]
+"168
+[; ;RTC.c: 168:                 }
+}
+[e :U 82 ]
+"169
+[; ;RTC.c: 169:                 passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,tmpLeft,tmpRight);
+[e ( _passTubeNum (4 , , , , , , , , , _tensHours _singleHours -> -> 10 `i `uc _tensMinutes _singleMinutes -> -> 10 `i `uc _tensSeconds _singleSeconds _tmpLeft _tmpRight ]
+"170
+[; ;RTC.c: 170:                 oldSeconds = seconds;
+[e = _oldSeconds _seconds ]
+"171
+[; ;RTC.c: 171:             }
+}
+[e :U 80 ]
+[e :U 78 ]
+"172
+[; ;RTC.c: 172:         }
+}
+[e :U 76 ]
+"173
+[; ;RTC.c: 173:     }
+}
+[e :U 75 ]
+"174
+[; ;RTC.c: 174: }
+[e :UE 73 ]
+}
+"176
+[; ;RTC.c: 176: void getDate(void) {
+[v _getDate `(v ~T0 @X0 1 ef ]
+{
+[e :U _getDate ]
+[f ]
+"177
+[; ;RTC.c: 177:     unsigned char day, month, year;
+[v _day `uc ~T0 @X0 1 a ]
+[v _month `uc ~T0 @X0 1 a ]
+[v _year `uc ~T0 @X0 1 a ]
+"178
+[; ;RTC.c: 178:     unsigned char singleDay, singleMonth, singleYear;
+[v _singleDay `uc ~T0 @X0 1 a ]
+[v _singleMonth `uc ~T0 @X0 1 a ]
+[v _singleYear `uc ~T0 @X0 1 a ]
+"179
+[; ;RTC.c: 179:     unsigned char tensDay, tensMonth, tensYear;
+[v _tensDay `uc ~T0 @X0 1 a ]
+[v _tensMonth `uc ~T0 @X0 1 a ]
+[v _tensYear `uc ~T0 @X0 1 a ]
+"180
+[; ;RTC.c: 180:     reqReadRTC(0x04);
+[e ( _reqReadRTC (1 -> -> 4 `i `uc ]
+"181
+[; ;RTC.c: 181:     day = readDataRTC();
+[e = _day ( _readDataRTC ..  ]
+"182
+[; ;RTC.c: 182:     I2C_SendACK();
+[e ( _I2C_SendACK ..  ]
+"183
+[; ;RTC.c: 183:     month = readDataRTC();
+[e = _month ( _readDataRTC ..  ]
+"184
+[; ;RTC.c: 184:     I2C_SendACK();
+[e ( _I2C_SendACK ..  ]
+"185
+[; ;RTC.c: 185:     year = readDataRTC();
+[e = _year ( _readDataRTC ..  ]
+"186
+[; ;RTC.c: 186:     endReadRTC();
+[e ( _endReadRTC ..  ]
+"187
+[; ;RTC.c: 187:     singleDay = (day & 0x0F);
+[e = _singleDay -> & -> _day `i -> 15 `i `uc ]
+"188
+[; ;RTC.c: 188:     tensDay = (swapNibbles(day) & 0x0F);
+[e = _tensDay -> & -> ( _swapNibbles (1 _day `i -> 15 `i `uc ]
+"189
+[; ;RTC.c: 189:     singleMonth = (month & 0x0F);
+[e = _singleMonth -> & -> _month `i -> 15 `i `uc ]
+"190
+[; ;RTC.c: 190:     tensMonth = (swapNibbles(month) & 0x0F);
+[e = _tensMonth -> & -> ( _swapNibbles (1 _month `i -> 15 `i `uc ]
+"191
+[; ;RTC.c: 191:     singleYear = (year & 0x0F);
+[e = _singleYear -> & -> _year `i -> 15 `i `uc ]
+"192
+[; ;RTC.c: 192:     tensYear = (swapNibbles(year) & 0x0F);
+[e = _tensYear -> & -> ( _swapNibbles (1 _year `i -> 15 `i `uc ]
+"193
+[; ;RTC.c: 193:     passTubeNum(tensDay,singleDay,10,tensMonth,singleMonth,10,tensYear,singleYear,0x00,0x00);
+[e ( _passTubeNum (4 , , , , , , , , , _tensDay _singleDay -> -> 10 `i `uc _tensMonth _singleMonth -> -> 10 `i `uc _tensYear _singleYear -> -> 0 `i `uc -> -> 0 `i `uc ]
+"194
+[; ;RTC.c: 194: }
+[e :UE 83 ]
 }

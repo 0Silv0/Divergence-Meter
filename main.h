@@ -34,16 +34,16 @@
 
 //Macros
 #define BIT_CHECK(data,bitNum) ((data)>>(bitNum) & 1) // Checks if bit is set at bitNum location
-#define BIT_SET(data,bitNum) (data |= (1<<bitNum))    // Sets bit of byte at bitNum location
-#define BIT_CLEAR(data,bitNum) (data &=(0<<bitNum))   // Clears bit of byte at bitNum location
-#define BIT_TOGGLE(data,bitNum) (data ^= (1<<bitNum)) // Toggles bit of byte at bitNum location
+#define BIT_SET(data,bitNum) ((data) |= (1<<bitNum))    // Sets bit of byte at bitNum location
+#define BIT_CLEAR(data,bitNum) ((data) &= ~(1<<bitNum))   // Clears bit of byte at bitNum location
+#define BIT_TOGGLE(data,bitNum) ((data) ^= (1<<bitNum)) // Toggles bit of byte at bitNum location
 
 //Flag bits
 #define short1  0       // Short BTN1 press
 #define long1   1       // Long BTN1 press
 #define short2  2       // Short BTN2 press
 #define long2   3       // Long BTN2 press
-#define Done    4       // World line animation complete
+#define typeRTC 4       // RTC type, 0 for DS3232 1 for DS1307
 #define Slide   5       // Slide loading used in ___ (1=slide)
 #define AMPM    6       // Keeps track of AM/PM (1=PM)
 #define Clk12   7       // 12/24 hour preference (1=12 hour clock)
@@ -53,7 +53,7 @@
 #define ErrRTC  1       // Clock not responding
 
 // Global variables
-extern unsigned char flag;
+extern unsigned char Flag;
 extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW; // Bit mask for PortA
 extern unsigned char PORTB_SHADOW; // Bit mask for PortB

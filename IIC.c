@@ -72,7 +72,7 @@ void I2C_WriteByte(unsigned char Data) {
         }
     }
     // If timer ran out RTC is not communicating correctly, throw error flag
-    if(timer == 0) {
+    if(timer == 0 && SDA) {
         BIT_SET(ErrFlag, ErrNACK);
     }
     // Returns 0 for ACK and 1 for NACK.

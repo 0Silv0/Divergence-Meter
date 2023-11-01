@@ -18,5 +18,6 @@ __bit isRTCRunning(void);
 void startRTC(void);
 __bit checkRTCType(void);
 void getTime(void);
+void getDate(void);
 #endif	/* RTC_H */
 

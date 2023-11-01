@@ -1201,7 +1201,7 @@ extern __bank0 __bit __timeout;
 #pragma config CPD = OFF
 #pragma config CP = OFF
 # 56 "./main.h"
-extern unsigned char flag;
+extern unsigned char Flag;
 extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
@@ -1244,6 +1244,7 @@ __bit isRTCRunning(void);
 void startRTC(void);
 __bit checkRTCType(void);
 void getTime(void);
+void getDate(void);
 # 11 "./headers.h" 2
 
 # 1 "./tubes.h" 1
@@ -1259,7 +1260,7 @@ void latch(void);
 void display(void);
 void flashBrightness(void);
 void blankTubes(void);
-void displayError666(void);
+void displayError(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
 void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
@@ -1284,6 +1285,8 @@ unsigned char T7 __attribute__((address(0x29)));
 
 void InitTubes(void) {
     blankTubes();
+    loadDisplay();
+    display();
 }
 
 
@@ -1298,7 +1301,7 @@ void preLoadWL(void) {
     T0 = 6;
     leftDP = 0x00;
     rightDP = 0x00;
-    (rightDP |= (1<<6));
+    ((rightDP) |= (1<<6));
 }
 
 void loadDisplay(void) {
@@ -1347,16 +1350,16 @@ void checkDP(unsigned char *DP) {
 
 
 void latch(void) {
-    (PORTB_SHADOW |= (1<<0x5));
+    ((PORTB_SHADOW) |= (1<<0x5));
     PORTB = PORTB_SHADOW;
-    (PORTB_SHADOW &=(0<<0x5));
+    ((PORTB_SHADOW) &= ~(1<<0x5));
     PORTB = PORTB_SHADOW;
 }
 
 
 void display(void) {
-    (PORTB_SHADOW |= (1<<0x1));
-    (PORTB_SHADOW |= (1<<0x3));
+    ((PORTB_SHADOW) |= (1<<0x1));
+    ((PORTB_SHADOW) |= (1<<0x3));
     PORTB = PORTB_SHADOW;
 }
 
@@ -1377,29 +1380,34 @@ void blankTubes(void) {
 }
 
 
-void displayError666(void) {
+void displayError(void) {
     blankTubes();
-    T0 = T1 = T2 = 6;
-    leftDP = rightDP = 0x00;
-    loadDisplay();
-    display();
+    if(((ErrFlag)>>(1) & 1)) {
+        T0 = T1 = T2 = 6;
+        leftDP = rightDP = 0x00;
+        loadDisplay();
+    } else if (((ErrFlag)>>(0) & 1)) {
+        T0 = T1 = T2 = 9;
+        leftDP = rightDP = 0x00;
+        loadDisplay();
+    }
 }
 
 
 void send1ToDrivers(void) {
-    (PORTB_SHADOW |= (1<<0x4));
-    (PORTB_SHADOW |= (1<<0x2));
+    ((PORTB_SHADOW) |= (1<<0x4));
+    ((PORTB_SHADOW) |= (1<<0x2));
     PORTB = PORTB_SHADOW;
-    (PORTB_SHADOW &=(0<<0x2));
+    ((PORTB_SHADOW) &= ~(1<<0x2));
     PORTB = PORTB_SHADOW;
 }
 
 
 void send0ToDrivers(void) {
-    (PORTB_SHADOW &=(0<<0x4));
-    (PORTB_SHADOW |= (1<<0x2));
+    ((PORTB_SHADOW) &= ~(1<<0x4));
+    ((PORTB_SHADOW) |= (1<<0x2));
     PORTB = PORTB_SHADOW;
-    (PORTB_SHADOW &=(0<<0x2));
+    ((PORTB_SHADOW) &= ~(1<<0x2));
     PORTB = PORTB_SHADOW;
 }
 
@@ -1415,5 +1423,4 @@ void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, uns
     leftDP = tmpLDP;
     rightDP = tmpRDP;
     loadDisplay();
-    display();
 }
