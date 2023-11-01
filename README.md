@@ -24,13 +24,16 @@ Features to add/currently working on.
 30-10-23 |
   Added clock display and the decimal point switching per second animation. Added I2C error flags, not currently in use. Added RTC error flag, displaying error 666 when RTC is not starting correctly, does not stop other functions from working which is nice.
   T6 still not properly displaying digits even after solder joint touch ups, will swap it to a different position to test, hopefully its not a tube issue.
-  Update: turns out the tube leads were not making proper contact and my soldering job for the serial to parallel drivers was a-ok. After fiddling around with the tube all numers in T6 (now T1) are displaying correctly.
+  Update: turns out the tube leads were not making proper contact and my soldering job for the serial to parallel drivers was a-ok. After fiddling around with the tube all numbers in T6 (now T1) are displaying correctly.
 
 31-10-23 |
   RTC error handling appears to be working, tested without backup battery and got the correct error, plugged battery back in, cycled power and RTC started back up. Nice. So error handling works for DS1307, couldn't tell you if it works for DS3232.
 
+01-11-23 |
+  Added date display for four seconds every 30 seconds. Changed startRTC() a bit to write date correctly, needed to skip the day register, which I forgot about at first.
+  Flickering bug fixed, my BIT_CLEAR macro had a mistake... instead of clearing just one bit it was clearing all bits from 0 - bitNumPosition. 
 Known bugs:
-- [ ] Slight tube flickering when clock updates per second. Why? not sure... tried changing how HVE gets enabled and it didn't like it at all. More testing needed.
+- [X] Slight tube flickering when clock updates per second. Why? not sure... tried changing how HVE gets enabled and it didn't like it at all. More testing needed. (Update: BIT_CLEAR Macro had a mistake... 🤦)
 
 To test:
 - [ ] Error handling on a DS3232
