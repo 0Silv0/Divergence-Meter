@@ -5,14 +5,16 @@ I wanted to learn embedded C and the divergence meter is a cool project, so I de
 
 Features to add/currently working on.
 
-- [ ] I2C error handling (Error flag in place, just need to decide if I want to just display an error, or work on resending the read/write request. Will see how much memory I have to work with when the rest of the program is finished.
+- [X] I2C error handling (Error flag in place, just need to decide if I want to just display an error, or work on resending the read/write request. Will see how much memory I have to work with when the rest of the program is finished.
 - [X] Tube Display
 - [ ] Animations
-- [ ] User settings input
+- [X] User settings input
 - [ ] World line generation
 - [ ] Optimization and bug fixes
 - [ ] Daylight savings
 - [ ] Cross fading (maybe? Would be cool but this is not important)
+
+I had to make some changed to how I normally write code simply due to the free XC8 compiler being awful at optimization, might try and see how much space is saved if I was to use the paid PRO version of the compiler... 
 
 27-10-23 | 
   Can display digits to all tubes(Probably, still need to insert the rest of my nixie tubes to be certain)
@@ -32,6 +34,10 @@ Features to add/currently working on.
 01-11-23 |
   Added date display for four seconds every 30 seconds. Changed startRTC() a bit to write date correctly, needed to skip the day register, which I forgot about at first.
   Flickering bug fixed, my BIT_CLEAR macro had a mistake... instead of clearing just one bit it was clearing all bits from 0 - bitNumPosition. 
+
+03-11-23 |
+  Added settings menu, and changed some of the way I wrote my code to try and reduce program memory space.
+  
 Known bugs:
 - [X] Slight tube flickering when clock updates per second. Why? not sure... tried changing how HVE gets enabled and it didn't like it at all. More testing needed. (Update: BIT_CLEAR Macro had a mistake... 🤦)
 
