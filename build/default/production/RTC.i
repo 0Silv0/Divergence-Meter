@@ -1200,8 +1200,9 @@ extern __bank0 __bit __timeout;
 #pragma config LVP = OFF
 #pragma config CPD = OFF
 #pragma config CP = OFF
-# 56 "./main.h"
+# 59 "./main.h"
 extern unsigned char Flag;
+extern unsigned char Flag2;
 extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
@@ -1263,8 +1264,46 @@ void blankTubes(void);
 void displayError(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
-void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
+
+
+
+
+extern unsigned char leftDP;
+extern unsigned char rightDP;
+extern unsigned char T0 __attribute__((address(0x22)));
+extern unsigned char T1 __attribute__((address(0x23)));
+extern unsigned char T2 __attribute__((address(0x24)));
+extern unsigned char T3 __attribute__((address(0x25)));
+extern unsigned char T4 __attribute__((address(0x26)));
+extern unsigned char T5 __attribute__((address(0x27)));
+extern unsigned char T6 __attribute__((address(0x28)));
+extern unsigned char T7 __attribute__((address(0x29)));
 # 12 "./headers.h" 2
+
+# 1 "./settings.h" 1
+
+
+
+
+void settingsMenu(unsigned char menu);
+void hourFormatSetting(void);
+void hoursSetting(void);
+void minuteSetting(void);
+void daySetting(void);
+void monthSetting(void);
+void yearSetting(void);
+void dateFormatSetting(void);
+void blankingSetting(void);
+void unblankingSetting(void);
+void timeAdjSetting(void);
+void brightnessSetting(void);
+void buttons(void);
+void incDecBCD(void);
+
+
+extern unsigned char blankStart;
+extern unsigned char blankEnd;
+# 13 "./headers.h" 2
 # 1 "RTC.c" 2
 
 
@@ -1394,11 +1433,14 @@ __bit checkRTCType(void) {
     return 0;
 }
 
+
+
+
 void getTime(void) {
     unsigned char seconds, minutes, hours;
-    unsigned char singleSeconds, singleMinutes, singleHours;
-    unsigned char tensSeconds, tensMinutes, tensHours;
-    unsigned char tmpLeft, tmpRight;
+
+
+
 
     seconds = readByteRTC(0x00);
 
@@ -1420,21 +1462,27 @@ void getTime(void) {
                 I2C_SendACK();
                 hours = readDataRTC();
                 endReadRTC();
-                singleSeconds = (seconds & 0x0F);
-                tensSeconds = (swapNibbles(seconds) & 0x0F);
-                singleMinutes = (minutes & 0x0F);
-                tensMinutes = (swapNibbles(minutes) & 0x0F);
-                singleHours = (hours & 0x0F);
-                tensHours = (swapNibbles(hours) & 0x0F);
+                T0 = (seconds & 0x0F);
+                T1 = (swapNibbles(seconds) & 0x0F);
+                T3 = (minutes & 0x0F);
+                T4 = (swapNibbles(minutes) & 0x0F);
+                T6 = (hours & 0x0F);
+                T7 = (swapNibbles(hours) & 0x0F);
+                T2 = T5 = 10;
 
                 if(((seconds)>>(0) & 1)) {
-                    tmpLeft = 0x00;
-                    tmpRight = 0x24;
+                    leftDP = 0x00;
+                    rightDP = 0x24;
+
+
                 } else {
-                    tmpLeft = 0x24;
-                    tmpRight = 0x00;
+                    leftDP = 0x24;
+                    rightDP = 0x00;
+
+
                 }
-                passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,tmpLeft,tmpRight);
+
+                loadDisplay();
                 oldSeconds = seconds;
             }
         }
@@ -1443,8 +1491,8 @@ void getTime(void) {
 
 void getDate(void) {
     unsigned char day, month, year;
-    unsigned char singleDay, singleMonth, singleYear;
-    unsigned char tensDay, tensMonth, tensYear;
+
+
     reqReadRTC(0x04);
     day = readDataRTC();
     I2C_SendACK();
@@ -1452,11 +1500,14 @@ void getDate(void) {
     I2C_SendACK();
     year = readDataRTC();
     endReadRTC();
-    singleDay = (day & 0x0F);
-    tensDay = (swapNibbles(day) & 0x0F);
-    singleMonth = (month & 0x0F);
-    tensMonth = (swapNibbles(month) & 0x0F);
-    singleYear = (year & 0x0F);
-    tensYear = (swapNibbles(year) & 0x0F);
-    passTubeNum(tensDay,singleDay,10,tensMonth,singleMonth,10,tensYear,singleYear,0x00,0x00);
+    T7 = (swapNibbles(day) & 0x0F);
+    T6 = (day & 0x0F);
+    T4 = (swapNibbles(month) & 0x0F);
+    T3 = (month & 0x0F);
+    T1 = (swapNibbles(year) & 0x0F);
+    T0 = (year & 0x0F);
+    T2 = T5 = 10;
+    leftDP = rightDP = 0x00;
+
+    loadDisplay();
 }

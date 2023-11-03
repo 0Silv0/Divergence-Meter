@@ -1,4 +1,4 @@
-# 1 "tubes.c"
+# 1 "settings.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,7 +6,8 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.45\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "tubes.c" 2
+# 1 "settings.c" 2
+
 # 1 "./headers.h" 1
 
 
@@ -1304,148 +1305,215 @@ void incDecBCD(void);
 extern unsigned char blankStart;
 extern unsigned char blankEnd;
 # 13 "./headers.h" 2
-# 1 "tubes.c" 2
+# 2 "settings.c" 2
 
 
+unsigned char blankStart, blankEnd;
+unsigned char incMin, incMax;
 
+void InitSettings(void) {
 
+}
 
+void settingsMenu(unsigned char menu) {
+    switch(menu) {
 
-unsigned char leftDP;
-unsigned char rightDP;
-unsigned char T0 __attribute__((address(0x22)));
-unsigned char T1 __attribute__((address(0x23)));
-unsigned char T2 __attribute__((address(0x24)));
-unsigned char T3 __attribute__((address(0x25)));
-unsigned char T4 __attribute__((address(0x26)));
-unsigned char T5 __attribute__((address(0x27)));
-unsigned char T6 __attribute__((address(0x28)));
-unsigned char T7 __attribute__((address(0x29)));
+        case 0:
+            hourFormatSetting();
+            hoursSetting();
+            minuteSetting();
+            blankingSetting();
+            unblankingSetting();
+            timeAdjSetting();
 
-void InitTubes(void) {
+        case 1:
+            daySetting();
+            monthSetting();
+            yearSetting();
+            dateFormatSetting();
+        case 2:
+            brightnessSetting();
+        default:
+            break;
+    }
+}
+
+void hourFormatSetting(void) {
     blankTubes();
-    loadDisplay();
-    display();
-}
-
-
-void preLoadWL(void) {
-    T7 = 1;
-    T6 = 10;
-    T5 = 0;
-    T4 = 4;
-    T3 = 8;
-    T2 = 5;
-    T1 = 9;
-    T0 = 6;
-    leftDP = 0x00;
-    rightDP = 0x00;
-    ((rightDP) |= (1<<6));
-}
-
-void loadDisplay(void) {
-    unsigned char *tubePtr;
-    tubePtr = &T7;
-    unsigned char dispNum;
-    unsigned char LDP = leftDP;
-    unsigned char RDP = rightDP;
-
-   for (unsigned char tubeIndex = 0; tubeIndex <= 7; tubeIndex++) {
-        checkDP(&LDP);
-        dispNum = 1;
-
-        for (unsigned char numIndex = 0; numIndex < 9; numIndex++) {
-            if(dispNum == *tubePtr) {
-                send1ToDrivers();
-            } else {
-                send0ToDrivers();
-            }
-            dispNum++;
-        }
-
-        if (*tubePtr == 0) {
-            send1ToDrivers();
+    T7 = 0;
+    T6 = 1;
+    do {
+        if(((Flag2)>>(2) & 1)) {
+            T1 = 1;
+            T0 = 2;
         } else {
-            send0ToDrivers();
+            T1 = 2;
+            T0 = 4;
         }
-        checkDP(&RDP);
-        tubePtr--;
-    }
-    latch();
-}
-
-
-void checkDP(unsigned char *DP) {
-    if ((((*DP))>>(7) & 1)) {
-
-        *DP = (*DP) << 1;
-        send1ToDrivers();
-    } else {
-
-        *DP = (*DP) << 1;
-        send0ToDrivers();
-    }
-}
-
-
-void latch(void) {
-    ((PORTB_SHADOW) |= (1<<0x5));
-    PORTB = PORTB_SHADOW;
-    ((PORTB_SHADOW) &= ~(1<<0x5));
-    PORTB = PORTB_SHADOW;
-}
-
-
-void display(void) {
-    ((PORTB_SHADOW) |= (1<<0x1));
-    ((PORTB_SHADOW) |= (1<<0x3));
-    PORTB = PORTB_SHADOW;
-}
-
-void flashBrightness(void) {
-
-}
-
-
-void blankTubes(void) {
-    unsigned char *ptr;
-    ptr = &T0;
-
-    for(unsigned char i = 0; i < 8; i++) {
-        *ptr = 10;
-        ptr++;
-    }
-    leftDP = rightDP = 0x00;
-}
-
-
-void displayError(void) {
-    blankTubes();
-    if(((ErrFlag)>>(1) & 1)) {
-        T0 = T1 = T2 = 6;
-        leftDP = rightDP = 0x00;
         loadDisplay();
-    } else if (((ErrFlag)>>(0) & 1)) {
-        T0 = T1 = T2 = 9;
-        leftDP = rightDP = 0x00;
+        buttons();
+        if(((Flag)>>(0) & 1)) {
+            ((Flag2) ^= (1<<2));
+        }
+    } while (!((Flag)>>(3) & 1));
+
+
+}
+
+void hoursSetting(void) {
+    unsigned char hours;
+    hours = readByteRTC(0x02);
+    T6 = 2;
+    do {
+        T1 = (swapNibbles(hours) & 0x0F);
+        T0 = (hours & 0x0F);
         loadDisplay();
+        buttons();
+        incDecBCD();
+    } while (!((Flag)>>(3) & 1));
+    writeByteRTC(0x02, hours);
+}
+
+void minuteSetting(void) {
+    unsigned char minutes;
+    minutes = readByteRTC(0x01);
+    T6 = 3;
+    do {
+        T1 = (swapNibbles(minutes) & 0x0F);
+        T0 = (minutes & 0x0F);
+        loadDisplay();
+        buttons();
+        incDecBCD();
+    } while (!((Flag)>>(3) & 1));
+    writeByteRTC(0x01, minutes);
+}
+
+void daySetting(void) {
+    unsigned char day;
+    day = readByteRTC(0x04);
+    T6 = 4;
+    do {
+        T1 = (swapNibbles(day) & 0x0F);
+        T0 = (day & 0x0F);
+        loadDisplay();
+        buttons();
+        incDecBCD();
+    } while (!((Flag)>>(3) & 1));
+    writeByteRTC(0x04, day);
+}
+
+void monthSetting(void) {
+    unsigned char month;
+    month = readByteRTC(0x01);
+    T6 = 5;
+    do {
+        T1 = (swapNibbles(month) & 0x0F);
+        T0 = (month & 0x0F);
+        loadDisplay();
+        buttons();
+        incDecBCD();
+    } while (!((Flag)>>(3) & 1));
+    writeByteRTC(0x05, month);
+}
+
+void yearSetting(void) {
+    unsigned char year;
+    year = readByteRTC(0x01);
+    T6 = 6;
+    do {
+        T1 = (swapNibbles(year) & 0x0F);
+        T0 = (year & 0x0F);
+        loadDisplay();
+        buttons();
+        incDecBCD();
+    } while (!((Flag)>>(3) & 1));
+    writeByteRTC(0x06, year);
+}
+
+void dateFormatSetting(void) {
+    T6 = 7;
+    do {
+        T1 = 0;
+        T0 = ((Flag2)>>(1) & 1);
+
+        loadDisplay();
+        buttons();
+        if(((Flag)>>(0) & 1)) {
+            ((Flag2) ^= (1<<1));
+        }
+    } while (!((Flag)>>(3) & 1));
+
+}
+
+void blankingSetting(void) {
+    blankStart = readByteRTC(0x14);
+    T6 = 8;
+    do {
+        T1 = (swapNibbles(blankStart) & 0x0F);
+        T0 = (blankStart & 0x0F);
+        loadDisplay();
+        buttons();
+        incDecBCD();
+    } while (!((Flag)>>(3) & 1));
+    writeByteRTC(0x14, blankStart);
+}
+
+void unblankingSetting(void) {
+    blankEnd = readByteRTC(0x15);
+    T6 = 9;
+    do {
+        T1 = (swapNibbles(blankEnd) & 0x0F);
+        T0 = (blankEnd & 0x0F);
+        loadDisplay();
+        buttons();
+        incDecBCD();
+    } while (!((Flag)>>(3) & 1));
+    writeByteRTC(0x15, blankEnd);
+}
+
+void timeAdjSetting(void) {
+
+}
+
+void brightnessSetting(void) {
+
+}
+
+
+void buttons(void) {
+    Flag &= 0b11110000;
+    unsigned int timer = 0;
+    if(PORTAbits.RA2) {
+
+        while(PORTAbits.RA2) {
+            timer++;
+            _delay((unsigned long)((1)*(4000000/4000.0)));
+        }
+
+        if(timer < 500) {
+            ((Flag) |= (1<<0));
+        } else {
+            ((Flag) |= (1<<1));
+        }
+    } else if (PORTAbits.RA3) {
+
+        while(PORTAbits.RA3) {
+            timer++;
+            _delay((unsigned long)((1)*(4000000/4000.0)));
+        }
+
+        if(timer < 500) {
+            ((Flag) |= (1<<2));
+        } else {
+            ((Flag) |= (1<<3));
+        }
     }
 }
 
+void incDecBCD(void) {
+    if(((Flag)>>(0) & 1)) {
 
-void send1ToDrivers(void) {
-    ((PORTB_SHADOW) |= (1<<0x4));
-    ((PORTB_SHADOW) |= (1<<0x2));
-    PORTB = PORTB_SHADOW;
-    ((PORTB_SHADOW) &= ~(1<<0x2));
-    PORTB = PORTB_SHADOW;
-}
+    } else if (((Flag)>>(2) & 1)) {
 
-
-void send0ToDrivers(void) {
-    ((PORTB_SHADOW) &= ~(1<<0x4));
-    ((PORTB_SHADOW) |= (1<<0x2));
-    PORTB = PORTB_SHADOW;
-    ((PORTB_SHADOW) &= ~(1<<0x2));
-    PORTB = PORTB_SHADOW;
+    }
 }

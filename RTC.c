@@ -126,11 +126,14 @@ __bit checkRTCType(void) {
     return 0;                         // If OSF is clear or clock is DS1307 return 0 (if any clock is working);
 }
 
+// Gets time to display
+// I stopped using passTubeNum because I was worried I would run out of program memory
+// When I am done with the program I will see if I can add it back, to try and get rid of some global variables
 void getTime(void) {
     unsigned char seconds, minutes, hours;
-    unsigned char singleSeconds, singleMinutes, singleHours;
-    unsigned char tensSeconds, tensMinutes, tensHours;
-    unsigned char tmpLeft, tmpRight;
+    //unsigned char singleSeconds, singleMinutes, singleHours;
+    //unsigned char tensSeconds, tensMinutes, tensHours;
+    //unsigned char tmpLeft, tmpRight;
     
     seconds = readByteRTC(0x00); // Reads only seconds from RTC to check if update needs to be performed
     // Checks to see if RTC is stopped for some reason
@@ -152,21 +155,27 @@ void getTime(void) {
                 I2C_SendACK();           // sends ACK to increment to hours address
                 hours = readDataRTC();   // Reads minutes
                 endReadRTC();
-                singleSeconds = (seconds & 0x0F); // Keeps only ones digit of seconds
-                tensSeconds = (swapNibbles(seconds) & 0x0F); // Swaps nibbles to get tens digit of seconds
-                singleMinutes = (minutes & 0x0F); // Keeps only ones digit of minutes
-                tensMinutes = (swapNibbles(minutes) & 0x0F); // Swaps nibbles to get tens digit of minutes
-                singleHours = (hours & 0x0F); // Keeps only ones digit of hours
-                tensHours = (swapNibbles(hours) & 0x0F); // Swaps nibbles to get tens digit of hours       
+                T0 = (seconds & 0x0F); // Keeps only ones digit of seconds
+                T1 = (swapNibbles(seconds) & 0x0F); // Swaps nibbles to get tens digit of seconds
+                T3 = (minutes & 0x0F); // Keeps only ones digit of minutes
+                T4 = (swapNibbles(minutes) & 0x0F); // Swaps nibbles to get tens digit of minutes
+                T6 = (hours & 0x0F); // Keeps only ones digit of hours
+                T7 = (swapNibbles(hours) & 0x0F); // Swaps nibbles to get tens digit of hours       
+                T2 = T5 = 10; // Displays blanks
                 // Swaps decimal points between left and right depending if its a new second. Even numbers in binary end in 0 and odd end in 1.
                 if(BIT_CHECK(seconds,0)) {
-                    tmpLeft = 0x00;  // disables decimal points in all tubes
-                    tmpRight = 0x24; // 0x24 == 0b00100100 enables decimal point on tubes 2 and 4
+                    leftDP = 0x00;      // disables decimal points in all tubes
+                    rightDP = 0x24;     // 0x24 == 0b00100100 enables decimal point on tubes 2 and 4
+                    //tmpLeft = 0x00;  // disables decimal points in all tubes
+                    //tmpRight = 0x24; // 0x24 == 0b00100100 enables decimal point on tubes 2 and 4
                 } else {
-                    tmpLeft = 0x24;
-                    tmpRight = 0x00;
+                    leftDP = 0x24;  // 0x24 == 0b00100100 enables decimal point on tubes 2 and 4
+                    rightDP = 0x00;  // disables decimal points in all tubes
+                    //tmpLeft = 0x24;
+                    //tmpRight = 0x00;
                 }
-                passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,tmpLeft,tmpRight); //Puts the time into tubes
+                //passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,tmpLeft,tmpRight); //Puts the time into tubes
+                loadDisplay();
                 oldSeconds = seconds;                
             }
         }
@@ -175,8 +184,8 @@ void getTime(void) {
 
 void getDate(void) {
     unsigned char day, month, year;
-    unsigned char singleDay, singleMonth, singleYear;
-    unsigned char tensDay, tensMonth, tensYear;
+    //unsigned char singleDay, singleMonth, singleYear;
+    //unsigned char tensDay, tensMonth, tensYear;
     reqReadRTC(0x04);
     day = readDataRTC();
     I2C_SendACK();
@@ -184,11 +193,14 @@ void getDate(void) {
     I2C_SendACK();
     year = readDataRTC();
     endReadRTC();
-    singleDay = (day & 0x0F); // Keeps only ones digit of seconds
-    tensDay = (swapNibbles(day) & 0x0F); // Swaps nibbles to get tens digit of seconds
-    singleMonth = (month & 0x0F); // Keeps only ones digit of minutes
-    tensMonth = (swapNibbles(month) & 0x0F); // Swaps nibbles to get tens digit of minutes
-    singleYear = (year & 0x0F); // Keeps only ones digit of hours
-    tensYear = (swapNibbles(year) & 0x0F); // Swaps nibbles to get tens digit of hours       
-    passTubeNum(tensDay,singleDay,10,tensMonth,singleMonth,10,tensYear,singleYear,0x00,0x00);
+    T7 = (swapNibbles(day) & 0x0F); // Swaps nibbles to get tens digit of day
+    T6 = (day & 0x0F); // Keeps only ones digit of day
+    T4 = (swapNibbles(month) & 0x0F); // Swaps nibbles to get tens digit of month    
+    T3 = (month & 0x0F); // Keeps only ones digit of month
+    T1 = (swapNibbles(year) & 0x0F); // Swaps nibbles to get tens digit of years
+    T0 = (year & 0x0F); // Keeps only ones digit of years      
+    T2 = T5 = 10;
+    leftDP = rightDP = 0x00;
+    //passTubeNum(tensDay,singleDay,10,tensMonth,singleMonth,10,tensYear,singleYear,0x00,0x00);
+    loadDisplay();
 }

@@ -1200,8 +1200,9 @@ extern __bank0 __bit __timeout;
 #pragma config LVP = OFF
 #pragma config CPD = OFF
 #pragma config CP = OFF
-# 56 "./main.h"
+# 59 "./main.h"
 extern unsigned char Flag;
+extern unsigned char Flag2;
 extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
@@ -1263,8 +1264,46 @@ void blankTubes(void);
 void displayError(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
-void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
+
+
+
+
+extern unsigned char leftDP;
+extern unsigned char rightDP;
+extern unsigned char T0 __attribute__((address(0x22)));
+extern unsigned char T1 __attribute__((address(0x23)));
+extern unsigned char T2 __attribute__((address(0x24)));
+extern unsigned char T3 __attribute__((address(0x25)));
+extern unsigned char T4 __attribute__((address(0x26)));
+extern unsigned char T5 __attribute__((address(0x27)));
+extern unsigned char T6 __attribute__((address(0x28)));
+extern unsigned char T7 __attribute__((address(0x29)));
 # 12 "./headers.h" 2
+
+# 1 "./settings.h" 1
+
+
+
+
+void settingsMenu(unsigned char menu);
+void hourFormatSetting(void);
+void hoursSetting(void);
+void minuteSetting(void);
+void daySetting(void);
+void monthSetting(void);
+void yearSetting(void);
+void dateFormatSetting(void);
+void blankingSetting(void);
+void unblankingSetting(void);
+void timeAdjSetting(void);
+void brightnessSetting(void);
+void buttons(void);
+void incDecBCD(void);
+
+
+extern unsigned char blankStart;
+extern unsigned char blankEnd;
+# 13 "./headers.h" 2
 # 1 "IIC.c" 2
 
 
@@ -1348,17 +1387,17 @@ void I2C_WriteByte(unsigned char Data) {
 
 
 unsigned char I2C_ReadByte(void) {
-    unsigned char i, Data = 0;
-    for(i=0; i<8; i++) {
+    unsigned char data = 0;
+    for(unsigned char i=0; i<8; i++) {
         TRISAbits.TRISA0 = 0;
         TRISAbits.TRISA1 = 1;
         _delay((unsigned long)((500/100)*(4000000/4000000.0)));
         TRISAbits.TRISA0 = 1;
         _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
-        Data = Data|(PORTAbits.RA1<<(7-i));
+        data = data|(PORTAbits.RA1<<(7-i));
         _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
     }
-    return Data;
+    return data;
 }
 
 

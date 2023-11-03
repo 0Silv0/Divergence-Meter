@@ -1,7 +1,1913 @@
-Unable to generate the disassembly listing file. 
-Please make sure that you have built the project with symbol information. 
-1. Open the Project Properties.
-2. Select the "Loading" node under "Conf: [your current configuration]".
-3. Check "Load Symbols when Programming or building for production".
+Disassembly Listing for DivergenceMeter
+Generated From:
+C:/Users/Silv/MPLABXProjects/DivergenceMeter.X/dist/default/debug/DivergenceMeter.X.debug.elf
+Nov 3, 2023 1:08:13 AM
 
-Double click on this editor pane to set.
+---  C:/Users/Silv/MPLABXProjects/DivergenceMeter.X/tubes.c  --------------------------------------------
+1:             #include "headers.h"
+2:             
+3:             // Once I have a better understanding of writing to the serial to parallel drivers
+4:             // I will try and not use absolute variable declarations, so as to stay out of the 
+5:             // compilers way. Started at a different location than Tom because I did not want to 
+6:             // fragment the GPR stack and maybe cause issues with the linker.
+7:             unsigned char leftDP;
+8:             unsigned char rightDP;
+9:             unsigned char T0 __at(0x22);
+10:            unsigned char T1 __at(0x23);
+11:            unsigned char T2 __at(0x24);
+12:            unsigned char T3 __at(0x25);
+13:            unsigned char T4 __at(0x26);
+14:            unsigned char T5 __at(0x27);
+15:            unsigned char T6 __at(0x28);
+16:            unsigned char T7 __at(0x29);
+17:            
+18:            void InitTubes(void) {
+19:                blankTubes(); // Initialize all tubes to display nothing
+036C  245A     CALL 0x45A
+20:                loadDisplay();
+036D  2639     CALL 0x639
+21:                display();
+036E  2378     CALL 0x378
+22:            }
+036F  0008     RETURN
+23:            
+24:            // Loads Steins;Gate worldline number
+25:            void preLoadWL(void) {
+26:                T7 = 1;
+042C  1283     BCF STATUS, 0x5
+042D  1303     BCF STATUS, 0x6
+042E  01A9     CLRF T7
+042F  0AA9     INCF T7, F
+27:                T6 = 10; // Display no number
+0430  300A     MOVLW 0xA
+0431  00A8     MOVWF T6
+28:                T5 = 0;
+0432  01A7     CLRF T5
+29:                T4 = 4;
+0433  3004     MOVLW 0x4
+0434  00A6     MOVWF T4
+30:                T3 = 8;
+0435  3008     MOVLW 0x8
+0436  00A5     MOVWF T3
+31:                T2 = 5;
+0437  3005     MOVLW 0x5
+0438  00A4     MOVWF T2
+32:                T1 = 9;
+0439  3009     MOVLW 0x9
+043A  00A3     MOVWF T1
+33:                T0 = 6;
+043B  3006     MOVLW 0x6
+043C  00A2     MOVWF T0
+34:                leftDP = 0x00; // Clears leftDP
+043D  01B3     CLRF leftDP
+35:                rightDP = 0x00; // Clears rightDP
+043E  01B2     CLRF rightDP
+36:                BIT_SET(rightDP, 6); // Sets right decimal point for tube 6
+043F  1732     BSF rightDP, 0x6
+37:            }
+0440  0008     RETURN
+38:            // Loads numbers into display before enabling latches
+39:            void loadDisplay(void) {
+40:                unsigned char *tubePtr;
+41:                tubePtr = &T7; // Points to memory address of T7
+0639  3029     MOVLW 0x29
+063A  00F3     MOVWF data
+42:                unsigned char dispNum;
+43:                unsigned char LDP = leftDP; // Copy leftDP so we do not destroy original value
+063B  1283     BCF STATUS, 0x5
+063C  1303     BCF STATUS, 0x6
+063D  0833     MOVF leftDP, W
+063E  00F6     MOVWF data
+44:                unsigned char RDP = rightDP; // Copy rightDP so we do not destroy original value
+063F  0832     MOVF rightDP, W
+0640  00F7     MOVWF address
+45:                
+46:               for (unsigned char tubeIndex = 0; tubeIndex <= 7; tubeIndex++) {  
+0641  01F4     CLRF tubeIndex
+47:                    checkDP(&LDP); // Checks left decimal point
+0642  3076     MOVLW 0x76
+0643  24DB     CALL 0x4DB
+48:                    dispNum = 1;
+0644  01F2     CLRF dispNum
+0645  0AF2     INCF dispNum, F
+49:                    // Loops through all 9 numbers and sends 0 or 1 if it matches the number we want to display
+50:                    for (unsigned char numIndex = 0; numIndex < 9; numIndex++) {
+0646  01F5     CLRF data
+51:                        if(dispNum == *tubePtr) {
+0647  0873     MOVF data, W
+0648  0084     MOVWF FSR
+0649  1383     BCF STATUS, 0x7
+064A  0800     MOVF INDF, W
+064B  0672     XORWF dispNum, W
+064C  1D03     BTFSS STATUS, 0x2
+064D  2E4F     GOTO 0x64F
+064E  2E50     GOTO 0x650
+064F  2E52     GOTO 0x652
+52:                            send1ToDrivers();
+0650  23B4     CALL 0x3B4
+53:                        } else {
+0651  2E53     GOTO 0x653
+54:                            send0ToDrivers();
+0652  23FA     CALL 0x3FA
+55:                        }
+56:                        dispNum++;
+0653  3001     MOVLW 0x1
+0654  00FF     MOVWF btemp
+0655  087F     MOVF btemp, W
+0656  07F2     ADDWF dispNum, F
+57:                    }
+0657  3001     MOVLW 0x1
+0658  00FF     MOVWF btemp
+0659  087F     MOVF btemp, W
+065A  07F5     ADDWF data, F
+065B  3009     MOVLW 0x9
+065C  0275     SUBWF data, W
+065D  1C03     BTFSS STATUS, 0x0
+065E  2E60     GOTO 0x660
+065F  2E61     GOTO 0x661
+0660  2E47     GOTO 0x647
+58:                    // Checks to see if number we want to display is 0
+59:                    if (*tubePtr == 0) { 
+0661  0873     MOVF data, W
+0662  0084     MOVWF FSR
+0663  1383     BCF STATUS, 0x7
+0664  0800     MOVF INDF, W
+0665  1D03     BTFSS STATUS, 0x2
+0666  2E68     GOTO 0x668
+0667  2E69     GOTO 0x669
+0668  2E6B     GOTO 0x66B
+60:                        send1ToDrivers();
+0669  23B4     CALL 0x3B4
+61:                    } else {
+066A  2E6C     GOTO 0x66C
+62:                        send0ToDrivers();
+066B  23FA     CALL 0x3FA
+63:                    }
+64:                    checkDP(&RDP); // Checks right decimal point
+066C  3077     MOVLW 0x77
+066D  24DB     CALL 0x4DB
+65:                    tubePtr--;
+066E  3001     MOVLW 0x1
+066F  02F3     SUBWF data, F
+66:                }
+0670  3001     MOVLW 0x1
+0671  00FF     MOVWF btemp
+0672  087F     MOVF btemp, W
+0673  07F4     ADDWF tubeIndex, F
+0674  3008     MOVLW 0x8
+0675  0274     SUBWF tubeIndex, W
+0676  1C03     BTFSS STATUS, 0x0
+0677  2E79     GOTO 0x679
+0678  2E7A     GOTO 0x67A
+0679  2E42     GOTO 0x642
+67:                latch(); // Latches results
+067A  23A8     CALL 0x3A8
+68:            }
+067B  0008     RETURN
+69:            
+70:            // Rotates DP flag, when carry bit will be 1 returns true. Essentially RLF in assembly. Just doesn't save carry bit and it doesn't need to :)
+71:            void checkDP(unsigned char *DP) {
+04DB  00F1     MOVWF timer
+72:                if (BIT_CHECK((*DP), 7)) {
+04DC  0871     MOVF timer, W
+04DD  0084     MOVWF FSR
+04DE  0800     MOVF INDF, W
+04DF  00F0     MOVWF __pcstackCOMMON
+04E0  3007     MOVLW 0x7
+04E1  1003     BCF STATUS, 0x0
+04E2  0CF0     RRF __pcstackCOMMON, F
+04E3  3EFF     ADDLW 0xFF
+04E4  1D03     BTFSS STATUS, 0x2
+04E5  2CE1     GOTO 0x4E1
+04E6  1C70     BTFSS __pcstackCOMMON, 0x0
+04E7  2CE9     GOTO 0x4E9
+04E8  2CEA     GOTO 0x4EA
+04E9  2CF6     GOTO 0x4F6
+73:                    // Rotation would've put 1 in carry flag in assembly, so send one to drivers
+74:                    *DP = (*DP) << 1;
+04EA  0871     MOVF timer, W
+04EB  0084     MOVWF FSR
+04EC  0800     MOVF INDF, W
+04ED  00F0     MOVWF __pcstackCOMMON
+04EE  0770     ADDWF __pcstackCOMMON, W
+04EF  00FF     MOVWF btemp
+04F0  0871     MOVF timer, W
+04F1  0084     MOVWF FSR
+04F2  087F     MOVF btemp, W
+04F3  0080     MOVWF INDF
+75:                    send1ToDrivers();
+04F4  23B4     CALL 0x3B4
+76:                } else {
+04F5  2D01     GOTO 0x501
+77:                    // Rotates DP left one and sends zero to drivers
+78:                    *DP = (*DP) << 1;
+04F6  0871     MOVF timer, W
+04F7  0084     MOVWF FSR
+04F8  0800     MOVF INDF, W
+04F9  00F0     MOVWF __pcstackCOMMON
+04FA  0770     ADDWF __pcstackCOMMON, W
+04FB  00FF     MOVWF btemp
+04FC  0871     MOVF timer, W
+04FD  0084     MOVWF FSR
+04FE  087F     MOVF btemp, W
+04FF  0080     MOVWF INDF
+79:                    send0ToDrivers();
+0500  23FA     CALL 0x3FA
+80:                }
+81:            }
+0501  0008     RETURN
+82:            
+83:            // Enables latches in serial to parallel drivers
+84:            void latch(void) {
+85:                BIT_SET(PORTB_SHADOW, NLE); // Latches load when NLE is high
+03A8  1283     BCF STATUS, 0x5
+03A9  1303     BCF STATUS, 0x6
+03AA  16B5     BSF PORTB_SHADOW, 0x5
+86:                PORTB = PORTB_SHADOW;
+03AB  0835     MOVF PORTB_SHADOW, W
+03AC  0086     MOVWF PORTB
+87:                BIT_CLEAR(PORTB_SHADOW, NLE); // Latches lock when NLE is low
+03AD  30DF     MOVLW 0xDF
+03AE  00FF     MOVWF btemp
+03AF  087F     MOVF btemp, W
+03B0  05B5     ANDWF PORTB_SHADOW, F
+88:                PORTB = PORTB_SHADOW;
+03B1  0835     MOVF PORTB_SHADOW, W
+03B2  0086     MOVWF PORTB
+89:            }
+03B3  0008     RETURN
+90:            
+91:            // Displays loaded numbers into tubes
+92:            void display(void) {
+93:                BIT_SET(PORTB_SHADOW, HVE);
+0378  1283     BCF STATUS, 0x5
+0379  1303     BCF STATUS, 0x6
+037A  14B5     BSF PORTB_SHADOW, 0x1
+94:                BIT_SET(PORTB_SHADOW, NBL); // Set NOT blanking high, causing tubes to no longer be blanked
+037B  15B5     BSF PORTB_SHADOW, 0x3
+95:                PORTB = PORTB_SHADOW;
+037C  0835     MOVF PORTB_SHADOW, W
+037D  0086     MOVWF PORTB
+96:            }
+037E  0008     RETURN
+97:            //Flashes full brightness in tubes
+98:            void flashBrightness(void) {
+99:                
+100:           }
+101:           
+102:           // Blanks eight tubes
+103:           void blankTubes(void) {
+104:               unsigned char *ptr;
+105:               ptr = &T0; // Points to memory address of T0
+045A  3022     MOVLW 0x22
+045B  00F0     MOVWF __pcstackCOMMON
+106:               // Assigns 10 to all eight tubes
+107:               for(unsigned char i = 0; i < 8; i++) {
+045C  01F1     CLRF timer
+108:                   *ptr = 10; // 10 will display blank in tube
+045D  0870     MOVF __pcstackCOMMON, W
+045E  0084     MOVWF FSR
+045F  300A     MOVLW 0xA
+0460  1383     BCF STATUS, 0x7
+0461  0080     MOVWF INDF
+109:                   ptr++; // Goes to next tube address
+0462  3001     MOVLW 0x1
+0463  00FF     MOVWF btemp
+0464  087F     MOVF btemp, W
+0465  07F0     ADDWF __pcstackCOMMON, F
+110:               }
+0466  3001     MOVLW 0x1
+0467  00FF     MOVWF btemp
+0468  087F     MOVF btemp, W
+0469  07F1     ADDWF timer, F
+046A  3008     MOVLW 0x8
+046B  0271     SUBWF timer, W
+046C  1C03     BTFSS STATUS, 0x0
+046D  2C6F     GOTO 0x46F
+046E  2C70     GOTO 0x470
+046F  2C5D     GOTO 0x45D
+111:               leftDP = rightDP = 0x00;
+0470  1283     BCF STATUS, 0x5
+0471  1303     BCF STATUS, 0x6
+0472  01B2     CLRF rightDP
+0473  01B3     CLRF leftDP
+112:           }
+0474  0008     RETURN
+113:           
+114:           // Displays error 666
+115:           void displayError(void) {
+116:               blankTubes(); // Clear tubes
+0475  245A     CALL 0x45A
+117:               if(BIT_CHECK(ErrFlag, ErrRTC)) {
+0476  1283     BCF STATUS, 0x5
+0477  1303     BCF STATUS, 0x6
+0478  0834     MOVF ErrFlag, W
+0479  00F8     MOVWF day
+047A  3001     MOVLW 0x1
+047B  1003     BCF STATUS, 0x0
+047C  0CF8     RRF day, F
+047D  3EFF     ADDLW 0xFF
+047E  1D03     BTFSS STATUS, 0x2
+047F  2C7B     GOTO 0x47B
+0480  1C78     BTFSS day, 0x0
+0481  2C83     GOTO 0x483
+0482  2C84     GOTO 0x484
+0483  2C8C     GOTO 0x48C
+118:                   T0 = T1 = T2 = 6; // Sets T0-T2 to 6
+0484  3006     MOVLW 0x6
+0485  00A4     MOVWF T2
+0486  00A3     MOVWF T1
+0487  00A2     MOVWF T0
+119:                   leftDP = rightDP = 0x00; // Clears left and right decimal points
+0488  01B2     CLRF rightDP
+0489  01B3     CLRF leftDP
+120:                   loadDisplay(); // Sends tube data to serial to parallel drivers
+048A  2639     CALL 0x639
+121:               } else if (BIT_CHECK(ErrFlag, ErrNACK)) {
+048B  2C95     GOTO 0x495
+048C  1C34     BTFSS ErrFlag, 0x0
+048D  2C8F     GOTO 0x48F
+048E  2C90     GOTO 0x490
+048F  2C95     GOTO 0x495
+122:                   T0 = T1 = T2 = 9; // Sets T0-T2 to 9
+0490  3009     MOVLW 0x9
+0491  00A4     MOVWF T2
+0492  00A3     MOVWF T1
+0493  00A2     MOVWF T0
+0494  2C88     GOTO 0x488
+123:                   leftDP = rightDP = 0x00; // Clears left and right decimal points
+124:                   loadDisplay(); // Sends tube data to serial to parallel drivers
+125:               }
+126:           }
+0495  0008     RETURN
+127:           
+128:           // Sends 1 to serial to parallel drivers
+129:           void send1ToDrivers(void) {
+130:               BIT_SET(PORTB_SHADOW, DAT); // Set Data line high for one
+03B4  1283     BCF STATUS, 0x5
+03B5  1303     BCF STATUS, 0x6
+03B6  1635     BSF PORTB_SHADOW, 0x4
+131:               BIT_SET(PORTB_SHADOW, CLK); // Set clock high
+03B7  1535     BSF PORTB_SHADOW, 0x2
+132:               PORTB = PORTB_SHADOW;
+03B8  0835     MOVF PORTB_SHADOW, W
+03B9  0086     MOVWF PORTB
+133:               BIT_CLEAR(PORTB_SHADOW, CLK); // Set clock low
+03BA  30FB     MOVLW 0xFB
+03BB  00FF     MOVWF btemp
+03BC  087F     MOVF btemp, W
+03BD  05B5     ANDWF PORTB_SHADOW, F
+134:               PORTB = PORTB_SHADOW;
+03BE  0835     MOVF PORTB_SHADOW, W
+03BF  0086     MOVWF PORTB
+135:           }
+03C0  0008     RETURN
+136:           
+137:           // Sends 0 to serial to parallel drivers
+138:           void send0ToDrivers(void) {
+139:               BIT_CLEAR(PORTB_SHADOW, DAT); // Set Data line low for zero
+03FA  30EF     MOVLW 0xEF
+03FB  00FF     MOVWF btemp
+03FC  087F     MOVF btemp, W
+03FD  1283     BCF STATUS, 0x5
+03FE  1303     BCF STATUS, 0x6
+03FF  05B5     ANDWF PORTB_SHADOW, F
+140:               BIT_SET(PORTB_SHADOW, CLK); // Set clock high
+0400  1535     BSF PORTB_SHADOW, 0x2
+141:               PORTB = PORTB_SHADOW;
+0401  0835     MOVF PORTB_SHADOW, W
+0402  0086     MOVWF PORTB
+142:               BIT_CLEAR(PORTB_SHADOW, CLK); // Set clock low
+0403  30FB     MOVLW 0xFB
+0404  00FF     MOVWF btemp
+0405  087F     MOVF btemp, W
+0406  05B5     ANDWF PORTB_SHADOW, F
+143:               PORTB = PORTB_SHADOW;    
+0407  0835     MOVF PORTB_SHADOW, W
+0408  0086     MOVWF PORTB
+144:           }
+0409  0008     RETURN
+145:           
+146:           //void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP) {
+147:           //    T0 = tmp0;
+148:           //    T1 = tmp1;
+149:           //    T2 = tmp2;
+150:           //    T3 = tmp3;
+151:           //    T4 = tmp4;
+152:           //    T5 = tmp5;
+153:           //    T6 = tmp6;
+154:           //    T7 = tmp7;
+155:           //    leftDP = tmpLDP;
+156:           //    rightDP = tmpRDP;
+157:           //    loadDisplay();
+158:           //}
+159:           
+160:           //void settingsDisplay(unsigned char tmp7, unsigned char tmp6, unsigned char tmp1, unsigned char tmp0) {
+161:           //    blankTubes();
+162:           //    T0 = tmp0;
+163:           //    T1 = tmp1;
+164:           //    T6 = tmp6;
+165:           //    T7 = tmp7;
+166:           //    loadDisplay();
+167:           //}
+---  C:/Users/Silv/MPLABXProjects/DivergenceMeter.X/settings.c  -----------------------------------------
+1:             
+2:             #include "headers.h"
+3:             
+4:             void InitSettings(void) {
+5:                 
+6:             }
+7:             // Settings menu
+8:             void settingsMenu(unsigned char menu) {
+0496  00FC     MOVWF menu
+9:                 switch(menu) {
+0497  2CA4     GOTO 0x4A4
+10:                    // Time settings grouped together
+11:                    case 0:
+12:                        hourFormatSetting(); // 12/24 Hour setting
+0498  25BB     CALL 0x5BB
+13:                        hoursSetting(); // Hours setting
+0499  24B8     CALL 0x4B8
+14:                        minuteSetting(); // Minute setting
+049A  2362     CALL 0x362
+15:                        blankingSetting();   // Tube blanking setting
+049B  235E     CALL 0x35E
+16:                        unblankingSetting();  // Tube un-blanking setting 
+049C  2365     CALL 0x365
+17:                        timeAdjSetting(); // Time adjustment setting
+049D  2364     CALL 0x364
+18:                    // Date settings grouped together
+19:                    case 1:
+20:                        daySetting(); // Day setting
+049E  2361     CALL 0x361
+21:                        monthSetting(); // Month setting
+049F  2363     CALL 0x363
+22:                        yearSetting(); // Year setting
+04A0  2366     CALL 0x366
+23:                        dateFormatSetting(); // Date format setting
+04A1  2360     CALL 0x360
+24:                    case 2:
+25:                        brightnessSetting(); // Brightness setting
+04A2  235F     CALL 0x35F
+04A3  2CB7     GOTO 0x4B7
+26:                    default:
+27:                        break;               
+28:                }
+04A4  087C     MOVF menu, W
+04A5  00FA     MOVWF year
+04A6  01FB     CLRF RTCaddress
+04A7  087B     MOVF RTCaddress, W
+04A8  3A00     XORLW 0x0
+04A9  1903     BTFSC STATUS, 0x2
+04AA  2CAC     GOTO 0x4AC
+04AB  2CB7     GOTO 0x4B7
+04AC  087A     MOVF year, W
+04AD  3A00     XORLW 0x0
+04AE  1903     BTFSC STATUS, 0x2
+04AF  2C98     GOTO 0x498
+04B0  3A01     XORLW 0x1
+04B1  1903     BTFSC STATUS, 0x2
+04B2  2C9E     GOTO 0x49E
+04B3  3A03     XORLW 0x3
+04B4  1903     BTFSC STATUS, 0x2
+04B5  2CA2     GOTO 0x4A2
+04B6  2CB7     GOTO 0x4B7
+29:            }
+04B7  0008     RETURN
+30:            
+31:            void hourFormatSetting(void) {
+32:                unsigned char btn;
+33:                blankTubes();
+05BB  245A     CALL 0x45A
+34:                T7 = 0;
+05BC  1283     BCF STATUS, 0x5
+05BD  1303     BCF STATUS, 0x6
+05BE  01A9     CLRF T7
+35:                T6 = 1;
+05BF  01A8     CLRF T6
+05C0  0AA8     INCF T6, F
+36:                do {
+37:                    if(BIT_CHECK(Flag, Clk12)) {
+05C1  1683     BSF STATUS, 0x5
+05C2  1303     BCF STATUS, 0x6
+05C3  0820     MOVF 0x20, W
+05C4  00F8     MOVWF 0xF8
+05C5  3007     MOVLW 0x7
+05C6  1003     BCF STATUS, 0x0
+05C7  0CF8     RRF day, F
+05C8  3EFF     ADDLW 0xFF
+05C9  1D03     BTFSS STATUS, 0x2
+05CA  2DC6     GOTO 0x5C6
+05CB  1C78     BTFSS 0xF8, 0x0
+05CC  2DCE     GOTO 0x5CE
+05CD  2DCF     GOTO 0x5CF
+05CE  2DD6     GOTO 0x5D6
+38:                        T1 = 1;
+05CF  1283     BCF STATUS, 0x5
+05D0  1303     BCF STATUS, 0x6
+05D1  01A3     CLRF T1
+05D2  0AA3     INCF T1, F
+39:                        T0 = 2;
+05D3  3002     MOVLW 0x2
+05D4  00A2     MOVWF T0
+40:                    } else {
+05D5  2DDC     GOTO 0x5DC
+41:                        T1 = 2;
+05D6  3002     MOVLW 0x2
+05D7  1283     BCF STATUS, 0x5
+05D8  1303     BCF STATUS, 0x6
+05D9  00A3     MOVWF T1
+42:                        T0 = 4;
+05DA  3004     MOVLW 0x4
+05DB  00A2     MOVWF T0
+43:                    }  
+44:                    loadDisplay();
+05DC  2639     CALL 0x639
+45:                    btn = buttons();
+05DD  271F     CALL 0x71F
+05DE  00F9     MOVWF month
+46:                    if(btn == 1) {
+05DF  0379     DECF month, W
+05E0  1D03     BTFSS STATUS, 0x2
+05E1  2DE3     GOTO 0x5E3
+05E2  2DE4     GOTO 0x5E4
+05E3  2DEA     GOTO 0x5EA
+47:                        BIT_TOGGLE(Flag, Clk12);
+05E4  3080     MOVLW 0x80
+05E5  00FF     MOVWF btemp
+05E6  087F     MOVF btemp, W
+05E7  1683     BSF STATUS, 0x5
+05E8  1303     BCF STATUS, 0x6
+05E9  06A0     XORWF 0x20, F
+48:                    }
+49:                } while (!BIT_CHECK(Flag, long2)); // Wait until long press of button 2 to go to next setting
+05EA  1683     BSF STATUS, 0x5
+05EB  1303     BCF STATUS, 0x6
+05EC  0820     MOVF 0x20, W
+05ED  00F8     MOVWF 0xF8
+05EE  3003     MOVLW 0x3
+05EF  1003     BCF STATUS, 0x0
+05F0  0CF8     RRF day, F
+05F1  3EFF     ADDLW 0xFF
+05F2  1D03     BTFSS STATUS, 0x2
+05F3  2DEF     GOTO 0x5EF
+05F4  1C78     BTFSS 0xF8, 0x0
+05F5  2DF7     GOTO 0x5F7
+05F6  2DF8     GOTO 0x5F8
+05F7  2DC1     GOTO 0x5C1
+50:                
+51:                // write to EEPROM to save 12/24 hour choice
+52:            }
+05F8  0008     RETURN
+53:            
+54:            void hoursSetting(void) {
+55:                unsigned char btn, hours;
+56:                hours = readByteRTC(0x02);
+04B8  3002     MOVLW 0x2
+04B9  238D     CALL 0x38D
+04BA  00F9     MOVWF 0xF9
+57:                T7 = 0;
+04BB  1283     BCF STATUS, 0x5
+04BC  1303     BCF STATUS, 0x6
+04BD  01A9     CLRF T7
+58:                T6 = 2;
+04BE  3002     MOVLW 0x2
+04BF  00A8     MOVWF T6
+59:                do {
+60:                    T1 = (hours & 0x0F); // Keeps tens digit of hours
+04C0  0879     MOVF month, W
+04C1  390F     ANDLW 0xF
+04C2  1283     BCF STATUS, 0x5
+04C3  00A3     MOVWF T1
+61:                    T0 = (swapNibbles(hours) & 0x0F); // Keeps ones digit of hours
+04C4  0879     MOVF month, W
+04C5  2441     CALL 0x441
+04C6  390F     ANDLW 0xF
+04C7  1283     BCF STATUS, 0x5
+04C8  1303     BCF STATUS, 0x6
+04C9  00A2     MOVWF T0
+62:                    loadDisplay();
+04CA  2639     CALL 0x639
+63:                    btn = buttons();
+04CB  271F     CALL 0x71F
+64:                } while (!BIT_CHECK(Flag, long2)); // Wait until long press of button 2 to go to next setting    
+04CC  1683     BSF STATUS, 0x5
+04CD  1303     BCF STATUS, 0x6
+04CE  0820     MOVF 0x20, W
+04CF  00F8     MOVWF 0xF8
+04D0  3003     MOVLW 0x3
+04D1  1003     BCF STATUS, 0x0
+04D2  0CF8     RRF day, F
+04D3  3EFF     ADDLW 0xFF
+04D4  1D03     BTFSS STATUS, 0x2
+04D5  2CD1     GOTO 0x4D1
+04D6  1C78     BTFSS 0xF8, 0x0
+04D7  2CD9     GOTO 0x4D9
+04D8  2CDA     GOTO 0x4DA
+04D9  2CC0     GOTO 0x4C0
+65:            }
+04DA  0008     RETURN
+66:            
+67:            void minuteSetting(void) {
+68:                
+69:            }
+0362  0008     RETURN
+70:            
+71:            void daySetting(void) {
+72:                
+73:            }
+0361  0008     RETURN
+74:            
+75:            void monthSetting(void) {
+76:                
+77:            }
+0363  0008     RETURN
+78:            
+79:            void yearSetting(void) {
+80:                
+81:            }
+0366  0008     RETURN
+82:            
+83:            void dateFormatSetting(void) {
+84:                
+85:            }
+0360  0008     RETURN
+86:            
+87:            void blankingSetting(void) {
+88:                
+89:            }
+035E  0008     RETURN
+90:            
+91:            void unblankingSetting(void) {
+92:                
+93:            }
+0365  0008     RETURN
+94:            
+95:            void timeAdjSetting(void) {
+96:                
+97:            }
+0364  0008     RETURN
+98:            
+99:            void brightnessSetting(void) {
+100:               
+101:           }
+035F  0008     RETURN
+102:           
+103:           //Returns if BTN1 or BTN2 was pressed, and sets Flag bits for short or long presses
+104:           unsigned char buttons(void) {
+105:               Flag &= 0b11110000; // Clears BTN press flag bits
+071F  30F0     MOVLW 0xF0
+0720  00FF     MOVWF 0xFF
+0721  087F     MOVF btemp, W
+0722  1683     BSF STATUS, 0x5
+0723  1303     BCF STATUS, 0x6
+0724  05A0     ANDWF 0x20, F
+106:               unsigned int timer = 0; // using int instead of char to avoid rollover. Can only hold btn for 255ms before rollover with uchar and 65535ms with uint 
+0725  01F1     CLRF 0xF1
+0726  01F2     CLRF 0xF2
+107:               if(BTN1) {
+0727  1283     BCF STATUS, 0x5
+0728  1303     BCF STATUS, 0x6
+0729  1D05     BTFSS PORTA, 0x2
+072A  2F2C     GOTO 0x72C
+072B  2F2D     GOTO 0x72D
+072C  2F53     GOTO 0x753
+072D  2F3B     GOTO 0x73B
+108:                   // wait for BTN release
+109:                   while(BTN1) {
+073B  1283     BCF STATUS, 0x5
+073C  1303     BCF STATUS, 0x6
+073D  1905     BTFSC PORTA, 0x2
+073E  2F40     GOTO 0x740
+073F  2F41     GOTO 0x741
+0740  2F2E     GOTO 0x72E
+110:                       timer++;
+072E  3001     MOVLW 0x1
+072F  07F1     ADDWF timer, F
+0730  1803     BTFSC STATUS, 0x0
+0731  0AF2     INCF dispNum, F
+0732  3000     MOVLW 0x0
+0733  07F2     ADDWF dispNum, F
+111:                       __delay_ms(1);
+0734  30C7     MOVLW 0xC7
+0735  00F0     MOVWF __pcstackCOMMON
+0736  2F37     GOTO 0x737
+0737  0BF0     DECFSZ __pcstackCOMMON, F
+0738  2F36     GOTO 0x736
+0739  2F3A     GOTO 0x73A
+073A  2F3B     GOTO 0x73B
+112:                   }  
+113:                   // If BTN held for 500ms+
+114:                   if(timer < 500) {
+0741  3001     MOVLW 0x1
+0742  0272     SUBWF dispNum, W
+0743  30F4     MOVLW 0xF4
+0744  1903     BTFSC STATUS, 0x2
+0745  0271     SUBWF timer, W
+0746  1803     BTFSC STATUS, 0x0
+0747  2F49     GOTO 0x749
+0748  2F4A     GOTO 0x74A
+0749  2F4E     GOTO 0x74E
+115:                       BIT_SET(Flag, short1);
+074A  1683     BSF STATUS, 0x5
+074B  1303     BCF STATUS, 0x6
+074C  1420     BSF Flag, 0x0
+116:                   } else {
+074D  2F51     GOTO 0x751
+117:                       BIT_SET(Flag, long1);
+074E  1683     BSF STATUS, 0x5
+074F  1303     BCF STATUS, 0x6
+0750  14A0     BSF Flag, 0x1
+118:                   }
+119:                   return 1;
+0751  3001     MOVLW 0x1
+0752  2F7E     GOTO 0x77E
+120:               } else if (BTN2) {
+0753  1D85     BTFSS TRISA, 0x3
+0754  2F56     GOTO 0x756
+0755  2F57     GOTO 0x757
+0756  2F7D     GOTO 0x77D
+0757  2F65     GOTO 0x765
+121:                   // wait for BTN release
+122:                   while(BTN2) {
+0765  1283     BCF STATUS, 0x5
+0766  1303     BCF STATUS, 0x6
+0767  1985     BTFSC PORTA, 0x3
+0768  2F6A     GOTO 0x76A
+0769  2F6B     GOTO 0x76B
+076A  2F58     GOTO 0x758
+123:                       timer++;
+0758  3001     MOVLW 0x1
+0759  07F1     ADDWF timer, F
+075A  1803     BTFSC STATUS, 0x0
+075B  0AF2     INCF dispNum, F
+075C  3000     MOVLW 0x0
+075D  07F2     ADDWF dispNum, F
+124:                       __delay_ms(1);
+075E  30C7     MOVLW 0xC7
+075F  00F0     MOVWF __pcstackCOMMON
+0760  2F61     GOTO 0x761
+0761  0BF0     DECFSZ __pcstackCOMMON, F
+0762  2F60     GOTO 0x760
+0763  2F64     GOTO 0x764
+0764  2F65     GOTO 0x765
+125:                   } 
+126:                   // If BTN held for 500ms+
+127:                   if(timer < 500) {
+076B  3001     MOVLW 0x1
+076C  0272     SUBWF dispNum, W
+076D  30F4     MOVLW 0xF4
+076E  1903     BTFSC STATUS, 0x2
+076F  0271     SUBWF timer, W
+0770  1803     BTFSC STATUS, 0x0
+0771  2F73     GOTO 0x773
+0772  2F74     GOTO 0x774
+0773  2F78     GOTO 0x778
+128:                       BIT_SET(Flag, short2);
+0774  1683     BSF STATUS, 0x5
+0775  1303     BCF STATUS, 0x6
+0776  1520     BSF Flag, 0x2
+129:                   } else {
+0777  2F7B     GOTO 0x77B
+130:                       BIT_SET(Flag, long2);
+0778  1683     BSF STATUS, 0x5
+0779  1303     BCF STATUS, 0x6
+077A  15A0     BSF Flag, 0x3
+131:                   }
+132:                   return 2;
+077B  3002     MOVLW 0x2
+077C  2F7E     GOTO 0x77E
+133:               }
+134:               return 0;
+077D  3000     MOVLW 0x0
+135:           }
+077E  0008     RETURN
+---  C:/Users/Silv/MPLABXProjects/DivergenceMeter.X/main.c  ---------------------------------------------
+1:             #include "headers.h"
+2:             //TODO
+3:             //Error handling in I2C
+4:             //User input for clock settings
+5:             //Displaying numbers in nixie tubes
+6:             //  -interfacing with the serial chips
+7:             
+8:             //PORTA (RA4-RA7 not used, except RA5 for programmer)
+9:             //SCL           SCL clock line on RA0 for I2C
+10:            //SDA           SDA data line on RA1 for I2C
+11:            //BTN1          Button 1 on RA2
+12:            //BTN2          Button 2 on RA3
+13:            
+14:            //PORTB (RB6-RB7 are for programmer)
+15:            //LED           Debug LED on RB0
+16:            //HVE           High voltage supply enable pin on RB1
+17:            //CLK           Clock line to serial chips on RB2
+18:            //NBL           NOT blanking line to serial chips on RB3
+19:            //DAT           Data line to serial chips on RB4
+20:            //NLE           NOT Latch Enable to serial chips on RB5
+21:            
+22:            //Flag bits
+23:            // short1       0   Short BTN1 press
+24:            // long1        1   Long BTN1 press
+25:            // short2       2   Short BTN2 press
+26:            // long2        3   Long BTN2 press
+27:            // typeRTC      4   RTC type, 0 for DS3232 1 for DS1307
+28:            // Slide        5   Slide loading used in ___ (1=slide)
+29:            // AMPM         6   Keeps track of AM/PM (1=PM)
+30:            // Clk12        7   12/24 hour preference (1=12 hour clock)
+31:            
+32:            //Error Flag bits
+33:            // ErrNACK      0   RTC NACK/SDA line high
+34:            // Global variables
+35:            unsigned char Flag;
+36:            unsigned char ErrFlag;
+37:            unsigned char PORTA_SHADOW;
+38:            unsigned char PORTB_SHADOW;
+39:            
+40:            void main(void) {
+41:                Init(); // Initialize everything
+05F9  252D     CALL 0x52D
+42:                unsigned char btn = 0;
+05FA  1283     BCF STATUS, 0x5
+05FB  1303     BCF STATUS, 0x6
+05FC  01B0     CLRF btn
+43:                while(1) {
+44:                    if(btn == 0) {
+05FD  1283     BCF STATUS, 0x5
+05FE  1303     BCF STATUS, 0x6
+05FF  0830     MOVF btn, W
+0600  1D03     BTFSS STATUS, 0x2
+0601  2E03     GOTO 0x603
+0602  2E04     GOTO 0x604
+0603  2E18     GOTO 0x618
+45:                        if(!(BIT_CHECK(ErrFlag, ErrRTC))) {
+0604  0834     MOVF ErrFlag, W
+0605  00AD     MOVWF 0x2D
+0606  3001     MOVLW 0x1
+0607  1003     BCF STATUS, 0x0
+0608  0CAD     RRF 0x2D, F
+0609  3EFF     ADDLW 0xFF
+060A  1D03     BTFSS STATUS, 0x2
+060B  2E07     GOTO 0x607
+060C  182D     BTFSC 0x2D, 0x0
+060D  2E0F     GOTO 0x60F
+060E  2E10     GOTO 0x610
+060F  2E16     GOTO 0x616
+46:                            getTime();
+0610  277F     CALL 0x77F
+47:                            btn = buttons();
+0611  271F     CALL 0x71F
+0612  1283     BCF STATUS, 0x5
+0613  1303     BCF STATUS, 0x6
+0614  00B0     MOVWF btn
+48:                        } else {
+0615  2DFD     GOTO 0x5FD
+49:                            displayError();
+0616  2475     CALL 0x475
+0617  2DFD     GOTO 0x5FD
+50:                        }
+51:                    } else if (btn == 1) {
+0618  0330     DECF btn, W
+0619  1D03     BTFSS STATUS, 0x2
+061A  2E1C     GOTO 0x61C
+061B  2E1D     GOTO 0x61D
+061C  2E2E     GOTO 0x62E
+52:                        preLoadWL();
+061D  242C     CALL 0x42C
+53:                        loadDisplay();
+061E  2639     CALL 0x639
+54:                        __delay_ms(4000);
+061F  3015     MOVLW 0x15
+0620  1283     BCF STATUS, 0x5
+0621  1303     BCF STATUS, 0x6
+0622  00AF     MOVWF 0x2F
+0623  304B     MOVLW 0x4B
+0624  00AE     MOVWF 0x2E
+0625  30BE     MOVLW 0xBE
+0626  00AD     MOVWF 0x2D
+0627  0BAD     DECFSZ 0x2D, F
+0628  2E27     GOTO 0x627
+0629  0BAE     DECFSZ 0x2E, F
+062A  2E27     GOTO 0x627
+062B  0BAF     DECFSZ 0x2F, F
+062C  2E27     GOTO 0x627
+062D  2DFA     GOTO 0x5FA
+55:                        btn = 0;
+56:                    } else if (btn == 2) {
+062E  3002     MOVLW 0x2
+062F  0630     XORWF btn, W
+0630  1D03     BTFSS STATUS, 0x2
+0631  2E33     GOTO 0x633
+0632  2E34     GOTO 0x634
+0633  2E37     GOTO 0x637
+57:                        settingsMenu(0);
+0634  3000     MOVLW 0x0
+0635  2496     CALL 0x496
+0636  2DFA     GOTO 0x5FA
+58:                        btn = 0;
+59:                       // getDate();
+60:                       // __delay_ms(4000);
+61:                       // btn = 0;
+62:                    }
+0637  2DFD     GOTO 0x5FD
+63:                }
+64:            }
+65:            
+66:            // Initializations
+67:            void Init(void) {
+68:                CMCON = 0b111; //  Disables comparators and enables digital I/O
+052D  3007     MOVLW 0x7
+052E  1283     BCF STATUS, 0x5
+052F  1303     BCF STATUS, 0x6
+0530  009F     MOVWF CMCON
+69:                TRISA = 0b00101111; // Set I/O pins in PORTA
+0531  302F     MOVLW 0x2F
+0532  1683     BSF STATUS, 0x5
+0533  1303     BCF STATUS, 0x6
+0534  0085     MOVWF TRISA
+70:                TRISB = 0b00000000; // Set all pins to output in PORTB
+0535  0186     CLRF TRISB
+71:                OPTION_REG = 0b11011111; // Set TMR0 to clock of the internal clock, no prescaler
+0536  30DF     MOVLW 0xDF
+0537  0081     MOVWF OPTION_REG
+72:                PORTA_SHADOW = 0x00; // Clear PORTA Shadow bits
+0538  1283     BCF STATUS, 0x5
+0539  1303     BCF STATUS, 0x6
+053A  01B6     CLRF PORTA_SHADOW
+73:                PORTB_SHADOW = 0x00; // Clear PORTB Shadow bits
+053B  01B5     CLRF PORTB_SHADOW
+74:                PORTB = PORTB_SHADOW;
+053C  0835     MOVF PORTB_SHADOW, W
+053D  0086     MOVWF PORTB
+75:                Flag = 0x10; // Clears flag bits (sets default RTC to DS1307)
+053E  3010     MOVLW 0x10
+053F  1683     BSF STATUS, 0x5
+0540  1303     BCF STATUS, 0x6
+0541  00A0     MOVWF Flag
+76:                ErrFlag = 0x00; // Clears error flag
+0542  1283     BCF STATUS, 0x5
+0543  1303     BCF STATUS, 0x6
+0544  01B4     CLRF ErrFlag
+77:                InitI2C(); // Initialize I2C
+0545  2395     CALL 0x395
+78:                InitTubes(); // Initialize tubes
+0546  236C     CALL 0x36C
+79:                // Checks to see if clock is running
+80:                if(isRTCRunning()) { // Clock is DS1307 and is currently stopped
+0547  23C1     CALL 0x3C1
+0548  1C03     BTFSS STATUS, 0x0
+0549  2D4B     GOTO 0x54B
+054A  2D4C     GOTO 0x54C
+054B  2D51     GOTO 0x551
+81:                    BIT_SET(Flag, typeRTC); // Sets RTC type flag to DS1307
+054C  1683     BSF STATUS, 0x5
+054D  1303     BCF STATUS, 0x6
+054E  1620     BSF Flag, 0x4
+82:                    startRTC(); // Start DS1307
+054F  267C     CALL 0x67C
+83:                } else { // DS1307 is either running or the clock is a DS3232
+0550  2D57     GOTO 0x557
+84:                    if(checkRTCType()) { // returns 1 for stopped DS3232 and 0 for everything else
+0551  2585     CALL 0x585
+0552  1C03     BTFSS STATUS, 0x0
+0553  2D55     GOTO 0x555
+0554  2D56     GOTO 0x556
+0555  2D57     GOTO 0x557
+0556  2D4F     GOTO 0x54F
+85:                        startRTC(); // fills DS3232 after it was started in isRTCRunning()
+86:                    }
+87:                }
+88:            }
+0557  0008     RETURN
+89:            
+90:            // Swaps nibbles in a byte
+91:            unsigned char swapNibbles(unsigned char data) {
+0441  00F3     MOVWF 0xF3
+92:                return ((data & 0x0F) << 4 | (data & 0xF0) >> 4);
+0442  0873     MOVF data, W
+0443  00F0     MOVWF 0xF0
+0444  3004     MOVLW 0x4
+0445  1003     BCF STATUS, 0x0
+0446  0CF0     RRF __pcstackCOMMON, F
+0447  3EFF     ADDLW 0xFF
+0448  1D03     BTFSS STATUS, 0x2
+0449  2C45     GOTO 0x445
+044A  300F     MOVLW 0xF
+044B  0570     ANDWF __pcstackCOMMON, W
+044C  00F1     MOVWF 0xF1
+044D  0873     MOVF data, W
+044E  390F     ANDLW 0xF
+044F  00F2     MOVWF 0xF2
+0450  3003     MOVLW 0x3
+0451  1003     BCF STATUS, 0x0
+0452  0DF2     RLF dispNum, F
+0453  3EFF     ADDLW 0xFF
+0454  1D03     BTFSS STATUS, 0x2
+0455  2C51     GOTO 0x451
+0456  1003     BCF STATUS, 0x0
+0457  0D72     RLF dispNum, W
+0458  0471     IORWF timer, W
+93:            }
+0459  0008     RETURN
+---  C:/Users/Silv/MPLABXProjects/DivergenceMeter.X/RTC.c  ----------------------------------------------
+1:             #include "headers.h"
+2:             
+3:             unsigned char oldSeconds;
+4:             
+5:             // Starts read request for RTC
+6:             void reqReadRTC(unsigned char address) {
+039E  00F5     MOVWF 0xF5
+7:                 I2C_Start();
+039F  23CE     CALL 0x3CE
+8:                 I2C_WriteByte(DS1307w); // RTC slave address + write bit
+03A0  30D0     MOVLW 0xD0
+03A1  26C6     CALL 0x6C6
+9:                 I2C_WriteByte(address); // address to begin reading from
+03A2  0875     MOVF data, W
+03A3  26C6     CALL 0x6C6
+10:                I2C_ReStart();          // Second start to let RTC know it is a read request
+03A4  241B     CALL 0x41B
+11:                I2C_WriteByte(DS1307r); // RTC slave address + read bit
+03A5  30D1     MOVLW 0xD1
+03A6  26C6     CALL 0x6C6
+12:                                        // RTC ready to transmit data
+13:            }
+03A7  0008     RETURN
+14:            
+15:            // Reads data from RTC
+16:            unsigned char readDataRTC(void) {
+17:                unsigned char data;
+18:                data = I2C_ReadByte(); // stores read byte
+0374  2502     CALL 0x502
+0375  00F3     MOVWF 0xF3
+19:                return data;
+0376  0873     MOVF data, W
+20:            }
+0377  0008     RETURN
+21:            
+22:            // Ends read from RTC
+23:            void endReadRTC(void) {
+24:                I2C_SendNACK(); // Sends not acknowledge to signal end of read
+0369  23DC     CALL 0x3DC
+25:                I2C_Stop();     // Sends stop bit
+036A  240A     CALL 0x40A
+26:            }
+036B  0008     RETURN
+27:            
+28:            // Reads only one byte from RTC (created separate functions for ease of looping)
+29:            unsigned char readByteRTC(unsigned char address) {
+038D  00F6     MOVWF 0xF6
+30:                unsigned char data = 0x00;
+31:                reqReadRTC(address);   // Requests read from address location
+038E  0876     MOVF data, W
+038F  239E     CALL 0x39E
+32:                data = I2C_ReadByte(); // Stores read byte into data
+0390  2502     CALL 0x502
+0391  00F7     MOVWF 0xF7
+33:                endReadRTC();          // Ends read
+0392  2369     CALL 0x369
+34:                return data;
+0393  0877     MOVF address, W
+35:            }
+0394  0008     RETURN
+36:            
+37:            // Sends request to begin writing to slave
+38:            void reqWriteRTC(unsigned char address) {
+037F  00F5     MOVWF 0xF5
+39:                I2C_Start();
+0380  23CE     CALL 0x3CE
+40:                I2C_WriteByte(DS1307w); // Slave address + write bit
+0381  30D0     MOVLW 0xD0
+0382  26C6     CALL 0x6C6
+41:                I2C_WriteByte(address); // address to start writing in
+0383  0875     MOVF data, W
+0384  26C6     CALL 0x6C6
+42:            }
+0385  0008     RETURN
+43:            
+44:            // Sends byte to slave
+45:            void writeDataRTC(unsigned char data) {
+0370  00F5     MOVWF 0xF5
+46:                I2C_WriteByte(data); // Sends byte to slave
+0371  0875     MOVF data, W
+0372  26C6     CALL 0x6C6
+47:            }
+0373  0008     RETURN
+48:            
+49:            // Ends write request
+50:            void endWriteRTC(void) {
+51:                I2C_Stop();
+0367  240A     CALL 0x40A
+52:            }
+0368  0008     RETURN
+53:            
+54:            // Writes one byte to RTC (created separate functions for ease of looping)
+55:            void writeByteRTC(unsigned char address, unsigned char data) {
+0386  00F7     MOVWF 0xF7
+56:                reqWriteRTC(address); // Requests to begin writing to specified address
+0387  0877     MOVF address, W
+0388  237F     CALL 0x37F
+57:                writeDataRTC(data);   // Byte to write
+0389  0876     MOVF data, W
+038A  2370     CALL 0x370
+58:                endWriteRTC();        // Ends write request
+038B  2367     CALL 0x367
+59:            }
+038C  0008     RETURN
+60:            
+61:            // Checks to see if RTC is working
+62:            __bit isRTCRunning(void) {
+63:                unsigned char data;
+64:                data = readByteRTC(0x00);       // Reads address 00h (interested in CH which is bit 7)
+03C1  3000     MOVLW 0x0
+03C2  238D     CALL 0x38D
+03C3  00F9     MOVWF 0xF9
+65:                return BIT_CHECK(data,7); // returns 1 if CH is set(clock is not started) and 0 if CH is clear
+03C4  0879     MOVF month, W
+03C5  00F8     MOVWF 0xF8
+03C6  3007     MOVLW 0x7
+03C7  1003     BCF STATUS, 0x0
+03C8  0CF8     RRF day, F
+03C9  3EFF     ADDLW 0xFF
+03CA  1D03     BTFSS STATUS, 0x2
+03CB  2BC7     GOTO 0x3C7
+03CC  0C78     RRF day, W
+66:            }
+03CD  0008     RETURN
+67:            
+68:            // Starts RTC and initializes starting date and time
+69:            void startRTC(void) {
+70:                unsigned char clockTest, RTCaddress;
+71:                reqWriteRTC(0x00);  // writes to address 00h 
+067C  3000     MOVLW 0x0
+067D  237F     CALL 0x37F
+72:                writeDataRTC(0x00); // clears the seconds register and starts a halted DS1307 (doesn't hurt a DS3232)
+067E  3000     MOVLW 0x0
+067F  2370     CALL 0x370
+73:                //Fill clock with July 7, 2010, 12:30PM (first D-mail was sent), otherwise clock starts in 01/01/00 00:00:00
+74:                writeDataRTC(0x30); // 30 minutes
+0680  3030     MOVLW 0x30
+0681  2370     CALL 0x370
+75:                writeDataRTC(0x12); // 12 hours
+0682  3012     MOVLW 0x12
+0683  2370     CALL 0x370
+76:                endWriteRTC();
+0684  2367     CALL 0x367
+77:                reqWriteRTC(0x04);
+0685  3004     MOVLW 0x4
+0686  237F     CALL 0x37F
+78:                writeDataRTC(0x28); // 28th
+0687  3028     MOVLW 0x28
+0688  2370     CALL 0x370
+79:                writeDataRTC(0x7);  // 7 (July)
+0689  3007     MOVLW 0x7
+068A  2370     CALL 0x370
+80:                writeDataRTC(0x10); // 10 (2010)
+068B  3010     MOVLW 0x10
+068C  2370     CALL 0x370
+81:                endWriteRTC();
+068D  2367     CALL 0x367
+82:                //Clears clock RAM for tube blanking hours (because they are garbage currently)
+83:                reqWriteRTC(0x14);   // blankStart RAM address
+068E  3014     MOVLW 0x14
+068F  237F     CALL 0x37F
+84:                writeDataRTC(0x00);  // writes 00000000 to clear address
+0690  3000     MOVLW 0x0
+0691  2370     CALL 0x370
+85:                writeDataRTC(0x00);  // writes 00000000 to 0x15 (blankEnd RAM address) to clear it      
+0692  3000     MOVLW 0x0
+0693  2370     CALL 0x370
+86:                endWriteRTC();
+0694  2367     CALL 0x367
+87:                
+88:                if(BIT_CHECK(Flag, typeRTC)) {
+0695  1683     BSF STATUS, 0x5
+0696  1303     BCF STATUS, 0x6
+0697  0820     MOVF 0x20, W
+0698  00F9     MOVWF 0xF9
+0699  3004     MOVLW 0x4
+069A  1003     BCF STATUS, 0x0
+069B  0CF9     RRF month, F
+069C  3EFF     ADDLW 0xFF
+069D  1D03     BTFSS STATUS, 0x2
+069E  2E9A     GOTO 0x69A
+069F  1C79     BTFSS 0xF9, 0x0
+06A0  2EA2     GOTO 0x6A2
+06A1  2EA3     GOTO 0x6A3
+06A2  2EA5     GOTO 0x6A5
+89:                    RTCaddress = 0x00; // Address to check in DS1307
+06A3  01FB     CLRF 0xFB
+90:                } else {
+06A4  2EA7     GOTO 0x6A7
+91:                    RTCaddress = 0x0F; // Address to check in DS3232
+06A5  300F     MOVLW 0xF
+06A6  00FB     MOVWF 0xFB
+92:                }
+93:                // Checks to see if it started properly
+94:                clockTest = readByteRTC(RTCaddress);
+06A7  087B     MOVF RTCaddress, W
+06A8  238D     CALL 0x38D
+06A9  00FA     MOVWF 0xFA
+95:                if(!BIT_CHECK(clockTest,7)) {
+06AA  087A     MOVF year, W
+06AB  00F9     MOVWF 0xF9
+06AC  3007     MOVLW 0x7
+06AD  1003     BCF STATUS, 0x0
+06AE  0CF9     RRF month, F
+06AF  3EFF     ADDLW 0xFF
+06B0  1D03     BTFSS STATUS, 0x2
+06B1  2EAD     GOTO 0x6AD
+06B2  1879     BTFSC 0xF9, 0x0
+06B3  2EB5     GOTO 0x6B5
+06B4  2EB6     GOTO 0x6B6
+06B5  2EC1     GOTO 0x6C1
+96:                    BIT_CLEAR(ErrFlag,ErrRTC);  // Clears error flag if RTC started
+06B6  30FD     MOVLW 0xFD
+06B7  00FF     MOVWF 0xFF
+06B8  087F     MOVF btemp, W
+06B9  1283     BCF STATUS, 0x5
+06BA  1303     BCF STATUS, 0x6
+06BB  05B4     ANDWF ErrFlag, F
+97:                    BIT_CLEAR(ErrFlag,ErrNACK); // Clears NACK since obviously RTC acknowledged 
+06BC  30FE     MOVLW 0xFE
+06BD  00FF     MOVWF btemp
+06BE  087F     MOVF btemp, W
+06BF  05B4     ANDWF ErrFlag, F
+98:                } else {
+06C0  2EC5     GOTO 0x6C5
+99:                    // Throws error flag if not started properly
+100:                   BIT_SET(ErrFlag,ErrRTC);
+06C1  1283     BCF STATUS, 0x5
+06C2  1303     BCF STATUS, 0x6
+06C3  14B4     BSF ErrFlag, 0x1
+101:                   displayError();
+06C4  2475     CALL 0x475
+102:               }
+103:           }
+06C5  0008     RETURN
+104:           
+105:           // Checks to see if RTC is a running DS1307 or a DS3232 (running or stopped)
+106:           __bit checkRTCType(void) {
+107:               unsigned char data;
+108:               data = readByteRTC(0x0F);         // Memory address for Oscillator Stopped Flag (OSF)on DS3232; RAM register on DS1307
+0585  300F     MOVLW 0xF
+0586  238D     CALL 0x38D
+0587  00F9     MOVWF month
+109:               if(BIT_CHECK(data,7)) {           // If OSF is clear, Clock is running (with battery backup)
+0588  0879     MOVF month, W
+0589  00F8     MOVWF day
+058A  3007     MOVLW 0x7
+058B  1003     BCF STATUS, 0x0
+058C  0CF8     RRF day, F
+058D  3EFF     ADDLW 0xFF
+058E  1D03     BTFSS STATUS, 0x2
+058F  2D8B     GOTO 0x58B
+0590  1C78     BTFSS day, 0x0
+0591  2D93     GOTO 0x593
+0592  2D94     GOTO 0x594
+0593  2DB9     GOTO 0x5B9
+110:                                                 // Otherwise this is a stopped DS3232 or the DS1307 RAM at 0Fh bit 7 happened to be set
+111:                   // Check to see if it is a stopped DS3232 or just a set bit in the DS1307
+112:                   BIT_CLEAR(data,0);            // writes zero to bit 0 just in case there was a 1 there from the start
+0594  30FE     MOVLW 0xFE
+0595  00FF     MOVWF btemp
+0596  087F     MOVF btemp, W
+0597  05F9     ANDWF month, F
+113:                   writeByteRTC(0x0F,data); 
+0598  0879     MOVF month, W
+0599  00F6     MOVWF data
+059A  300F     MOVLW 0xF
+059B  2386     CALL 0x386
+114:                   BIT_SET(data,0);              // writes one to bit 0
+059C  1479     BSF month, 0x0
+115:                   writeByteRTC(0x0F,data); 
+059D  0879     MOVF month, W
+059E  00F6     MOVWF data
+059F  300F     MOVLW 0xF
+05A0  2386     CALL 0x386
+116:                   __delay_us(5);                // Delay by 5 usec (honestly just put this here just in case prob not needed will test)
+05A1  2DA2     GOTO 0x5A2
+05A2  2DA3     GOTO 0x5A3
+05A3  0000     NOP
+117:                   data = readByteRTC(0x0F);     // Read back from 0Fh
+05A4  300F     MOVLW 0xF
+05A5  238D     CALL 0x38D
+05A6  00F9     MOVWF month
+118:                   if(!BIT_CHECK(data,0)) {      // If the bit is not set it is a stopped DS3232. Bit cannot be 1 in a DS3232
+05A7  1879     BTFSC month, 0x0
+05A8  2DAA     GOTO 0x5AA
+05A9  2DAB     GOTO 0x5AB
+05AA  2DB6     GOTO 0x5B6
+119:                       writeByteRTC(0x0F, 0x00); // Clears the 0Fh register to start the DS3232 Clock
+05AB  01F6     CLRF data
+05AC  300F     MOVLW 0xF
+05AD  2386     CALL 0x386
+120:                       BIT_CLEAR(Flag, typeRTC); // Sets RTC type flag to DS3232
+05AE  30EF     MOVLW 0xEF
+05AF  00FF     MOVWF btemp
+05B0  087F     MOVF btemp, W
+05B1  1683     BSF STATUS, 0x5
+05B2  1303     BCF STATUS, 0x6
+05B3  05A0     ANDWF 0x20, F
+121:                       return 1;                 // Returns a one to start the clock/fill the clock
+05B4  1403     BSF STATUS, 0x0
+05B5  2DBA     GOTO 0x5BA
+122:                   } else {
+123:                       BIT_SET(Flag, typeRTC);   // Sets RTC type flag to DS1307
+05B6  1683     BSF STATUS, 0x5
+05B7  1303     BCF STATUS, 0x6
+05B8  1620     BSF Flag, 0x4
+124:                   }
+125:               } 
+126:               return 0;                         // If OSF is clear or clock is DS1307 return 0 (if any clock is working);
+05B9  1003     BCF STATUS, 0x0
+127:           }
+05BA  0008     RETURN
+128:           
+129:           // Gets time to display
+130:           // I stopped using passTubeNum because I was worried I would run out of program memory
+131:           // When I am done with the program I will see if I can add it back, to try and get rid of some global variables
+132:           void getTime(void) {
+133:               unsigned char seconds, minutes, hours;
+134:               //unsigned char singleSeconds, singleMinutes, singleHours;
+135:               //unsigned char tensSeconds, tensMinutes, tensHours;
+136:               //unsigned char tmpLeft, tmpRight;
+137:               
+138:               seconds = readByteRTC(0x00); // Reads only seconds from RTC to check if update needs to be performed
+077F  3000     MOVLW 0x0
+0780  238D     CALL 0x38D
+0781  1283     BCF STATUS, 0x5
+0782  1303     BCF STATUS, 0x6
+0783  00AC     MOVWF seconds
+139:               // Checks to see if RTC is stopped for some reason
+140:               if(BIT_CHECK(seconds,7)) {
+0784  082C     MOVF seconds, W
+0785  00FB     MOVWF RTCaddress
+0786  3007     MOVLW 0x7
+0787  1003     BCF STATUS, 0x0
+0788  0CFB     RRF RTCaddress, F
+0789  3EFF     ADDLW 0xFF
+078A  1D03     BTFSS STATUS, 0x2
+078B  2F87     GOTO 0x787
+078C  1C7B     BTFSS RTCaddress, 0x0
+078D  2F8F     GOTO 0x78F
+078E  2F90     GOTO 0x790
+078F  2F92     GOTO 0x792
+141:                   BIT_SET(ErrFlag, ErrRTC);
+0790  14B4     BSF ErrFlag, 0x1
+142:               } else {
+0791  2FF5     GOTO 0x7F5
+143:                   // Only updates display if its a new second, to avoid unnecessary instruction cycles
+144:                   if(seconds != oldSeconds) {
+0792  082C     MOVF seconds, W
+0793  0631     XORWF oldSeconds, W
+0794  1903     BTFSC STATUS, 0x2
+0795  2F97     GOTO 0x797
+0796  2F98     GOTO 0x798
+0797  2FF5     GOTO 0x7F5
+145:                       if(seconds == 0b00110000) { // 30 in BCD
+0798  3030     MOVLW 0x30
+0799  062C     XORWF seconds, W
+079A  1D03     BTFSS STATUS, 0x2
+079B  2F9D     GOTO 0x79D
+079C  2F9E     GOTO 0x79E
+079D  2FAD     GOTO 0x7AD
+146:                           getDate(); // Displays current date
+079E  2558     CALL 0x558
+147:                           __delay_ms(4000); // Delay four seconds for date display
+079F  3015     MOVLW 0x15
+07A0  00FD     MOVWF 0x7D
+07A1  304B     MOVLW 0x4B
+07A2  00FC     MOVWF menu
+07A3  30BE     MOVLW 0xBE
+07A4  00FB     MOVWF RTCaddress
+07A5  0BFB     DECFSZ RTCaddress, F
+07A6  2FA5     GOTO 0x7A5
+07A7  0BFC     DECFSZ menu, F
+07A8  2FA5     GOTO 0x7A5
+07A9  0BFD     DECFSZ 0x7D, F
+07AA  2FA5     GOTO 0x7A5
+07AB  0000     NOP
+148:                       } else if (seconds == 0b01011001) { // 59 in BCD
+07AC  2FF5     GOTO 0x7F5
+07AD  3059     MOVLW 0x59
+07AE  062C     XORWF seconds, W
+07AF  1D03     BTFSS STATUS, 0x2
+07B0  2FB2     GOTO 0x7B2
+07B1  2FB3     GOTO 0x7B3
+07B2  2FB4     GOTO 0x7B4
+07B3  2FF5     GOTO 0x7F5
+149:                           //do animation(); but that doesn't exist yet 
+150:                       } else {
+151:                           reqReadRTC(0x00); // Seconds address
+07B4  3000     MOVLW 0x0
+07B5  239E     CALL 0x39E
+152:                           seconds = readDataRTC(); // Reads seconds and 
+07B6  2374     CALL 0x374
+07B7  1283     BCF STATUS, 0x5
+07B8  1303     BCF STATUS, 0x6
+07B9  00AC     MOVWF seconds
+153:                           I2C_SendACK();           // sends ACK to increment to minutes address
+07BA  23EB     CALL 0x3EB
+154:                           minutes = readDataRTC(); // Reads minutes and 
+07BB  2374     CALL 0x374
+07BC  1283     BCF STATUS, 0x5
+07BD  1303     BCF STATUS, 0x6
+07BE  00AA     MOVWF __pcstackBANK0hhh
+155:                           I2C_SendACK();           // sends ACK to increment to hours address
+07BF  23EB     CALL 0x3EB
+156:                           hours = readDataRTC();   // Reads minutes
+07C0  2374     CALL 0x374
+07C1  1283     BCF STATUS, 0x5
+07C2  1303     BCF STATUS, 0x6
+07C3  00AB     MOVWF hours
+157:                           endReadRTC();
+07C4  2369     CALL 0x369
+158:                           T0 = (seconds & 0x0F); // Keeps only ones digit of seconds
+07C5  1283     BCF STATUS, 0x5
+07C6  1303     BCF STATUS, 0x6
+07C7  082C     MOVF seconds, W
+07C8  390F     ANDLW 0xF
+07C9  00A2     MOVWF T0
+159:                           T1 = (swapNibbles(seconds) & 0x0F); // Swaps nibbles to get tens digit of seconds
+07CA  082C     MOVF seconds, W
+07CB  2441     CALL 0x441
+07CC  390F     ANDLW 0xF
+07CD  1283     BCF STATUS, 0x5
+07CE  1303     BCF STATUS, 0x6
+07CF  00A3     MOVWF T1
+160:                           T3 = (minutes & 0x0F); // Keeps only ones digit of minutes
+07D0  082A     MOVF __pcstackBANK0hhh, W
+07D1  390F     ANDLW 0xF
+07D2  00A5     MOVWF T3
+161:                           T4 = (swapNibbles(minutes) & 0x0F); // Swaps nibbles to get tens digit of minutes
+07D3  082A     MOVF __pcstackBANK0hhh, W
+07D4  2441     CALL 0x441
+07D5  390F     ANDLW 0xF
+07D6  1283     BCF STATUS, 0x5
+07D7  1303     BCF STATUS, 0x6
+07D8  00A6     MOVWF T4
+162:                           T6 = (hours & 0x0F); // Keeps only ones digit of hours
+07D9  082B     MOVF hours, W
+07DA  390F     ANDLW 0xF
+07DB  00A8     MOVWF T6
+163:                           T7 = (swapNibbles(hours) & 0x0F); // Swaps nibbles to get tens digit of hours       
+07DC  082B     MOVF hours, W
+07DD  2441     CALL 0x441
+07DE  390F     ANDLW 0xF
+07DF  1283     BCF STATUS, 0x5
+07E0  1303     BCF STATUS, 0x6
+07E1  00A9     MOVWF T7
+164:                           T2 = T5 = 10; // Displays blanks
+07E2  300A     MOVLW 0xA
+07E3  00A7     MOVWF T5
+07E4  00A4     MOVWF T2
+165:                           // Swaps decimal points between left and right depending if its a new second. Even numbers in binary end in 0 and odd end in 1.
+166:                           if(BIT_CHECK(seconds,0)) {
+07E5  1C2C     BTFSS seconds, 0x0
+07E6  2FE8     GOTO 0x7E8
+07E7  2FE9     GOTO 0x7E9
+07E8  2FED     GOTO 0x7ED
+167:                               leftDP = 0x00;      // disables decimal points in all tubes
+07E9  01B3     CLRF leftDP
+168:                               rightDP = 0x24;     // 0x24 == 0b00100100 enables decimal point on tubes 2 and 4
+07EA  3024     MOVLW 0x24
+07EB  00B2     MOVWF rightDP
+169:                               //tmpLeft = 0x00;  // disables decimal points in all tubes
+170:                               //tmpRight = 0x24; // 0x24 == 0b00100100 enables decimal point on tubes 2 and 4
+171:                           } else {
+07EC  2FF0     GOTO 0x7F0
+172:                               leftDP = 0x24;  // 0x24 == 0b00100100 enables decimal point on tubes 2 and 4
+07ED  3024     MOVLW 0x24
+07EE  00B3     MOVWF leftDP
+173:                               rightDP = 0x00;  // disables decimal points in all tubes
+07EF  01B2     CLRF rightDP
+174:                               //tmpLeft = 0x24;
+175:                               //tmpRight = 0x00;
+176:                           }
+177:                           //passTubeNum(tensHours,singleHours,10,tensMinutes,singleMinutes,10,tensSeconds,singleSeconds,tmpLeft,tmpRight); //Puts the time into tubes
+178:                           loadDisplay();
+07F0  2639     CALL 0x639
+179:                           oldSeconds = seconds;                
+07F1  1283     BCF STATUS, 0x5
+07F2  1303     BCF STATUS, 0x6
+07F3  082C     MOVF seconds, W
+07F4  00B1     MOVWF oldSeconds
+180:                       }
+181:                   }
+182:               }
+183:           }
+07F5  0008     RETURN
+184:           
+185:           void getDate(void) {
+186:               unsigned char day, month, year;
+187:               //unsigned char singleDay, singleMonth, singleYear;
+188:               //unsigned char tensDay, tensMonth, tensYear;
+189:               reqReadRTC(0x04);
+0558  3004     MOVLW 0x4
+0559  239E     CALL 0x39E
+190:               day = readDataRTC();
+055A  2374     CALL 0x374
+055B  00F8     MOVWF day
+191:               I2C_SendACK();
+055C  23EB     CALL 0x3EB
+192:               month = readDataRTC();
+055D  2374     CALL 0x374
+055E  00F9     MOVWF month
+193:               I2C_SendACK();
+055F  23EB     CALL 0x3EB
+194:               year = readDataRTC();
+0560  2374     CALL 0x374
+0561  00FA     MOVWF year
+195:               endReadRTC();
+0562  2369     CALL 0x369
+196:               T7 = (swapNibbles(day) & 0x0F); // Swaps nibbles to get tens digit of day
+0563  0878     MOVF day, W
+0564  2441     CALL 0x441
+0565  390F     ANDLW 0xF
+0566  1283     BCF STATUS, 0x5
+0567  1303     BCF STATUS, 0x6
+0568  00A9     MOVWF T7
+197:               T6 = (day & 0x0F); // Keeps only ones digit of day
+0569  0878     MOVF day, W
+056A  390F     ANDLW 0xF
+056B  00A8     MOVWF T6
+198:               T4 = (swapNibbles(month) & 0x0F); // Swaps nibbles to get tens digit of month    
+056C  0879     MOVF month, W
+056D  2441     CALL 0x441
+056E  390F     ANDLW 0xF
+056F  1283     BCF STATUS, 0x5
+0570  1303     BCF STATUS, 0x6
+0571  00A6     MOVWF T4
+199:               T3 = (month & 0x0F); // Keeps only ones digit of month
+0572  0879     MOVF month, W
+0573  390F     ANDLW 0xF
+0574  00A5     MOVWF T3
+200:               T1 = (swapNibbles(year) & 0x0F); // Swaps nibbles to get tens digit of years
+0575  087A     MOVF year, W
+0576  2441     CALL 0x441
+0577  390F     ANDLW 0xF
+0578  1283     BCF STATUS, 0x5
+0579  1303     BCF STATUS, 0x6
+057A  00A3     MOVWF T1
+201:               T0 = (year & 0x0F); // Keeps only ones digit of years      
+057B  087A     MOVF year, W
+057C  390F     ANDLW 0xF
+057D  00A2     MOVWF T0
+202:               T2 = T5 = 10;
+057E  300A     MOVLW 0xA
+057F  00A7     MOVWF T5
+0580  00A4     MOVWF T2
+203:               leftDP = rightDP = 0x00;
+0581  01B2     CLRF rightDP
+0582  01B3     CLRF leftDP
+204:               //passTubeNum(tensDay,singleDay,10,tensMonth,singleMonth,10,tensYear,singleYear,0x00,0x00);
+205:               loadDisplay();
+0583  2639     CALL 0x639
+206:           }
+0584  0008     RETURN
+---  C:/Users/Silv/MPLABXProjects/DivergenceMeter.X/IIC.c  ----------------------------------------------
+1:             #include "headers.h"
+2:             
+3:             // Sets initial values of SDA and SCL pins
+4:             void InitI2C(void) {
+5:                 SCL_IO = 0;
+0395  1683     BSF STATUS, 0x5
+0396  1303     BCF STATUS, 0x6
+0397  1005     BCF TRISA, 0x0
+6:                 SDA_IO = 0;
+0398  1085     BCF TRISA, 0x1
+7:                 // Writes zero in output register of SDA and SCL pins
+8:                 SDA = 0;
+0399  1283     BCF STATUS, 0x5
+039A  1303     BCF STATUS, 0x6
+039B  1085     BCF PORTA, 0x1
+9:                 SCL = 0;
+039C  1005     BCF PORTA, 0x0
+10:            }
+039D  0008     RETURN
+11:            
+12:            // Sends start bit sequence
+13:            void I2C_Start(void) {
+14:                SCL_IO = 1;                    // SCL set to high
+03CE  1683     BSF STATUS, 0x5
+03CF  1303     BCF STATUS, 0x6
+03D0  1405     BSF TRISA, 0x0
+15:                SDA_IO = 1;                    // SDA set to high
+03D1  1485     BSF TRISA, 0x1
+16:                __delay_us(HalfBitDelay);   //Half bit delay
+03D2  2BD3     GOTO 0x3D3
+03D3  2BD4     GOTO 0x3D4
+03D4  0000     NOP
+17:                SDA_IO = 0;                    // SDA set to low
+03D5  1683     BSF STATUS, 0x5
+03D6  1303     BCF STATUS, 0x6
+03D7  1085     BCF TRISA, 0x1
+18:                __delay_us(HalfBitDelay);   //Half bit delay
+03D8  2BD9     GOTO 0x3D9
+03D9  2BDA     GOTO 0x3DA
+03DA  0000     NOP
+19:            }
+03DB  0008     RETURN
+20:            
+21:            // Sends second start bit sequence
+22:            void I2C_ReStart(void) {
+23:                SCL_IO = 0;
+041B  1683     BSF STATUS, 0x5
+041C  1303     BCF STATUS, 0x6
+041D  1005     BCF TRISA, 0x0
+24:                __delay_us(HalfBitDelay/2);
+041E  2C1F     GOTO 0x41F
+25:                SDA_IO = 1;
+041F  1683     BSF STATUS, 0x5
+0420  1303     BCF STATUS, 0x6
+0421  1485     BSF TRISA, 0x1
+26:                __delay_us(HalfBitDelay/2);
+0422  2C23     GOTO 0x423
+27:                SCL_IO = 1;
+0423  1683     BSF STATUS, 0x5
+0424  1303     BCF STATUS, 0x6
+0425  1405     BSF TRISA, 0x0
+28:                __delay_us(HalfBitDelay/2);
+0426  2C27     GOTO 0x427
+29:                SDA_IO = 0;
+0427  1683     BSF STATUS, 0x5
+0428  1303     BCF STATUS, 0x6
+0429  1085     BCF TRISA, 0x1
+30:                __delay_us(HalfBitDelay/2);
+042A  2C2B     GOTO 0x42B
+31:            }
+042B  0008     RETURN
+32:            
+33:            // Sends stop bit sequence
+34:            void I2C_Stop(void) {
+35:                SCL_IO = 0;
+040A  1683     BSF STATUS, 0x5
+040B  1303     BCF STATUS, 0x6
+040C  1005     BCF TRISA, 0x0
+36:                __delay_us(HalfBitDelay/2);
+040D  2C0E     GOTO 0x40E
+37:                SDA_IO = 0;
+040E  1683     BSF STATUS, 0x5
+040F  1303     BCF STATUS, 0x6
+0410  1085     BCF TRISA, 0x1
+38:                __delay_us(HalfBitDelay/2); 
+0411  2C12     GOTO 0x412
+39:                SCL_IO = 1;
+0412  1683     BSF STATUS, 0x5
+0413  1303     BCF STATUS, 0x6
+0414  1405     BSF TRISA, 0x0
+40:                __delay_us(HalfBitDelay/2); 
+0415  2C16     GOTO 0x416
+41:                SDA_IO = 1;
+0416  1683     BSF STATUS, 0x5
+0417  1303     BCF STATUS, 0x6
+0418  1485     BSF TRISA, 0x1
+42:                __delay_us(HalfBitDelay/2);
+0419  2C1A     GOTO 0x41A
+43:            }
+041A  0008     RETURN
+44:            // I2C data write from master to slave. 
+45:            void I2C_WriteByte(unsigned char Data) {
+06C6  00F2     MOVWF 0xF2
+46:                unsigned char i;
+47:                for(i = 0; i<8; i++) {
+06C7  01F4     CLRF 0xF4
+48:                    SCL_IO = 0;
+06C8  1683     BSF STATUS, 0x5
+06C9  1303     BCF STATUS, 0x6
+06CA  1005     BCF TRISA, 0x0
+49:                    __delay_us(HalfBitDelay/2);
+06CB  2ECC     GOTO 0x6CC
+50:                    SDA_IO = ((Data<<i)&0x80)?1:0;
+06CC  0A74     INCF tubeIndex, W
+06CD  00FF     MOVWF 0xFF
+06CE  0872     MOVF dispNum, W
+06CF  00F0     MOVWF 0xF0
+06D0  01F1     CLRF 0xF1
+06D1  2ED5     GOTO 0x6D5
+06D2  1003     BCF STATUS, 0x0
+06D3  0DF0     RLF __pcstackCOMMON, F
+06D4  0DF1     RLF timer, F
+06D5  0BFF     DECFSZ btemp, F
+06D6  2ED2     GOTO 0x6D2
+06D7  1BF0     BTFSC 0xF0, 0x7
+06D8  2EDA     GOTO 0x6DA
+06D9  2EDE     GOTO 0x6DE
+06DA  1683     BSF STATUS, 0x5
+06DB  1303     BCF STATUS, 0x6
+06DC  1485     BSF TRISA, 0x1
+06DD  2EE1     GOTO 0x6E1
+06DE  1683     BSF STATUS, 0x5
+06DF  1303     BCF STATUS, 0x6
+06E0  1085     BCF TRISA, 0x1
+51:                    __delay_us(HalfBitDelay/2);
+06E1  2EE2     GOTO 0x6E2
+52:                    SCL_IO = 1;   
+06E2  1683     BSF STATUS, 0x5
+06E3  1303     BCF STATUS, 0x6
+06E4  1405     BSF TRISA, 0x0
+53:                    __delay_us(HalfBitDelay);
+06E5  2EE6     GOTO 0x6E6
+06E6  2EE7     GOTO 0x6E7
+06E7  0000     NOP
+54:                }
+06E8  3001     MOVLW 0x1
+06E9  00FF     MOVWF 0xFF
+06EA  087F     MOVF btemp, W
+06EB  07F4     ADDWF tubeIndex, F
+06EC  3008     MOVLW 0x8
+06ED  0274     SUBWF tubeIndex, W
+06EE  1C03     BTFSS STATUS, 0x0
+06EF  2EF1     GOTO 0x6F1
+06F0  2EF2     GOTO 0x6F2
+06F1  2EC8     GOTO 0x6C8
+55:                
+56:                // Get ACK from slave
+57:                SCL_IO = 0;
+06F2  1683     BSF STATUS, 0x5
+06F3  1303     BCF STATUS, 0x6
+06F4  1005     BCF TRISA, 0x0
+58:                SDA_IO = 1;
+06F5  1485     BSF TRISA, 0x1
+59:                __delay_us(HalfBitDelay);
+06F6  2EF7     GOTO 0x6F7
+06F7  2EF8     GOTO 0x6F8
+06F8  0000     NOP
+60:                SCL_IO = 1;
+06F9  1683     BSF STATUS, 0x5
+06FA  1303     BCF STATUS, 0x6
+06FB  1405     BSF TRISA, 0x0
+61:                __delay_us(HalfBitDelay);
+06FC  2EFD     GOTO 0x6FD
+06FD  2EFE     GOTO 0x6FE
+06FE  0000     NOP
+62:                
+63:                // Waits for RTC to respond
+64:                unsigned char timer = 255;
+06FF  30FF     MOVLW 0xFF
+0700  00F3     MOVWF 0xF3
+65:                while(timer != 0) {
+0701  2F0D     GOTO 0x70D
+66:                    if(!SDA) {
+0702  1283     BCF STATUS, 0x5
+0703  1303     BCF STATUS, 0x6
+0704  1885     BTFSC PORTA, 0x1
+0705  2F07     GOTO 0x707
+0706  2F08     GOTO 0x708
+0707  2F0A     GOTO 0x70A
+67:                        // RTC responded, exit wait loop
+68:                        timer = 0;
+0708  01F3     CLRF data
+69:                    } else {
+0709  2F0D     GOTO 0x70D
+70:                        __delay_us(1);
+070A  0000     NOP
+71:                        timer--;
+070B  3001     MOVLW 0x1
+070C  02F3     SUBWF data, F
+72:                    }
+73:                }
+070D  0873     MOVF data, W
+070E  1D03     BTFSS STATUS, 0x2
+070F  2F11     GOTO 0x711
+0710  2F12     GOTO 0x712
+0711  2F02     GOTO 0x702
+74:                // If timer ran out RTC is not communicating correctly, throw error flag
+75:                if(timer == 0 && SDA) {
+0712  0873     MOVF data, W
+0713  1D03     BTFSS STATUS, 0x2
+0714  2F16     GOTO 0x716
+0715  2F17     GOTO 0x717
+0716  2F1E     GOTO 0x71E
+0717  1283     BCF STATUS, 0x5
+0718  1303     BCF STATUS, 0x6
+0719  1C85     BTFSS PORTA, 0x1
+071A  2F1C     GOTO 0x71C
+071B  2F1D     GOTO 0x71D
+071C  2F1E     GOTO 0x71E
+76:                    BIT_SET(ErrFlag, ErrNACK);
+071D  1434     BSF ErrFlag, 0x0
+77:                }
+78:                //0 for ACK and 1 for NACK.
+79:            }
+071E  0008     RETURN
+80:            
+81:            // Reads 8 bits and returns it as a byte
+82:            unsigned char I2C_ReadByte(void) {
+83:                unsigned char data = 0;
+0502  01F1     CLRF timer
+84:                for(unsigned char i=0; i<8; i++) {
+0503  01F2     CLRF dispNum
+85:                    SCL_IO = 0;
+0504  1683     BSF STATUS, 0x5
+0505  1303     BCF STATUS, 0x6
+0506  1005     BCF TRISA, 0x0
+86:                    SDA_IO = 1;
+0507  1485     BSF TRISA, 0x1
+87:                    __delay_us(HalfBitDelay);
+0508  2D09     GOTO 0x509
+0509  2D0A     GOTO 0x50A
+050A  0000     NOP
+88:                    SCL_IO = 1;
+050B  1683     BSF STATUS, 0x5
+050C  1303     BCF STATUS, 0x6
+050D  1405     BSF TRISA, 0x0
+89:                    __delay_us(HalfBitDelay/2);
+050E  2D0F     GOTO 0x50F
+90:                    data = data|(SDA<<(7-i));
+050F  1283     BCF STATUS, 0x5
+0510  1303     BCF STATUS, 0x6
+0511  0C05     RRF PORTA, W
+0512  3901     ANDLW 0x1
+0513  00F0     MOVWF __pcstackCOMMON
+0514  0872     MOVF dispNum, W
+0515  3C07     SUBLW 0x7
+0516  3E01     ADDLW 0x1
+0517  2D1A     GOTO 0x51A
+0518  1003     BCF STATUS, 0x0
+0519  0DF0     RLF __pcstackCOMMON, F
+051A  3EFF     ADDLW 0xFF
+051B  1D03     BTFSS STATUS, 0x2
+051C  2D18     GOTO 0x518
+051D  0870     MOVF __pcstackCOMMON, W
+051E  0471     IORWF timer, W
+051F  00F1     MOVWF timer
+91:                    __delay_us(HalfBitDelay/2);
+0520  2D21     GOTO 0x521
+92:                }
+0521  3001     MOVLW 0x1
+0522  00FF     MOVWF btemp
+0523  087F     MOVF btemp, W
+0524  07F2     ADDWF dispNum, F
+0525  3008     MOVLW 0x8
+0526  0272     SUBWF dispNum, W
+0527  1C03     BTFSS STATUS, 0x0
+0528  2D2A     GOTO 0x52A
+0529  2D2B     GOTO 0x52B
+052A  2D04     GOTO 0x504
+93:                return data;
+052B  0871     MOVF timer, W
+94:            }
+052C  0008     RETURN
+95:            
+96:            //Send ACK to slave
+97:            void I2C_SendACK(void) {
+98:                SCL_IO = 0;
+03EB  1683     BSF STATUS, 0x5
+03EC  1303     BCF STATUS, 0x6
+03ED  1005     BCF TRISA, 0x0
+99:                __delay_us(HalfBitDelay/2);
+03EE  2BEF     GOTO 0x3EF
+100:               SDA_IO = 0;
+03EF  1683     BSF STATUS, 0x5
+03F0  1303     BCF STATUS, 0x6
+03F1  1085     BCF TRISA, 0x1
+101:               __delay_us(HalfBitDelay/2);
+03F2  2BF3     GOTO 0x3F3
+102:               SCL_IO = 1;
+03F3  1683     BSF STATUS, 0x5
+03F4  1303     BCF STATUS, 0x6
+03F5  1405     BSF TRISA, 0x0
+103:               __delay_us(HalfBitDelay);
+03F6  2BF7     GOTO 0x3F7
+03F7  2BF8     GOTO 0x3F8
+03F8  0000     NOP
+104:           }
+03F9  0008     RETURN
+105:           
+106:           //Send NACK to slave
+107:           void I2C_SendNACK(void) {
+108:               SCL_IO = 0;
+03DC  1683     BSF STATUS, 0x5
+03DD  1303     BCF STATUS, 0x6
+03DE  1005     BCF TRISA, 0x0
+109:               __delay_us(HalfBitDelay/2);
+03DF  2BE0     GOTO 0x3E0
+110:               SDA_IO = 1;
+03E0  1683     BSF STATUS, 0x5
+03E1  1303     BCF STATUS, 0x6
+03E2  1485     BSF TRISA, 0x1
+111:               __delay_us(HalfBitDelay/2);
+03E3  2BE4     GOTO 0x3E4
+112:               SCL_IO = 1;
+03E4  1683     BSF STATUS, 0x5
+03E5  1303     BCF STATUS, 0x6
+03E6  1405     BSF TRISA, 0x0
+113:               __delay_us(HalfBitDelay);
+03E7  2BE8     GOTO 0x3E8
+03E8  2BE9     GOTO 0x3E9
+03E9  0000     NOP
+114:           }
+03EA  0008     RETURN
+115:           
+116:           
+---  C:/Users/Silv/AppData/Local/Temp/xcBs568.1/driver_tmp_1.s  -----------------------------------------
+07F6  1283     BCF STATUS, 0x5
+07F7  1303     BCF STATUS, 0x6
+07F8  01B1     CLRF oldSeconds
+07F9  01B2     CLRF rightDP
+07FA  01B3     CLRF leftDP
+07FB  01B4     CLRF ErrFlag
+07FC  01B5     CLRF PORTB_SHADOW
+07FD  01B6     CLRF PORTA_SHADOW
+07FE  0183     CLRF STATUS
+07FF  2DF9     GOTO 0x5F9

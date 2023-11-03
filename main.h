@@ -44,9 +44,12 @@
 #define short2  2       // Short BTN2 press
 #define long2   3       // Long BTN2 press
 #define typeRTC 4       // RTC type, 0 for DS3232 1 for DS1307
-#define Slide   5       // Slide loading used in ___ (1=slide)
-#define AMPM    6       // Keeps track of AM/PM (1=PM)
-#define Clk12   7       // 12/24 hour preference (1=12 hour clock)
+#define Slide   5       // Slide loading used in ___ (1=slide)   
+
+//Flag2 bits    
+#define AMPM    0       // Keeps track of AM/PM (1=PM)
+#define dateDMY 1       // 0 == 
+#define Clk12   2       // 12/24 hour preference (1=12 hour clock)
 
 //Error Flag bits
 #define ErrNACK 0       // RTC NACK/SDA line is high
@@ -54,6 +57,7 @@
 
 // Global variables
 extern unsigned char Flag;
+extern unsigned char Flag2;
 extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW; // Bit mask for PortA
 extern unsigned char PORTB_SHADOW; // Bit mask for PortB

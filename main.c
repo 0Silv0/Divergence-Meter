@@ -33,28 +33,33 @@
 // ErrNACK      0   RTC NACK/SDA line high
 // Global variables
 unsigned char Flag;
+unsigned char Flag2;
 unsigned char ErrFlag;
 unsigned char PORTA_SHADOW;
 unsigned char PORTB_SHADOW;
 
 void main(void) {
     Init(); // Initialize everything
-    unsigned char menu = 1;
+    unsigned char btn = 0;
     while(1) {
-        if(menu) {
+        if (BIT_CHECK(Flag, short1)) {
+            preLoadWL();
+            loadDisplay();
+            __delay_ms(4000);
+            btn = 0;
+        } else if (BIT_CHECK(Flag, short2)) {
+            settingsMenu(0);
+            btn = 0;
+           // getDate();
+           // __delay_ms(4000);
+           // btn = 0;
+        } else {
             if(!(BIT_CHECK(ErrFlag, ErrRTC))) {
                 getTime();
+                buttons();
             } else {
                 displayError();
-            }
-        }
-        if(BTN1) {
-            while(BTN1) {}  // wait for btn release
-            menu = 0;
-            //passTubeNum(BIT_CHECK(ErrFlag, ErrNACK),10,1,2,3,4,5,6,0x00,0x00); using this for variable testing
-        } else if (BTN2) {
-            while(BTN2) {}  // wait for btn release
-            menu = 1;
+            }            
         }
     }
 }
@@ -69,6 +74,7 @@ void Init(void) {
     PORTB_SHADOW = 0x00; // Clear PORTB Shadow bits
     PORTB = PORTB_SHADOW;
     Flag = 0x10; // Clears flag bits (sets default RTC to DS1307)
+    Flag2 = 0x00;
     ErrFlag = 0x00; // Clears error flag
     InitI2C(); // Initialize I2C
     InitTubes(); // Initialize tubes

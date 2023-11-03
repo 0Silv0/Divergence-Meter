@@ -75,22 +75,22 @@ void I2C_WriteByte(unsigned char Data) {
     if(timer == 0 && SDA) {
         BIT_SET(ErrFlag, ErrNACK);
     }
-    // Returns 0 for ACK and 1 for NACK.
+    //0 for ACK and 1 for NACK.
 }
 
 // Reads 8 bits and returns it as a byte
 unsigned char I2C_ReadByte(void) {
-    unsigned char i, Data = 0;
-    for(i=0; i<8; i++) {
+    unsigned char data = 0;
+    for(unsigned char i=0; i<8; i++) {
         SCL_IO = 0;
         SDA_IO = 1;
         __delay_us(HalfBitDelay);
         SCL_IO = 1;
         __delay_us(HalfBitDelay/2);
-        Data = Data|(SDA<<(7-i));
+        data = data|(SDA<<(7-i));
         __delay_us(HalfBitDelay/2);
     }
-    return Data;
+    return data;
 }
 
 //Send ACK to slave

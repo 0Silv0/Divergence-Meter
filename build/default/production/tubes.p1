@@ -20,14 +20,14 @@ Version 4.0 HI-TECH Software Intermediate Code
 "9
 [; ;./tubes.h: 9: void latch(void);
 [v _latch `(v ~T0 @X0 0 ef ]
-"59 ./main.h
-[; ;./main.h: 59: extern unsigned char PORTB_SHADOW;
+"63 ./main.h
+[; ;./main.h: 63: extern unsigned char PORTB_SHADOW;
 [v _PORTB_SHADOW `uc ~T0 @X0 0 e ]
 "228 C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h
 [; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 228: extern volatile unsigned char PORTB __attribute__((address(0x006)));
 [v _PORTB `Vuc ~T0 @X0 0 e@6 ]
-"57 ./main.h
-[; ;./main.h: 57: extern unsigned char ErrFlag;
+"61 ./main.h
+[; ;./main.h: 61: extern unsigned char ErrFlag;
 [v _ErrFlag `uc ~T0 @X0 0 e ]
 "54 C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h
 [; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 54: __asm("INDF equ 00h");
@@ -590,57 +590,4 @@ Version 4.0 HI-TECH Software Intermediate Code
 "144
 [; ;tubes.c: 144: }
 [e :UE 83 ]
-}
-"146
-[; ;tubes.c: 146: void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP) {
-[v _passTubeNum `(v ~T0 @X0 1 ef10`uc`uc`uc`uc`uc`uc`uc`uc`uc`uc ]
-{
-[e :U _passTubeNum ]
-[v _tmp7 `uc ~T0 @X0 1 r1 ]
-[v _tmp6 `uc ~T0 @X0 1 r2 ]
-[v _tmp5 `uc ~T0 @X0 1 r3 ]
-[v _tmp4 `uc ~T0 @X0 1 r4 ]
-[v _tmp3 `uc ~T0 @X0 1 r5 ]
-[v _tmp2 `uc ~T0 @X0 1 r6 ]
-[v _tmp1 `uc ~T0 @X0 1 r7 ]
-[v _tmp0 `uc ~T0 @X0 1 r8 ]
-[v _tmpLDP `uc ~T0 @X0 1 r9 ]
-[v _tmpRDP `uc ~T0 @X0 1 r10 ]
-[f ]
-"147
-[; ;tubes.c: 147:     T0 = tmp0;
-[e = _T0 _tmp0 ]
-"148
-[; ;tubes.c: 148:     T1 = tmp1;
-[e = _T1 _tmp1 ]
-"149
-[; ;tubes.c: 149:     T2 = tmp2;
-[e = _T2 _tmp2 ]
-"150
-[; ;tubes.c: 150:     T3 = tmp3;
-[e = _T3 _tmp3 ]
-"151
-[; ;tubes.c: 151:     T4 = tmp4;
-[e = _T4 _tmp4 ]
-"152
-[; ;tubes.c: 152:     T5 = tmp5;
-[e = _T5 _tmp5 ]
-"153
-[; ;tubes.c: 153:     T6 = tmp6;
-[e = _T6 _tmp6 ]
-"154
-[; ;tubes.c: 154:     T7 = tmp7;
-[e = _T7 _tmp7 ]
-"155
-[; ;tubes.c: 155:     leftDP = tmpLDP;
-[e = _leftDP _tmpLDP ]
-"156
-[; ;tubes.c: 156:     rightDP = tmpRDP;
-[e = _rightDP _tmpRDP ]
-"157
-[; ;tubes.c: 157:     loadDisplay();
-[e ( _loadDisplay ..  ]
-"158
-[; ;tubes.c: 158: }
-[e :UE 84 ]
 }

@@ -10,6 +10,7 @@
 #include "IIC.h"
 #include "RTC.h" 
 #include "tubes.h"
+#include "settings.h"
 
 #endif	/* HEADERS_H */
 

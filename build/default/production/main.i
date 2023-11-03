@@ -1200,8 +1200,9 @@ extern __bank0 __bit __timeout;
 #pragma config LVP = OFF
 #pragma config CPD = OFF
 #pragma config CP = OFF
-# 56 "./main.h"
+# 59 "./main.h"
 extern unsigned char Flag;
+extern unsigned char Flag2;
 extern unsigned char ErrFlag;
 extern unsigned char PORTA_SHADOW;
 extern unsigned char PORTB_SHADOW;
@@ -1263,34 +1264,76 @@ void blankTubes(void);
 void displayError(void);
 void send1ToDrivers(void);
 void send0ToDrivers(void);
-void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP);
+
+
+
+
+extern unsigned char leftDP;
+extern unsigned char rightDP;
+extern unsigned char T0 __attribute__((address(0x22)));
+extern unsigned char T1 __attribute__((address(0x23)));
+extern unsigned char T2 __attribute__((address(0x24)));
+extern unsigned char T3 __attribute__((address(0x25)));
+extern unsigned char T4 __attribute__((address(0x26)));
+extern unsigned char T5 __attribute__((address(0x27)));
+extern unsigned char T6 __attribute__((address(0x28)));
+extern unsigned char T7 __attribute__((address(0x29)));
 # 12 "./headers.h" 2
+
+# 1 "./settings.h" 1
+
+
+
+
+void settingsMenu(unsigned char menu);
+void hourFormatSetting(void);
+void hoursSetting(void);
+void minuteSetting(void);
+void daySetting(void);
+void monthSetting(void);
+void yearSetting(void);
+void dateFormatSetting(void);
+void blankingSetting(void);
+void unblankingSetting(void);
+void timeAdjSetting(void);
+void brightnessSetting(void);
+void buttons(void);
+void incDecBCD(void);
+
+
+extern unsigned char blankStart;
+extern unsigned char blankEnd;
+# 13 "./headers.h" 2
 # 1 "main.c" 2
 # 35 "main.c"
 unsigned char Flag;
+unsigned char Flag2;
 unsigned char ErrFlag;
 unsigned char PORTA_SHADOW;
 unsigned char PORTB_SHADOW;
 
 void main(void) {
     Init();
-    unsigned char menu = 1;
+    unsigned char btn = 0;
     while(1) {
-        if(menu) {
+        if (((Flag)>>(0) & 1)) {
+            preLoadWL();
+            loadDisplay();
+            _delay((unsigned long)((4000)*(4000000/4000.0)));
+            btn = 0;
+        } else if (((Flag)>>(2) & 1)) {
+            settingsMenu(0);
+            btn = 0;
+
+
+
+        } else {
             if(!(((ErrFlag)>>(1) & 1))) {
                 getTime();
+                buttons();
             } else {
                 displayError();
             }
-        }
-        if(PORTAbits.RA2) {
-            while(PORTAbits.RA2) {}
-            menu = 0;
-            passTubeNum(((ErrFlag)>>(0) & 1),10,1,2,3,4,5,6,0x00,0x00);
-            startRTC();
-        } else if (PORTAbits.RA3) {
-            while(PORTAbits.RA3) {}
-            menu = 1;
         }
     }
 }
@@ -1305,6 +1348,7 @@ void Init(void) {
     PORTB_SHADOW = 0x00;
     PORTB = PORTB_SHADOW;
     Flag = 0x10;
+    Flag2 = 0x00;
     ErrFlag = 0x00;
     InitI2C();
     InitTubes();

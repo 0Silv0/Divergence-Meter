@@ -1,5 +1,5 @@
-build/default/production/tubes.p1:  \
-tubes.c  \
+build/default/production/settings.p1:  \
+settings.c  \
 headers.h  \
 main.h  \
 IIC.h  \

@@ -25,8 +25,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "20 C:\Program Files\Microchip\xc8\v2.45\pic\include\builtins.h
 [v __delay `JF164 ~T0 @X0 0 e ]
 [p i __delay ]
-"57 ./main.h
-[; ;./main.h: 57: extern unsigned char ErrFlag;
+"61 ./main.h
+[; ;./main.h: 61: extern unsigned char ErrFlag;
 [v _ErrFlag `uc ~T0 @X0 0 e ]
 "54 C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h
 [; ;C:/Users/Silv/.mchp_packs/Microchip/PIC16Fxxx_DFP/1.6.156/xc8\pic\include\proc\pic16f628a.h: 54: __asm("INDF equ 00h");
@@ -390,13 +390,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U _I2C_ReadByte ]
 [f ]
 "83
-[; ;IIC.c: 83:     unsigned char i, Data = 0;
-[v _i `uc ~T0 @X0 1 a ]
-[v _Data `uc ~T0 @X0 1 a ]
-[e = _Data -> -> 0 `i `uc ]
+[; ;IIC.c: 83:     unsigned char data = 0;
+[v _data `uc ~T0 @X0 1 a ]
+[e = _data -> -> 0 `i `uc ]
 "84
-[; ;IIC.c: 84:     for(i=0; i<8; i++) {
+[; ;IIC.c: 84:     for(unsigned char i=0; i<8; i++) {
 {
+[v _i `uc ~T0 @X0 1 a ]
 [e = _i -> -> 0 `i `uc ]
 [e $ < -> _i `i -> 8 `i 70  ]
 [e $U 71  ]
@@ -418,8 +418,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;IIC.c: 89:         _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
 [e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "90
-[; ;IIC.c: 90:         Data = Data|(PORTAbits.RA1<<(7-i));
-[e = _Data -> | -> _Data `i << -> . . _PORTAbits 0 1 `i - -> 7 `i -> _i `i `uc ]
+[; ;IIC.c: 90:         data = data|(PORTAbits.RA1<<(7-i));
+[e = _data -> | -> _data `i << -> . . _PORTAbits 0 1 `i - -> 7 `i -> _i `i `uc ]
 "91
 [; ;IIC.c: 91:         _delay((unsigned long)((500/100/2)*(4000000/4000000.0)));
 [e ( __delay (1 -> * -> / / -> 500 `i -> 100 `i -> 2 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
@@ -431,8 +431,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 71 ]
 }
 "93
-[; ;IIC.c: 93:     return Data;
-[e ) _Data ]
+[; ;IIC.c: 93:     return data;
+[e ) _data ]
 [e $UE 69  ]
 "94
 [; ;IIC.c: 94: }

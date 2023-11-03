@@ -4,4 +4,5 @@ headers.h  \
 main.h  \
 IIC.h  \
 RTC.h  \
-tubes.h 
+tubes.h  \
+settings.h 

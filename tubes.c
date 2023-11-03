@@ -143,16 +143,25 @@ void send0ToDrivers(void) {
     PORTB = PORTB_SHADOW;    
 }
 
-void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP) {
-    T0 = tmp0;
-    T1 = tmp1;
-    T2 = tmp2;
-    T3 = tmp3;
-    T4 = tmp4;
-    T5 = tmp5;
-    T6 = tmp6;
-    T7 = tmp7;
-    leftDP = tmpLDP;
-    rightDP = tmpRDP;
-    loadDisplay();
-}
+//void passTubeNum(unsigned char tmp7, unsigned char tmp6, unsigned char tmp5, unsigned char tmp4, unsigned char tmp3, unsigned char tmp2, unsigned char tmp1, unsigned char tmp0, unsigned char tmpLDP, unsigned char tmpRDP) {
+//    T0 = tmp0;
+//    T1 = tmp1;
+//    T2 = tmp2;
+//    T3 = tmp3;
+//    T4 = tmp4;
+//    T5 = tmp5;
+//    T6 = tmp6;
+//    T7 = tmp7;
+//    leftDP = tmpLDP;
+//    rightDP = tmpRDP;
+//    loadDisplay();
+//}
+
+//void settingsDisplay(unsigned char tmp7, unsigned char tmp6, unsigned char tmp1, unsigned char tmp0) {
+//    blankTubes();
+//    T0 = tmp0;
+//    T1 = tmp1;
+//    T6 = tmp6;
+//    T7 = tmp7;
+//    loadDisplay();
+//}
