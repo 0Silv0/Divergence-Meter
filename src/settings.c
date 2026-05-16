@@ -14,8 +14,7 @@ static const uint8_t brightnessLUP[8] = {32, 64, 96, 128, 160, 192, 224, 255}; /
 // Sets tube brightness level (1-8), 8 is resevered for flashing tubes. 7 is maximum brightness to prevent cathode poisoning.
 void setBrightness(uint8_t brightnessLevel) {
     tubeBrightness = brightnessLevel;
-    // CHANGE CCP to correct one when pwm pin is decided
-    CCPR1L = brightnessLUP[brightnessLevel - 1];  // level-1 since table is 0 indexed
+    CCPR4L = brightnessLUP[brightnessLevel - 1];  // level-1 since table is 0 indexed
 }
 
 // Returns current tube brightness level

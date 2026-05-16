@@ -53,19 +53,29 @@
 #define I2C_NACK        1   // Device did not acknowledge its address
 #define I2C_TIMEOUT     2   // Bus didn't become idle in time
 
-//PORTA (RA4-RA7 not used, except RA5 for programmer)
-//#define SCL  PORTAbits.RA0          // SCL clock line on RA0 for I2C
-//#define SDA  PORTAbits.RA1          // SDA data line on RA1 for I2C
-//#define BTN1 PORTAbits.RA2          // Button 1 on RA2
-//#define BTN2 PORTAbits.RA3          // Button 2 on RA3
+//PORTA
+//*RA4 = NBL
+//*RA6 = HVE
+//*RA7 = DAT
+//--------
+//RA0 = FREE
+//RA1 = FREE
+#define BTN1 PORTAbits.RA2          // Button 1 on RA2
+#define BTN2 PORTAbits.RA3          // Button 2 on RA3
+#define NBL _PORTA_RA4_POSITION     // NOT blanking line to serial chips on RA4
+//RA5 = MCLR                          (hardware reset, also used for programming)
+#define HVE _PORTA_RA6_POSITION     // High voltage supply enable pin on RA6
+#define DAT _PORTA_RA7_POSITION     // Data line to serial chips on RA7
 
-//PORTB (RB6-RB7 are for programmer)
-//#define LED _PORTB_RB0_POSITION          // Debug LED on RB0
-//#define HVE _PORTB_RB1_POSITION          // High voltage supply enable pin on RB1
-//#define CLK _PORTB_RB2_POSITION          // Clock line to serial chips on RB2
-//#define NBL _PORTB_RB3_POSITION          // NOT blanking line to serial chips on RB3
-//#define DAT _PORTB_RB4_POSITION          // Data line to serial chips on RB4
-//#define NLE _PORTB_RB5_POSITION          // NOT Latch Enable to serial chips on RB5
+//PORTB
+#define LED _PORTB_RB0_POSITION     // Debug LED on RB0
+//*RB1 = SDA                          (i2c data line)
+#define CLK _PORTB_RB2_POSITION     // Clock line to serial chips on RB2
+//*RB3 = LVP                          (pin is disabled because it is being used for LVP)
+//*RB4 = SCL                          (i2c clock line)
+#define NLE _PORTB_RB5_POSITION     // NOT Latch Enable to serial chips on RB5
+//RB6 = PGC                           (clock line for programming, can be used but will avoid just in case)
+//RB7 = PGD                           (data line for programming, can be used but will avoid just in case)
 
 //Macros
 #define BIT_CHECK(data,bitNum) ((data)>>(bitNum) & 1)                // Checks if bit is set at bitNum location

@@ -8,4 +8,13 @@
 #ifndef RTC_H
 #define RTC_H
 
+#include <xc.h>
+#include <stdint.h>
+
+void startRTC(void);
+__bit isRTCHalted(void);
+__bit checkRTCType(void);
+void getTime(void);
+void getDate(void);
+
 #endif /* RTC_H */
