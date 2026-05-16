@@ -10,6 +10,12 @@
  #include <xc.h>
  #include <stdint.h>
 
- void InitPWM(void);
+ typedef struct {
+    uint8_t tubes[8];
+    uint8_t leftDP;
+    uint8_t rightDP;
+ } Display;
+
+ void InitTubes(void);
 
 #endif /* TUBES_H */
